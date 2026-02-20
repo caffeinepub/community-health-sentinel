@@ -1,128 +1,327 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T14:15:29.669Z",
+  "generatedAt": "2026-02-20T19:14:19.333Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 8,
-    "implemented": 8,
+    "total": 25,
+    "implemented": 24,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Add a 14-Day Predictive Forecast section below the existing Risk Trends section with title '14-Day Predictive Forecast', displaying a line chart that projects outbreak probability for the next 14 days, and includes labels showing Confidence Score (e.g., 87%) and Model AUC (e.g., 0.91), matching the existing line chart visual style",
+        "id": "REQ-46",
+        "summary": "Replace the existing RoleSelector component title from 'Select User Category' to 'Select User Type' and update the three role option labels to: 'Common Citizen' (instead of Community Member), 'Hospital / PHC' (instead of Healthcare Facility), and 'Government Health Authority' (instead of Administrative Authority), maintaining the existing icon-based card design",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ForecastChart.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
+          "frontend/src/components/RoleSelector.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/ForecastChart.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
+          "frontend/src/components/RoleSelector.tsx"
         ]
       },
       {
-        "id": "REQ-11",
-        "summary": "Enhance the existing Real-Time Risk Analysis card by adding color-coded status text that displays 'Low Risk' in green, 'Moderate Risk' in orange, or 'High Risk' in red based on the risk percentage, and add a label under the gauge showing 'Prediction Confidence: 87%' without changing the card layout",
+        "id": "REQ-47",
+        "summary": "Create a Disease Classification System component (frontend/src/components/DiseaseClassification.tsx) displaying title 'Disease Risk Distribution' with simulated probability percentages for four diseases: Cholera, Typhoid, Dysentery, and Hepatitis A, showing both a horizontal bar chart and a pie chart visualization with the highest probability disease highlighted in red and all values displayed as percentages",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/RiskGauge.tsx"
+          "frontend/src/components/DiseaseClassification.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/RiskGauge.tsx"
+          "frontend/src/components/DiseaseClassification.tsx"
         ]
       },
       {
-        "id": "REQ-12",
-        "summary": "Add an Automated Response Recommendation panel directly below the Real-Time Risk Analysis section with title 'Automated Response Recommendation', displaying a red alert box for risk >70% with text 'HIGH RISK DETECTED – Immediate Action Required' and recommended actions (Conduct emergency water testing, Initiate chlorination protocols, Issue public advisory, Mobilize PHC response teams), a yellow warning version for moderate risk, and a green informational version for low risk, using consistent card styling",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AlertEngine.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AlertEngine.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-13",
-        "summary": "Add a Ward Risk Distribution section below the Alert panel with title 'Ward Risk Distribution', displaying a responsive grid of 8 ward cards (Ward 1 – Central, Ward 2 – North, Ward 3 – South, Ward 4 – East, Ward 5 – West, Ward 6 – Northeast, Ward 7 – Southeast, Ward 8 – Northwest), where each card shows risk percentage, risk level label, and color-coded border based on risk level, plus a legend indicating Green (<40%), Orange (40–70%), Red (>70%), maintaining the light theme styling",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WardHeatmap.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WardHeatmap.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-14",
-        "summary": "Add an Explainable AI – Factor Contribution section below the ward grid with title 'Explainable AI – Factor Contribution', displaying horizontal impact bars for Rainfall Impact, Humidity Impact, Turbidity Impact, and Bacteria Index Impact, followed by explanation text stating 'The outbreak risk is primarily driven by rainfall and bacterial load. Elevated turbidity and humidity further increase disease transmission probability.', matching the existing UI style",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ExplainableAI.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/ExplainableAI.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-15",
-        "summary": "Add a data freshness footer at the bottom of the dashboard displaying 'Last Data Updated:' with a dynamic timestamp and 'Data Sources: IMD Rainfall API, Water Quality Sensors, PHC Surveillance Reports' in small grey text with minimal styling",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/DataFreshnessFooter.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/DataFreshnessFooter.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-16",
-        "summary": "Generate realistic mock data for the 14-day forecast projection showing outbreak probability percentages for each of the next 14 days with appropriate variance to simulate predictive trends",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ForecastChart.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/ForecastChart.tsx"
-        ]
-      },
-      {
-        "id": "REQ-17",
-        "summary": "Generate realistic mock risk data for each of the 8 wards (Central, North, South, East, West, Northeast, Southeast, Northwest) with risk percentages and levels that vary across wards to create a meaningful heatmap visualization",
+        "id": "REQ-48",
+        "summary": "Update WardHeatmap component (frontend/src/components/WardHeatmap.tsx) to display a 3x3 grid showing 9 wards (Ward 1 through Ward 9) instead of the current 8 wards, with title 'Village Risk Heatmap – Coimbatore District', where each cell displays ward number, outbreak probability percentage, and color-coded background: Green for <30%, Yellow for 30-70%, Red for >70%, creating a visually strong and clear grid layout",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/WardHeatmap.tsx"
         ],
         "matchedFiles": [
           "frontend/src/components/WardHeatmap.tsx"
+        ]
+      },
+      {
+        "id": "REQ-49",
+        "summary": "Create a Ward Priority Score component (frontend/src/components/InterventionPriority.tsx) implementing a priority scoring system with formula: Priority Score = outbreak_probability × vulnerability_weight, where vulnerability_weight is calculated as: base 1 + 1 if sanitation_coverage < 50% + 1 if water_treatment_coverage < 60% + 1 if population_density > 2000, normalized to 0-100 scale, displaying a sortable table with columns: Ward Name, Outbreak Probability, Vulnerability Weight, Priority Score, Priority Rank, highlighting the top 3 rows in red with 'Immediate Intervention Required' badge, plus a bar chart of Priority Score by ward and a recommendation box (e.g., 'Deploy chlorination teams to Ward 4 and Ward 7 first') using simulated ward data",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/InterventionPriority.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InterventionPriority.tsx"
+        ]
+      },
+      {
+        "id": "REQ-50",
+        "summary": "Create an Alert History System component (frontend/src/components/AlertHistory.tsx) that stores and displays all predictions where Risk Level is MEDIUM or HIGH, showing a table with columns: Date & Time, Ward, Risk Level, Probability, Action Recommended, with filters for ward and risk level, storing data locally in React state or localStorage if backend storage is not available",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AlertHistory.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AlertHistory.tsx"
+        ]
+      },
+      {
+        "id": "REQ-51",
+        "summary": "Create a Patient Case Trend Graph component (frontend/src/components/PatientCaseTrend.tsx) displaying a line chart showing simulated historical case volume trends over the past 30 days, with x-axis showing dates and y-axis showing number of reported cases, using the same chart styling as ForecastChart with blue line color and white background",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/PatientCaseTrend.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/PatientCaseTrend.tsx"
+        ]
+      },
+      {
+        "id": "REQ-52",
+        "summary": "Create a Ward Comparison Bar Chart component (frontend/src/components/WardComparison.tsx) displaying a horizontal or vertical bar chart comparing current outbreak probability across all 9 wards, with bars color-coded by risk level (Green <30%, Yellow 30-70%, Red >70%), showing ward names and percentage values on the chart",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/WardComparison.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/WardComparison.tsx"
+        ]
+      },
+      {
+        "id": "REQ-53",
+        "summary": "Create a Resource Requirement Estimation Chart component (frontend/src/components/ResourceEstimation.tsx) displaying a bar chart showing estimated resource needs (medical staff, hospital beds, water purification units, chlorination teams) based on current risk level and projected case volume, with numerical values and unit labels",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/ResourceEstimation.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ResourceEstimation.tsx"
+        ]
+      },
+      {
+        "id": "REQ-54",
+        "summary": "Integrate EmailJS library into the frontend by installing the emailjs-com package and creating an EmailAlertService utility (frontend/src/services/EmailAlertService.ts) that exports functions for sending alert emails using placeholder configuration values 'SERVICE_ID_HERE', 'TEMPLATE_ID_HERE', and 'PUBLIC_KEY_HERE', with template variables: risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, ensuring modular and clean integration without hardcoded real keys",
+        "status": "implemented",
+        "plannedFiles": [
+          "package.json",
+          "frontend/src/services/EmailAlertService.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/services/EmailAlertService.ts"
+        ]
+      },
+      {
+        "id": "REQ-55",
+        "summary": "Add automatic email alert triggering to the RiskPredictionPanel component that calls the EmailAlertService when outbreak_probability exceeds 70%, and add a manual 'Send Alert Email' button that displays success confirmation 'Alert Email Sent Successfully' or error message if failed, only triggering for MEDIUM or HIGH risk levels",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/RiskPredictionPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/RiskPredictionPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-56",
+        "summary": "Add CSV export functionality to the Government dashboard view by creating an ExportButton component that generates and downloads a CSV file containing all ward data including: Ward Name, Outbreak Probability, Risk Level, Vulnerability Weight, Priority Score, Sanitation Coverage, Water Treatment Coverage, Population Density, with filename format 'coimbatore-district-risk-analysis-[date].csv'",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/ExportButton.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ExportButton.tsx"
+        ]
+      },
+      {
+        "id": "REQ-57",
+        "summary": "Update DashboardPage.tsx to render the DiseaseClassification component for Common Citizen view (below RiskGauge) and Government view (in analytics section), ensuring it displays for appropriate user roles",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-58",
+        "summary": "Update DashboardPage.tsx to conditionally render InterventionPriority component only in Government dashboard view, positioning it as a dedicated analytics section below the ward heatmap",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-59",
+        "summary": "Update DashboardPage.tsx to conditionally render AlertHistory component only in Government dashboard view (showing all alerts) and Hospital/PHC view (showing alerts filtered by their selected ward), hiding it from Common Citizen view",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-60",
+        "summary": "Update DashboardPage.tsx to render PatientCaseTrend component only in Hospital/PHC and Government dashboard views, positioning it in the analytics section below the forecast chart",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-61",
+        "summary": "Update DashboardPage.tsx to render WardComparison component only in Government dashboard view, positioning it in the analytics section after the intervention priority section",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-62",
+        "summary": "Update DashboardPage.tsx to render ResourceEstimation component only in Government dashboard view, positioning it in the analytics section after the ward comparison",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-63",
+        "summary": "Add ward input functionality to Hospital/PHC dashboard view by creating a WardSelector dropdown component (mandatory field) at the top of the dashboard that stores the selected ward (1-9) in state and passes it as context to all Hospital/PHC specific components for filtering and data display",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/WardSelector.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/WardSelector.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-64",
+        "summary": "Add Hospital/PHC input form fields to RiskPredictionPanel when in Hospital/PHC role view, including: Number of Reported Cases (numeric input), Sanitation Coverage % (0-100), Water Treatment Coverage % (0-100), and Population Density (numeric input), in addition to the existing environmental parameter fields, with appropriate validation",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/RiskPredictionPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/RiskPredictionPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-65",
+        "summary": "Enhance the backend predictOutbreakRisk function in backend/main.mo to implement 7-day moving average calculation for all environmental inputs (rainfall, humidity, turbidity, bacteria) by maintaining a history array for each parameter and calculating the average of the last 7 values before applying the weighted risk formula",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-66",
+        "summary": "Generate realistic simulated ward-level data in the frontend for all 9 wards including: sanitation coverage (40-85%), water treatment coverage (45-90%), population density (1500-3500), and historical outbreak trends, using deterministic random generation based on ward ID to ensure consistency across renders",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/wardDataGenerator.ts",
+          "frontend/src/components/InterventionPriority.tsx",
+          "frontend/src/components/WardHeatmap.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/wardDataGenerator.ts",
+          "frontend/src/components/InterventionPriority.tsx",
+          "frontend/src/components/WardHeatmap.tsx"
+        ]
+      },
+      {
+        "id": "REQ-67",
+        "summary": "Update all color thresholds throughout the application to use the new risk classification: Green for <30% (Low Risk), Yellow/Amber for 30-70% (Medium Risk), and Red for >70% (High Risk), replacing the previous 40% and 40-70% thresholds in RiskGauge, WardHeatmap, AlertEngine, and all visualization components",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/RiskGauge.tsx",
+          "frontend/src/components/WardHeatmap.tsx",
+          "frontend/src/components/AlertEngine.tsx",
+          "frontend/src/components/RiskComponentBreakdown.tsx",
+          "frontend/src/components/SafetyAdvisory.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/RiskGauge.tsx",
+          "frontend/src/components/WardHeatmap.tsx",
+          "frontend/src/components/AlertEngine.tsx"
+        ]
+      },
+      {
+        "id": "REQ-68",
+        "summary": "Update the global color theme to ensure pure white backgrounds (#FFFFFF) are used consistently across all components, yellow/amber warning colors (#F59E0B or #FCD34D) for medium risk states, and maintain professional blue primary accent (#2563EB), green success (#16A34A), and red danger (#DC2626) colors as specified in the UI requirements",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js"
+        ],
+        "matchedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js"
+        ]
+      },
+      {
+        "id": "REQ-69",
+        "summary": "Add tab-based navigation to DashboardPage.tsx for Government view with tabs: 'Overview', 'Intervention Priority', 'Alert History', 'Analytics', allowing users to switch between different dashboard sections while maintaining the role-based component rendering logic",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-70",
+        "summary": "Add a 'Send Alert Email' button to the Hospital/PHC dashboard view positioned near the risk prediction results that manually triggers an email alert using EmailAlertService with current ward data and risk metrics, displaying loading state, success confirmation, or error message",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/components/AlertEngine.tsx",
-    "frontend/src/components/DataFreshnessFooter.tsx",
-    "frontend/src/components/ExplainableAI.tsx",
-    "frontend/src/components/ForecastChart.tsx",
+    "frontend/src/components/AlertHistory.tsx",
+    "frontend/src/components/DiseaseClassification.tsx",
+    "frontend/src/components/ExportButton.tsx",
+    "frontend/src/components/InterventionPriority.tsx",
+    "frontend/src/components/PatientCaseTrend.tsx",
+    "frontend/src/components/ResourceEstimation.tsx",
     "frontend/src/components/RiskGauge.tsx",
+    "frontend/src/components/RiskPredictionPanel.tsx",
+    "frontend/src/components/RoleSelector.tsx",
+    "frontend/src/components/WardComparison.tsx",
     "frontend/src/components/WardHeatmap.tsx",
+    "frontend/src/components/WardSelector.tsx",
+    "frontend/src/index.css",
     "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/services/EmailAlertService.ts",
+    "frontend/src/utils/wardDataGenerator.ts",
+    "frontend/tailwind.config.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

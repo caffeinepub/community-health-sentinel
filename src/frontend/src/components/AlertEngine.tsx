@@ -1,115 +1,89 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, AlertCircle, CheckCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface AlertEngineProps {
   riskPercentage: number;
 }
 
 export default function AlertEngine({ riskPercentage }: AlertEngineProps) {
-  if (riskPercentage >= 70) {
-    return (
-      <Card className="bg-red-500/20 backdrop-blur-sm border-red-400 border-2">
-        <CardHeader>
-          <CardTitle className="text-2xl text-red-200 flex items-center gap-3">
-            <AlertTriangle className="w-8 h-8" />
-            Automated Response Recommendation
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="bg-red-500/40 rounded-lg p-4 border border-red-400">
-            <p className="text-red-100 text-lg font-bold mb-3">
-              HIGH RISK DETECTED – Immediate Action Required
-            </p>
-            <div className="space-y-3">
-              <h3 className="text-red-100 font-bold">Recommended Actions:</h3>
-              <ul className="space-y-2 text-red-100">
-                <li className="flex items-start gap-2">
-                  <span className="text-red-300 font-bold">•</span>
-                  <span>Conduct emergency water testing</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-300 font-bold">•</span>
-                  <span>Initiate chlorination protocols</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-300 font-bold">•</span>
-                  <span>Issue public advisory</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-300 font-bold">•</span>
-                  <span>Mobilize PHC response teams</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const getAlertLevel = (): 'low' | 'moderate' | 'high' => {
+    if (riskPercentage < 30) return 'low';
+    if (riskPercentage < 70) return 'moderate';
+    return 'high';
+  };
 
-  if (riskPercentage >= 40) {
-    return (
-      <Card className="bg-orange-500/20 backdrop-blur-sm border-orange-400 border-2">
-        <CardHeader>
-          <CardTitle className="text-2xl text-orange-200 flex items-center gap-3">
-            <AlertCircle className="w-8 h-8" />
-            Automated Response Recommendation
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="bg-orange-500/40 rounded-lg p-4 border border-orange-400">
-            <p className="text-orange-100 text-lg font-bold mb-3">
-              MODERATE RISK – Enhanced Monitoring Required
-            </p>
-            <div className="space-y-3">
-              <h3 className="text-orange-100 font-bold">Recommended Actions:</h3>
-              <ul className="space-y-2 text-orange-100">
-                <li className="flex items-start gap-2">
-                  <span className="text-orange-300 font-bold">•</span>
-                  <span>Increase frequency of water quality monitoring</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-orange-300 font-bold">•</span>
-                  <span>Review and update emergency response protocols</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-orange-300 font-bold">•</span>
-                  <span>Conduct community awareness programs</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const alertLevel = getAlertLevel();
+
+  const alertConfig = {
+    low: {
+      icon: CheckCircle,
+      bgColor: 'bg-green-50',
+      borderColor: 'border-medical-green',
+      textColor: 'text-medical-green',
+      title: 'Low Risk - Routine Monitoring',
+      message: 'Current conditions indicate low outbreak risk. Continue standard monitoring protocols.',
+      actions: [
+        'Maintain regular water quality testing',
+        'Continue public health awareness campaigns',
+        'Monitor environmental parameters daily'
+      ]
+    },
+    moderate: {
+      icon: AlertCircle,
+      bgColor: 'bg-yellow-50',
+      borderColor: 'border-medical-orange',
+      textColor: 'text-medical-orange',
+      title: 'Moderate Risk - Enhanced Vigilance',
+      message: 'Elevated risk detected. Implement preventive measures and increase monitoring frequency.',
+      actions: [
+        'Increase water quality testing frequency',
+        'Deploy mobile health units to high-risk areas',
+        'Distribute water purification tablets',
+        'Issue public health advisories'
+      ]
+    },
+    high: {
+      icon: AlertTriangle,
+      bgColor: 'bg-red-50',
+      borderColor: 'border-medical-red',
+      textColor: 'text-medical-red',
+      title: 'High Risk - Immediate Action Required',
+      message: 'Critical outbreak risk detected. Activate emergency response protocols immediately.',
+      actions: [
+        'Activate emergency response teams',
+        'Deploy chlorination units to affected areas',
+        'Set up temporary health screening camps',
+        'Issue urgent public health warnings',
+        'Coordinate with district health authorities',
+        'Prepare isolation facilities'
+      ]
+    }
+  };
+
+  const config = alertConfig[alertLevel];
+  const Icon = config.icon;
 
   return (
-    <Card className="bg-green-500/20 backdrop-blur-sm border-green-400 border-2">
-      <CardHeader>
-        <CardTitle className="text-2xl text-green-200 flex items-center gap-3">
-          <CheckCircle className="w-8 h-8" />
-          Automated Response Recommendation
-        </CardTitle>
+    <Card className={`${config.bgColor} border-2 ${config.borderColor} shadow-medical rounded-xl`}>
+      <CardHeader className="p-6">
+        <div className="flex items-center gap-3">
+          <Icon className={`w-8 h-8 ${config.textColor}`} />
+          <CardTitle className={`text-2xl ${config.textColor}`}>{config.title}</CardTitle>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="bg-green-500/40 rounded-lg p-4 border border-green-400">
-          <p className="text-green-100 text-lg font-bold mb-3">
-            LOW RISK – Normal Operations
-          </p>
-          <div className="space-y-3">
-            <h3 className="text-green-100 font-bold">Recommended Actions:</h3>
-            <ul className="space-y-2 text-green-100">
-              <li className="flex items-start gap-2">
-                <span className="text-green-300 font-bold">•</span>
-                <span>Maintain regular water quality testing schedule</span>
+      <CardContent className="p-6 pt-0 space-y-4">
+        <p className="text-medical-slate font-medium">{config.message}</p>
+        
+        <div>
+          <h4 className="font-semibold text-medical-slate mb-2">Recommended Actions:</h4>
+          <ul className="space-y-2">
+            {config.actions.map((action, index) => (
+              <li key={index} className="flex items-start gap-2 text-medical-grey">
+                <span className={`${config.textColor} mt-1`}>•</span>
+                <span>{action}</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-green-300 font-bold">•</span>
-                <span>Continue routine sanitation and hygiene programs</span>
-              </li>
-            </ul>
-          </div>
+            ))}
+          </ul>
         </div>
       </CardContent>
     </Card>

@@ -66,9 +66,23 @@ export default {
                     border: 'oklch(var(--sidebar-border))',
                     ring: 'oklch(var(--sidebar-ring))'
                 },
-                'gov-dark': 'oklch(var(--gov-dark))',
-                'gov-primary': 'oklch(var(--gov-primary))',
-                'gov-teal': 'oklch(var(--gov-teal))'
+                success: 'oklch(var(--success))',
+                warning: 'oklch(var(--warning))',
+                danger: 'oklch(var(--danger))',
+                // Medical theme specific colors
+                'medical-blue': '#2563EB',
+                'medical-blue-soft': '#3B82F6',
+                'medical-green': '#16A34A',
+                'medical-orange': '#F59E0B',
+                'medical-red': '#DC2626',
+                'medical-slate': '#1E293B',
+                'medical-grey': '#64748B',
+                'medical-border': '#E2E8F0',
+                'medical-bg': '#F8FAFC',
+                // Government theme colors (for backward compatibility)
+                'gov-dark': '#0F172A',
+                'gov-primary': '#1E3A5F',
+                'gov-teal': '#14B8A6'
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -77,7 +91,7 @@ export default {
             },
             boxShadow: {
                 xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
-                'gov': '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)'
+                medical: '0 4px 12px rgba(0,0,0,0.05)'
             },
             fontSize: {
                 'xs': ['0.75rem', { lineHeight: '1.5' }],

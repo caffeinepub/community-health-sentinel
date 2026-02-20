@@ -1,6 +1,10 @@
 import { createRouter, createRoute, createRootRoute, RouterProvider, Outlet } from '@tanstack/react-router';
+import { useState } from 'react';
 import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
+import RoleSelector from './components/RoleSelector';
+
+export type UserRole = 'community' | 'healthcare' | 'admin' | null;
 
 const rootRoute = createRootRoute({
   component: () => <Outlet />
@@ -12,10 +16,20 @@ const indexRoute = createRoute({
   component: LandingPage
 });
 
+function DashboardRouteComponent() {
+  const [selectedRole, setSelectedRole] = useState<UserRole>(null);
+
+  if (!selectedRole) {
+    return <RoleSelector onRoleSelect={setSelectedRole} />;
+  }
+
+  return <DashboardPage userRole={selectedRole} />;
+}
+
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/dashboard',
-  component: DashboardPage
+  component: DashboardRouteComponent
 });
 
 const routeTree = rootRoute.addChildren([indexRoute, dashboardRoute]);

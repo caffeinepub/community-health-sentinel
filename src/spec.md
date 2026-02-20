@@ -1,15 +1,26 @@
 # Specification
 
 ## Summary
-**Goal:** Enhance the Community Health Sentinel dashboard with predictive forecasting, enhanced risk analysis, automated alerts, ward-level heatmap, explainable AI factors, and data freshness indicators.
+**Goal:** Upgrade Community Health Sentinel to a production-grade system with role-based dashboards, disease classification, 9-ward risk heatmap, priority scoring, alert history, EmailJS integration, and advanced visualizations for waterborne disease outbreak prediction in Coimbatore District.
 
 **Planned changes:**
-- Add 14-Day Predictive Forecast section below Risk Trends with line chart showing outbreak probability projection, confidence score, and model AUC
-- Enhance Real-Time Risk Analysis card with color-coded status text (Low/Moderate/High Risk) and prediction confidence label
-- Add Automated Response Recommendation panel below Risk Analysis with color-coded alert boxes (red for high risk, yellow for moderate, green for low) and recommended actions
-- Add Ward Risk Distribution section with 8 ward cards displaying risk percentages, levels, and color-coded borders with legend
-- Add Explainable AI – Factor Contribution section with horizontal impact bars for Rainfall, Humidity, Turbidity, and Bacteria Index, plus explanation text
-- Add data freshness footer at bottom showing last update timestamp and data sources
-- Generate realistic mock data for 14-day forecast and 8-ward risk distribution
+- Update RoleSelector labels to "Select User Type" with roles: Common Citizen, Hospital / PHC, Government Health Authority
+- Add Disease Classification System showing probability distribution for Cholera, Typhoid, Dysentery, and Hepatitis A with bar and pie charts
+- Expand WardHeatmap to 3x3 grid displaying 9 wards with color-coded risk levels (Green <30%, Yellow 30-70%, Red >70%)
+- Create Intervention Priority component with vulnerability-weighted priority scoring, sortable table, bar chart, and deployment recommendations
+- Add Alert History system storing MEDIUM/HIGH risk predictions with filtering by ward and risk level
+- Create Patient Case Trend graph showing 30-day historical case volume
+- Add Ward Comparison bar chart showing outbreak probability across all 9 wards
+- Create Resource Estimation chart showing required medical staff, beds, water purification units, and chlorination teams
+- Integrate EmailJS with placeholder configuration for alert email functionality
+- Add automatic email alerts when risk exceeds 70% and manual "Send Alert Email" button
+- Add CSV export functionality for Government dashboard with all ward data
+- Implement role-specific dashboard layouts: Common Citizen (basic risk info + disease breakdown), Hospital/PHC (ward-specific data + manual alerts), Government (comprehensive analytics + priority management)
+- Add ward selector dropdown for Hospital/PHC view with additional input fields (reported cases, sanitation coverage, water treatment coverage, population density)
+- Enhance backend with 7-day moving average calculation for environmental parameters
+- Generate realistic simulated ward-level data for all 9 wards
+- Update all color thresholds to new classification: <30% Low (Green), 30-70% Medium (Yellow), >70% High (Red)
+- Implement tab-based navigation for Government dashboard: Overview, Intervention Priority, Alert History, Analytics
+- Ensure pure white backgrounds and consistent professional color theme across all components
 
-**User-visible outcome:** Users can view predictive outbreak forecasts, receive automated response recommendations based on risk levels, see ward-level risk distribution across 8 geographic areas, understand which factors drive outbreak risk through explainable AI visualizations, and verify data freshness.
+**User-visible outcome:** Users can access role-specific dashboards with Common Citizens viewing basic risk information and disease probabilities, Hospital/PHC staff entering ward-specific data and managing alerts, and Government officials accessing comprehensive analytics including priority rankings, intervention recommendations, alert history, trend analysis, resource estimation, and CSV export capabilities, all powered by enhanced prediction algorithms and automated email notifications.

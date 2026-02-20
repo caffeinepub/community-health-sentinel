@@ -1,65 +1,53 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function WardHeatmap() {
-  // Generate realistic ward data with varying risk levels
-  const wards = [
-    { id: 1, name: 'Ward 1 – Central', risk: 72 },
-    { id: 2, name: 'Ward 2 – North', risk: 45 },
-    { id: 3, name: 'Ward 3 – South', risk: 28 },
-    { id: 4, name: 'Ward 4 – East', risk: 65 },
-    { id: 5, name: 'Ward 5 – West', risk: 38 },
-    { id: 6, name: 'Ward 6 – Northeast', risk: 52 },
-    { id: 7, name: 'Ward 7 – Southeast', risk: 18 },
-    { id: 8, name: 'Ward 8 – Northwest', risk: 81 }
-  ];
+interface WardHeatmapProps {
+  overallRisk?: number;
+}
 
-  const getRiskColor = (risk: number) => {
-    if (risk < 40) return 'bg-green-500/30 border-green-400 text-green-200';
-    if (risk < 70) return 'bg-orange-500/30 border-orange-400 text-orange-200';
-    return 'bg-red-500/30 border-red-400 text-red-200';
+export default function WardHeatmap({ overallRisk = 50 }: WardHeatmapProps) {
+  const wards = Array.from({ length: 9 }, (_, i) => i + 1);
+  
+  // Unique adjustment factors for each ward
+  const adjustmentFactors = [0.85, 1.15, 0.95, 1.10, 0.90, 1.05, 1.12, 0.88, 1.08];
+
+  const getWardRisk = (wardIndex: number): number => {
+    const adjustedRisk = overallRisk * adjustmentFactors[wardIndex];
+    return Math.min(100, Math.max(0, adjustedRisk));
   };
 
-  const getRiskLabel = (risk: number) => {
-    if (risk < 40) return 'Low Risk';
-    if (risk < 70) return 'Moderate Risk';
-    return 'High Risk';
+  const getRiskColor = (risk: number): string => {
+    if (risk < 30) return '#16A34A'; // Green
+    if (risk < 70) return '#F59E0B'; // Yellow
+    return '#DC2626'; // Red
   };
 
   return (
-    <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-      <CardHeader>
-        <CardTitle className="text-2xl text-white">Ward Risk Distribution</CardTitle>
+    <Card className="bg-white border-medical-border shadow-medical rounded-xl">
+      <CardHeader className="p-6">
+        <CardTitle className="text-2xl text-medical-slate">Village Risk Heatmap – Coimbatore District</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {wards.map((ward) => (
-            <div
-              key={ward.id}
-              className={`${getRiskColor(
-                ward.risk
-              )} border-2 rounded-lg p-4 transition-all hover:scale-105 cursor-pointer`}
-            >
-              <div className="text-sm font-semibold mb-2">{ward.name}</div>
-              <div className="text-3xl font-bold mb-1">{ward.risk}%</div>
-              <div className="text-xs font-medium">{getRiskLabel(ward.risk)}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Legend */}
-        <div className="mt-6 flex flex-wrap gap-4 justify-center">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-green-500 rounded" />
-            <span className="text-teal-200 text-sm">Green (&lt;40%)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-orange-500 rounded" />
-            <span className="text-teal-200 text-sm">Orange (40–70%)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-red-500 rounded" />
-            <span className="text-teal-200 text-sm">Red (&gt;70%)</span>
-          </div>
+      <CardContent className="p-6 pt-0">
+        <div className="grid grid-cols-3 gap-4">
+          {wards.map((ward, index) => {
+            const wardRisk = getWardRisk(index);
+            const riskColor = getRiskColor(wardRisk);
+            
+            return (
+              <div
+                key={ward}
+                className="rounded-lg p-6 text-center border-2 transition-all hover:scale-105"
+                style={{
+                  backgroundColor: riskColor,
+                  borderColor: riskColor,
+                  color: '#FFFFFF'
+                }}
+              >
+                <div className="text-3xl font-bold mb-2">Ward {ward}</div>
+                <div className="text-xl font-semibold">{wardRisk.toFixed(1)}%</div>
+                <div className="text-sm mt-1 opacity-90">Outbreak Probability</div>
+              </div>
+            );
+          })}
         </div>
       </CardContent>
     </Card>

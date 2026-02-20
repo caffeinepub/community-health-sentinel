@@ -32,49 +32,50 @@ export default function ForecastChart() {
   const modelAUC = 0.91;
 
   return (
-    <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-      <CardHeader>
-        <CardTitle className="text-2xl text-white">14-Day Predictive Forecast</CardTitle>
+    <Card className="bg-white border-medical-border shadow-medical rounded-xl">
+      <CardHeader className="p-6">
+        <CardTitle className="text-2xl text-medical-slate">14-Day Predictive Forecast</CardTitle>
         <div className="flex gap-6 mt-2">
           <div className="text-sm">
-            <span className="text-teal-200">Confidence Score: </span>
-            <span className="text-white font-semibold">{confidenceScore}%</span>
+            <span className="text-medical-grey">Confidence Score: </span>
+            <span className="text-medical-slate font-semibold">{confidenceScore}%</span>
           </div>
           <div className="text-sm">
-            <span className="text-teal-200">Model AUC: </span>
-            <span className="text-white font-semibold">{modelAUC}</span>
+            <span className="text-medical-grey">Model AUC: </span>
+            <span className="text-medical-slate font-semibold">{modelAUC}</span>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6 pt-0">
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={forecastData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis 
               dataKey="day" 
-              stroke="rgba(255,255,255,0.6)"
-              tick={{ fill: 'rgba(255,255,255,0.6)' }}
+              stroke="#64748B"
+              tick={{ fill: '#64748B' }}
             />
             <YAxis 
-              stroke="rgba(255,255,255,0.6)"
-              tick={{ fill: 'rgba(255,255,255,0.6)' }}
-              label={{ value: 'Risk %', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.6)' }}
+              stroke="#64748B"
+              tick={{ fill: '#64748B' }}
+              label={{ value: 'Risk %', angle: -90, position: 'insideLeft', fill: '#64748B' }}
             />
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: 'rgba(0,0,0,0.8)', 
-                border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: '8px'
+                backgroundColor: '#FFFFFF', 
+                border: '1px solid #E2E8F0',
+                borderRadius: '12px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
               }}
-              labelStyle={{ color: '#5eead4' }}
-              itemStyle={{ color: '#ffffff' }}
+              labelStyle={{ color: '#1E293B' }}
+              itemStyle={{ color: '#2563EB' }}
             />
             <Line 
               type="monotone" 
               dataKey="risk" 
-              stroke="#14b8a6" 
+              stroke="#2563EB" 
               strokeWidth={3}
-              dot={{ fill: '#14b8a6', r: 4 }}
+              dot={{ fill: '#2563EB', r: 4 }}
               activeDot={{ r: 6 }}
             />
           </LineChart>
