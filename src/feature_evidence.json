@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-existing-roleselector-component-title-from-select-user-category-to-select-user-type-and-update-the-three-role-option-labels-to-common-citizen-instead-of-community-member-hospital-phc-instead-of-healthcare-facility-and-government-health-authority-instead-of-administrative-authority-maintaining-the-existing-icon-based-card-design",
-      "featureTitle": "Replace the existing RoleSelector component title from 'Select User Category' to 'Select User Type' and update the three role option labels to: 'Common Citizen' (instead of Community Member), 'Hospital / PHC' (instead of Healthcare Facility), and 'Government Health Authority' (instead of Administrative Authority), maintaining the existing icon-based card design",
+      "featureId": "feature-remove-all-environmental-input-forms-rainfall-humidity-turbidity-bacteria-index-fields-and-risk-calculation-controls-from-the-common-citizen-dashboard-view-in-dashboardpage-tsx-ensuring-common-citizen-users-have-zero-ability-to-enter-data-or-trigger-calculations",
+      "featureTitle": "Remove all environmental input forms (rainfall, humidity, turbidity, bacteria index fields) and risk calculation controls from the Common Citizen dashboard view in DashboardPage.tsx, ensuring Common Citizen users have zero ability to enter data or trigger calculations",
       "files": [
-        "frontend/src/components/RoleSelector.tsx"
+        "frontend/src/pages/DashboardPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,15 +15,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-46"
+        "REQ-71"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-disease-classification-system-component-frontend-src-components-diseaseclassification-tsx-displaying-title-disease-risk-distribution-with-simulated-probability-percentages-for-four-diseases-cholera-typhoid-dysentery-and-hepatitis-a-showing-both-a-horizontal-bar-chart-and-a-pie-chart-visualization-with-the-highest-probability-disease-highlighted-in-red-and-all-values-displayed-as-percentages",
-      "featureTitle": "Create a Disease Classification System component (frontend/src/components/DiseaseClassification.tsx) displaying title 'Disease Risk Distribution' with simulated probability percentages for four diseases: Cholera, Typhoid, Dysentery, and Hepatitis A, showing both a horizontal bar chart and a pie chart visualization with the highest probability disease highlighted in red and all values displayed as percentages",
+      "featureId": "feature-create-a-new-lastgovernmentreport-component-frontend-src-components-lastgovernmentreport-tsx-displaying-a-read-only-card-titled-last-government-inspection-report-with-prominent-timestamp-label-and-fields-ward-water-quality-index-bacteria-level-turbidity-rainfall-humidity-sanitation-coverage-water-treatment-coverage-risk-level-using-white-card-styling-with-professional-blue-accents",
+      "featureTitle": "Create a new LastGovernmentReport component (frontend/src/components/LastGovernmentReport.tsx) displaying a read-only card titled 'Last Government Inspection Report' with prominent timestamp label and fields: Ward, Water Quality Index, Bacteria Level, Turbidity, Rainfall, Humidity, Sanitation Coverage %, Water Treatment Coverage %, Risk Level, using white card styling with professional blue accents",
       "files": [
-        "frontend/src/components/DiseaseClassification.tsx"
+        "frontend/src/components/LastGovernmentReport.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -33,15 +33,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-47"
+        "REQ-72"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-wardheatmap-component-frontend-src-components-wardheatmap-tsx-to-display-a-3x3-grid-showing-9-wards-ward-1-through-ward-9-instead-of-the-current-8-wards-with-title-village-risk-heatmap-coimbatore-district-where-each-cell-displays-ward-number-outbreak-probability-percentage-and-color-coded-background-green-for-30-yellow-for-30-70-red-for-70-creating-a-visually-strong-and-clear-grid-layout",
-      "featureTitle": "Update WardHeatmap component (frontend/src/components/WardHeatmap.tsx) to display a 3x3 grid showing 9 wards (Ward 1 through Ward 9) instead of the current 8 wards, with title 'Village Risk Heatmap – Coimbatore District', where each cell displays ward number, outbreak probability percentage, and color-coded background: Green for <30%, Yellow for 30-70%, Red for >70%, creating a visually strong and clear grid layout",
+      "featureId": "feature-add-page-title-public-transparency-dashboard-at-the-top-of-the-common-citizen-view-in-dashboardpage-tsx-styled-with-large-bold-text-and-professional-blue-color-2563eb",
+      "featureTitle": "Add page title 'Public Transparency Dashboard' at the top of the Common Citizen view in DashboardPage.tsx, styled with large bold text and professional blue color (#2563EB)",
       "files": [
-        "frontend/src/components/WardHeatmap.tsx"
+        "frontend/src/pages/DashboardPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -51,15 +51,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-48"
+        "REQ-73"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-ward-priority-score-component-frontend-src-components-interventionpriority-tsx-implementing-a-priority-scoring-system-with-formula-priority-score-outbreak-probability-vulnerability-weight-where-vulnerability-weight-is-calculated-as-base-1-1-if-sanitation-coverage-50-1-if-water-treatment-coverage-60-1-if-population-density-2000-normalized-to-0-100-scale-displaying-a-sortable-table-with-columns-ward-name-outbreak-probability-vulnerability-weight-priority-score-priority-rank-highlighting-the-top-3-rows-in-red-with-immediate-intervention-required-badge-plus-a-bar-chart-of-priority-score-by-ward-and-a-recommendation-box-e-g-deploy-chlorination-teams-to-ward-4-and-ward-7-first-using-simulated-ward-data",
-      "featureTitle": "Create a Ward Priority Score component (frontend/src/components/InterventionPriority.tsx) implementing a priority scoring system with formula: Priority Score = outbreak_probability × vulnerability_weight, where vulnerability_weight is calculated as: base 1 + 1 if sanitation_coverage < 50% + 1 if water_treatment_coverage < 60% + 1 if population_density > 2000, normalized to 0-100 scale, displaying a sortable table with columns: Ward Name, Outbreak Probability, Vulnerability Weight, Priority Score, Priority Rank, highlighting the top 3 rows in red with 'Immediate Intervention Required' badge, plus a bar chart of Priority Score by ward and a recommendation box (e.g., 'Deploy chlorination teams to Ward 4 and Ward 7 first') using simulated ward data",
+      "featureId": "feature-update-dashboardpage-tsx-to-render-only-these-components-for-common-citizen-view-lastgovernmentreport-new-riskgauge-read-only-current-status-diseaseclassification-safetyadvisory-preventiverecommendations-wardheatmap-read-only-alerthistory-read-only-filterable-removing-all-other-dashboard-sections",
+      "featureTitle": "Update DashboardPage.tsx to render only these components for Common Citizen view: LastGovernmentReport (new), RiskGauge (read-only current status), DiseaseClassification, SafetyAdvisory, PreventiveRecommendations, WardHeatmap (read-only), AlertHistory (read-only, filterable), removing all other dashboard sections",
       "files": [
-        "frontend/src/components/InterventionPriority.tsx"
+        "frontend/src/pages/DashboardPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -69,15 +69,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-49"
+        "REQ-74"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-an-alert-history-system-component-frontend-src-components-alerthistory-tsx-that-stores-and-displays-all-predictions-where-risk-level-is-medium-or-high-showing-a-table-with-columns-date-time-ward-risk-level-probability-action-recommended-with-filters-for-ward-and-risk-level-storing-data-locally-in-react-state-or-localstorage-if-backend-storage-is-not-available",
-      "featureTitle": "Create an Alert History System component (frontend/src/components/AlertHistory.tsx) that stores and displays all predictions where Risk Level is MEDIUM or HIGH, showing a table with columns: Date & Time, Ward, Risk Level, Probability, Action Recommended, with filters for ward and risk level, storing data locally in React state or localStorage if backend storage is not available",
+      "featureId": "feature-create-a-new-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-displaying-a-card-titled-government-data-update-panel-with-15-input-fields-ward-dropdown-1-9-rainfall-mm-7-day-avg-rainfall-auto-calculated-from-history-humidity-7-day-avg-humidity-auto-calculated-turbidity-ntu-bacteria-index-sanitation-coverage-water-treatment-coverage-population-density-reported-cases-7-day-count-water-source-type-dropdown-municipal-well-river-mixed-chlorination-status-yes-no-toggle-phc-capacity-dropdown-low-medium-high-emergency-response-status-dropdown-standby-active-critical-with-proper-validation-and-white-card-styling",
+      "featureTitle": "Create a new GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) displaying a card titled 'Government Data Update Panel' with 15 input fields: Ward (dropdown 1-9), Rainfall (mm), 7-day avg rainfall (auto-calculated from history), Humidity (%), 7-day avg humidity (auto-calculated), Turbidity (NTU), Bacteria Index, Sanitation Coverage (%), Water Treatment Coverage (%), Population Density, Reported Cases (7-day count), Water Source Type (dropdown: Municipal/Well/River/Mixed), Chlorination Status (Yes/No toggle), PHC Capacity (dropdown: Low/Medium/High), Emergency Response Status (dropdown: Standby/Active/Critical), with proper validation and white card styling",
       "files": [
-        "frontend/src/components/AlertHistory.tsx"
+        "frontend/src/components/GovernmentDataPanel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -87,15 +87,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-50"
+        "REQ-75"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-patient-case-trend-graph-component-frontend-src-components-patientcasetrend-tsx-displaying-a-line-chart-showing-simulated-historical-case-volume-trends-over-the-past-30-days-with-x-axis-showing-dates-and-y-axis-showing-number-of-reported-cases-using-the-same-chart-styling-as-forecastchart-with-blue-line-color-and-white-background",
-      "featureTitle": "Create a Patient Case Trend Graph component (frontend/src/components/PatientCaseTrend.tsx) displaying a line chart showing simulated historical case volume trends over the past 30 days, with x-axis showing dates and y-axis showing number of reported cases, using the same chart styling as ForecastChart with blue line color and white background",
+      "featureId": "feature-add-update-recalculate-risk-button-to-governmentdatapanel-component-that-when-clicked-1-validates-all-input-fields-2-calls-backend-predictoutbreakrisk-with-environmental-data-3-updates-all-dashboard-visualizations-riskgauge-diseaseclassification-wardheatmap-interventionpriority-4-creates-new-entry-in-alerthistory-with-all-input-data-plus-calculated-risk-5-shows-loading-state-during-calculation-6-displays-success-confirmation-or-validation-errors",
+      "featureTitle": "Add 'Update & Recalculate Risk' button to GovernmentDataPanel component that, when clicked: (1) validates all input fields, (2) calls backend predictOutbreakRisk with environmental data, (3) updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates new entry in AlertHistory with all input data plus calculated risk, (5) shows loading state during calculation, (6) displays success confirmation or validation errors",
       "files": [
-        "frontend/src/components/PatientCaseTrend.tsx"
+        "frontend/src/components/GovernmentDataPanel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -105,15 +105,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-51"
+        "REQ-76"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-ward-comparison-bar-chart-component-frontend-src-components-wardcomparison-tsx-displaying-a-horizontal-or-vertical-bar-chart-comparing-current-outbreak-probability-across-all-9-wards-with-bars-color-coded-by-risk-level-green-30-yellow-30-70-red-70-showing-ward-names-and-percentage-values-on-the-chart",
-      "featureTitle": "Create a Ward Comparison Bar Chart component (frontend/src/components/WardComparison.tsx) displaying a horizontal or vertical bar chart comparing current outbreak probability across all 9 wards, with bars color-coded by risk level (Green <30%, Yellow 30-70%, Red >70%), showing ward names and percentage values on the chart",
+      "featureId": "feature-update-dashboardpage-tsx-to-render-governmentdatapanel-component-only-in-government-view-positioning-it-prominently-at-the-top-of-the-dashboard-before-other-analytics-sections",
+      "featureTitle": "Update DashboardPage.tsx to render GovernmentDataPanel component only in Government view, positioning it prominently at the top of the dashboard before other analytics sections",
       "files": [
-        "frontend/src/components/WardComparison.tsx"
+        "frontend/src/pages/DashboardPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -123,31 +123,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-52"
+        "REQ-77"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-resource-requirement-estimation-chart-component-frontend-src-components-resourceestimation-tsx-displaying-a-bar-chart-showing-estimated-resource-needs-medical-staff-hospital-beds-water-purification-units-chlorination-teams-based-on-current-risk-level-and-projected-case-volume-with-numerical-values-and-unit-labels",
-      "featureTitle": "Create a Resource Requirement Estimation Chart component (frontend/src/components/ResourceEstimation.tsx) displaying a bar chart showing estimated resource needs (medical staff, hospital beds, water purification units, chlorination teams) based on current risk level and projected case volume, with numerical values and unit labels",
-      "files": [
-        "frontend/src/components/ResourceEstimation.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-53"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-integrate-emailjs-library-into-the-frontend-by-installing-the-emailjs-com-package-and-creating-an-emailalertservice-utility-frontend-src-services-emailalertservice-ts-that-exports-functions-for-sending-alert-emails-using-placeholder-configuration-values-service-id-here-template-id-here-and-public-key-here-with-template-variables-risk-level-risk-percentage-time-rainfall-humidity-turbidity-bacteria-ward-ensuring-modular-and-clean-integration-without-hardcoded-real-keys",
-      "featureTitle": "Integrate EmailJS library into the frontend by installing the emailjs-com package and creating an EmailAlertService utility (frontend/src/services/EmailAlertService.ts) that exports functions for sending alert emails using placeholder configuration values 'SERVICE_ID_HERE', 'TEMPLATE_ID_HERE', and 'PUBLIC_KEY_HERE', with template variables: risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, ensuring modular and clean integration without hardcoded real keys",
+      "featureId": "feature-update-emailalertservice-ts-to-implement-automatic-email-triggering-when-risk-percentage-exceeds-70-using-emailjs-send-with-parameters-service-id-here-template-id-here-template-variables-risk-level-risk-percentage-time-rainfall-humidity-turbidity-bacteria-ward-priority-score-public-key-here-and-return-promise-with-success-failure-status",
+      "featureTitle": "Update EmailAlertService.ts to implement automatic email triggering when risk_percentage exceeds 70, using emailjs.send() with parameters: SERVICE_ID_HERE, TEMPLATE_ID_HERE, template variables {risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, priority_score}, PUBLIC_KEY_HERE, and return Promise with success/failure status",
       "files": [
         "frontend/src/services/EmailAlertService.ts"
       ],
@@ -159,14 +141,69 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-54"
+        "REQ-78"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-automatic-email-alert-triggering-to-the-riskpredictionpanel-component-that-calls-the-emailalertservice-when-outbreak-probability-exceeds-70-and-add-a-manual-send-alert-email-button-that-displays-success-confirmation-alert-email-sent-successfully-or-error-message-if-failed-only-triggering-for-medium-or-high-risk-levels",
-      "featureTitle": "Add automatic email alert triggering to the RiskPredictionPanel component that calls the EmailAlertService when outbreak_probability exceeds 70%, and add a manual 'Send Alert Email' button that displays success confirmation 'Alert Email Sent Successfully' or error message if failed, only triggering for MEDIUM or HIGH risk levels",
+      "featureId": "feature-integrate-automatic-email-alert-triggering-in-governmentdatapanel-component-that-calls-emailalertservice-sendalert-immediately-after-risk-calculation-when-risk-percentage-70-and-displays-ui-toast-notification-government-alert-sent-successfully-on-success-or-email-alert-failed-error-message-on-failure",
+      "featureTitle": "Integrate automatic email alert triggering in GovernmentDataPanel component that calls EmailAlertService.sendAlert() immediately after risk calculation when risk_percentage > 70, and displays UI toast notification 'Government Alert Sent Successfully' on success or 'Email Alert Failed: [error message]' on failure",
       "files": [
+        "frontend/src/components/GovernmentDataPanel.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-79"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-manual-send-alert-email-button-to-governmentdatapanel-component-positioned-below-the-update-recalculate-risk-button-that-triggers-emailalertservice-sendalert-with-current-risk-data-regardless-of-risk-level-displaying-loading-spinner-during-send-and-success-failure-notification-after-completion",
+      "featureTitle": "Add manual 'Send Alert Email' button to GovernmentDataPanel component positioned below the 'Update & Recalculate Risk' button that triggers EmailAlertService.sendAlert() with current risk data regardless of risk level, displaying loading spinner during send and success/failure notification after completion",
+      "files": [
+        "frontend/src/components/GovernmentDataPanel.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-80"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-alerthistory-component-to-expand-columns-to-include-date-time-ward-rainfall-humidity-turbidity-bacteria-sanitation-water-treatment-risk-level-badge-risk-numeric-disease-most-likely-text-priority-score-numeric-email-sent-yes-no-badge-recommended-action-text-maintaining-filterable-table-with-ward-and-risk-level-filters",
+      "featureTitle": "Update AlertHistory component to expand columns to include: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level (badge), Risk % (numeric), Disease Most Likely (text), Priority Score (numeric), Email Sent (Yes/No badge), Recommended Action (text), maintaining filterable table with ward and risk level filters",
+      "files": [
+        "frontend/src/components/AlertHistory.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-81"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-alert-storage-logic-in-governmentdatapanel-and-riskpredictionpanel-components-to-store-complete-alert-records-including-all-environmental-inputs-rainfall-humidity-turbidity-bacteria-sanitation-water-treatment-calculated-outputs-risk-level-risk-percentage-disease-classification-priority-score-email-status-yes-no-and-recommended-action-text-in-localstorage-under-key-cholera-alerts",
+      "featureTitle": "Update the alert storage logic in GovernmentDataPanel and RiskPredictionPanel components to store complete alert records including all environmental inputs (rainfall, humidity, turbidity, bacteria, sanitation, water treatment), calculated outputs (risk level, risk percentage, disease classification, priority score), email status (Yes/No), and recommended action text in localStorage under key 'cholera_alerts'",
+      "files": [
+        "frontend/src/components/GovernmentDataPanel.tsx",
         "frontend/src/components/RiskPredictionPanel.tsx"
       ],
       "components": [
@@ -177,15 +214,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-55"
+        "REQ-82"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-csv-export-functionality-to-the-government-dashboard-view-by-creating-an-exportbutton-component-that-generates-and-downloads-a-csv-file-containing-all-ward-data-including-ward-name-outbreak-probability-risk-level-vulnerability-weight-priority-score-sanitation-coverage-water-treatment-coverage-population-density-with-filename-format-coimbatore-district-risk-analysis-date-csv",
-      "featureTitle": "Add CSV export functionality to the Government dashboard view by creating an ExportButton component that generates and downloads a CSV file containing all ward data including: Ward Name, Outbreak Probability, Risk Level, Vulnerability Weight, Priority Score, Sanitation Coverage, Water Treatment Coverage, Population Density, with filename format 'coimbatore-district-risk-analysis-[date].csv'",
+      "featureId": "feature-update-interventionpriority-component-to-implement-priority-score-calculation-using-formula-priority-score-outbreak-probability-vulnerability-weight-where-vulnerability-weight-base-1-0-1-0-if-sanitation-50-1-0-if-water-treatment-60-1-0-if-population-density-2000-normalized-to-0-100-scale-and-highlight-the-top-3-highest-priority-wards-with-red-background-and-immediate-intervention-required-badge",
+      "featureTitle": "Update InterventionPriority component to implement priority score calculation using formula: priority_score = outbreak_probability × vulnerability_weight, where vulnerability_weight = base 1.0 + 1.0 if sanitation < 50 + 1.0 if water_treatment < 60 + 1.0 if population_density > 2000, normalized to 0-100 scale, and highlight the top 3 highest priority wards with red background and 'Immediate Intervention Required' badge",
       "files": [
-        "frontend/src/components/ExportButton.tsx"
+        "frontend/src/components/InterventionPriority.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -195,14 +232,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-56"
+        "REQ-83"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-dashboardpage-tsx-to-render-the-diseaseclassification-component-for-common-citizen-view-below-riskgauge-and-government-view-in-analytics-section-ensuring-it-displays-for-appropriate-user-roles",
-      "featureTitle": "Update DashboardPage.tsx to render the DiseaseClassification component for Common Citizen view (below RiskGauge) and Government view (in analytics section), ensuring it displays for appropriate user roles",
+      "featureId": "feature-verify-and-maintain-consistent-visual-styling-across-all-dashboard-components-white-backgrounds-ffffff-professional-blue-headers-2563eb-red-color-for-high-risk-70-dc2626-yellow-amber-color-for-medium-risk-30-70-f59e0b-or-fcd34d-green-color-for-low-risk-30-16a34a-clean-card-borders-e2e8f0-soft-shadows-structured-spacing-24px-padding-and-government-grade-professional-aesthetic",
+      "featureTitle": "Verify and maintain consistent visual styling across all dashboard components: white backgrounds (#FFFFFF), professional blue headers (#2563EB), red color for high risk (>70%, #DC2626), yellow/amber color for medium risk (30-70%, #F59E0B or #FCD34D), green color for low risk (<30%, #16A34A), clean card borders (#E2E8F0), soft shadows, structured spacing (24px padding), and government-grade professional aesthetic",
       "files": [
+        "frontend/src/components/AlertHistory.tsx",
         "frontend/src/pages/DashboardPage.tsx"
       ],
       "components": [
@@ -213,14 +251,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-57"
+        "REQ-84"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-dashboardpage-tsx-to-conditionally-render-interventionpriority-component-only-in-government-dashboard-view-positioning-it-as-a-dedicated-analytics-section-below-the-ward-heatmap",
-      "featureTitle": "Update DashboardPage.tsx to conditionally render InterventionPriority component only in Government dashboard view, positioning it as a dedicated analytics section below the ward heatmap",
+      "featureId": "feature-update-riskpredictionpanel-component-to-hide-it-completely-from-common-citizen-view-and-simplify-it-for-hospital-phc-view-by-removing-government-only-fields-water-source-type-chlorination-status-phc-capacity-emergency-response-status-keeping-only-core-environmental-inputs-and-hospital-specific-fields-reported-cases-sanitation-coverage-water-treatment-coverage-population-density",
+      "featureTitle": "Update RiskPredictionPanel component to hide it completely from Common Citizen view and simplify it for Hospital/PHC view by removing government-only fields (water source type, chlorination status, PHC capacity, emergency response status), keeping only core environmental inputs and hospital-specific fields (reported cases, sanitation coverage, water treatment coverage, population density)",
       "files": [
+        "frontend/src/components/RiskPredictionPanel.tsx",
         "frontend/src/pages/DashboardPage.tsx"
       ],
       "components": [
@@ -231,211 +270,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-58"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-dashboardpage-tsx-to-conditionally-render-alerthistory-component-only-in-government-dashboard-view-showing-all-alerts-and-hospital-phc-view-showing-alerts-filtered-by-their-selected-ward-hiding-it-from-common-citizen-view",
-      "featureTitle": "Update DashboardPage.tsx to conditionally render AlertHistory component only in Government dashboard view (showing all alerts) and Hospital/PHC view (showing alerts filtered by their selected ward), hiding it from Common Citizen view",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-59"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-dashboardpage-tsx-to-render-patientcasetrend-component-only-in-hospital-phc-and-government-dashboard-views-positioning-it-in-the-analytics-section-below-the-forecast-chart",
-      "featureTitle": "Update DashboardPage.tsx to render PatientCaseTrend component only in Hospital/PHC and Government dashboard views, positioning it in the analytics section below the forecast chart",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-60"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-dashboardpage-tsx-to-render-wardcomparison-component-only-in-government-dashboard-view-positioning-it-in-the-analytics-section-after-the-intervention-priority-section",
-      "featureTitle": "Update DashboardPage.tsx to render WardComparison component only in Government dashboard view, positioning it in the analytics section after the intervention priority section",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-61"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-dashboardpage-tsx-to-render-resourceestimation-component-only-in-government-dashboard-view-positioning-it-in-the-analytics-section-after-the-ward-comparison",
-      "featureTitle": "Update DashboardPage.tsx to render ResourceEstimation component only in Government dashboard view, positioning it in the analytics section after the ward comparison",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-62"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-ward-input-functionality-to-hospital-phc-dashboard-view-by-creating-a-wardselector-dropdown-component-mandatory-field-at-the-top-of-the-dashboard-that-stores-the-selected-ward-1-9-in-state-and-passes-it-as-context-to-all-hospital-phc-specific-components-for-filtering-and-data-display",
-      "featureTitle": "Add ward input functionality to Hospital/PHC dashboard view by creating a WardSelector dropdown component (mandatory field) at the top of the dashboard that stores the selected ward (1-9) in state and passes it as context to all Hospital/PHC specific components for filtering and data display",
-      "files": [
-        "frontend/src/components/WardSelector.tsx",
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-63"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-hospital-phc-input-form-fields-to-riskpredictionpanel-when-in-hospital-phc-role-view-including-number-of-reported-cases-numeric-input-sanitation-coverage-0-100-water-treatment-coverage-0-100-and-population-density-numeric-input-in-addition-to-the-existing-environmental-parameter-fields-with-appropriate-validation",
-      "featureTitle": "Add Hospital/PHC input form fields to RiskPredictionPanel when in Hospital/PHC role view, including: Number of Reported Cases (numeric input), Sanitation Coverage % (0-100), Water Treatment Coverage % (0-100), and Population Density (numeric input), in addition to the existing environmental parameter fields, with appropriate validation",
-      "files": [
-        "frontend/src/components/RiskPredictionPanel.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-64"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-generate-realistic-simulated-ward-level-data-in-the-frontend-for-all-9-wards-including-sanitation-coverage-40-85-water-treatment-coverage-45-90-population-density-1500-3500-and-historical-outbreak-trends-using-deterministic-random-generation-based-on-ward-id-to-ensure-consistency-across-renders",
-      "featureTitle": "Generate realistic simulated ward-level data in the frontend for all 9 wards including: sanitation coverage (40-85%), water treatment coverage (45-90%), population density (1500-3500), and historical outbreak trends, using deterministic random generation based on ward ID to ensure consistency across renders",
-      "files": [
-        "frontend/src/components/InterventionPriority.tsx",
-        "frontend/src/components/WardHeatmap.tsx",
-        "frontend/src/utils/wardDataGenerator.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-66"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-all-color-thresholds-throughout-the-application-to-use-the-new-risk-classification-green-for-30-low-risk-yellow-amber-for-30-70-medium-risk-and-red-for-70-high-risk-replacing-the-previous-40-and-40-70-thresholds-in-riskgauge-wardheatmap-alertengine-and-all-visualization-components",
-      "featureTitle": "Update all color thresholds throughout the application to use the new risk classification: Green for <30% (Low Risk), Yellow/Amber for 30-70% (Medium Risk), and Red for >70% (High Risk), replacing the previous 40% and 40-70% thresholds in RiskGauge, WardHeatmap, AlertEngine, and all visualization components",
-      "files": [
-        "frontend/src/components/AlertEngine.tsx",
-        "frontend/src/components/RiskGauge.tsx",
-        "frontend/src/components/WardHeatmap.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-67"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-global-color-theme-to-ensure-pure-white-backgrounds-ffffff-are-used-consistently-across-all-components-yellow-amber-warning-colors-f59e0b-or-fcd34d-for-medium-risk-states-and-maintain-professional-blue-primary-accent-2563eb-green-success-16a34a-and-red-danger-dc2626-colors-as-specified-in-the-ui-requirements",
-      "featureTitle": "Update the global color theme to ensure pure white backgrounds (#FFFFFF) are used consistently across all components, yellow/amber warning colors (#F59E0B or #FCD34D) for medium risk states, and maintain professional blue primary accent (#2563EB), green success (#16A34A), and red danger (#DC2626) colors as specified in the UI requirements",
-      "files": [
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-68"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-tab-based-navigation-to-dashboardpage-tsx-for-government-view-with-tabs-overview-intervention-priority-alert-history-analytics-allowing-users-to-switch-between-different-dashboard-sections-while-maintaining-the-role-based-component-rendering-logic",
-      "featureTitle": "Add tab-based navigation to DashboardPage.tsx for Government view with tabs: 'Overview', 'Intervention Priority', 'Alert History', 'Analytics', allowing users to switch between different dashboard sections while maintaining the role-based component rendering logic",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-69"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-send-alert-email-button-to-the-hospital-phc-dashboard-view-positioned-near-the-risk-prediction-results-that-manually-triggers-an-email-alert-using-emailalertservice-with-current-ward-data-and-risk-metrics-displaying-loading-state-success-confirmation-or-error-message",
-      "featureTitle": "Add a 'Send Alert Email' button to the Hospital/PHC dashboard view positioned near the risk prediction results that manually triggers an email alert using EmailAlertService with current ward data and risk metrics, displaying loading state, success confirmation, or error message",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-70"
+        "REQ-85"
       ],
       "confidence": "high"
     }

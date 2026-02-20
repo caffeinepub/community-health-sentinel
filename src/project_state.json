@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 17,
-  "summary": "Community Health Sentinel - A production-grade AI-powered early warning system for water-borne diseases in Coimbatore District. Features full-screen role selection (Common Citizen, Hospital/PHC, Government Health Authority) with adaptive dashboard views, comprehensive disease classification system (Cholera, Typhoid, Dysentery, Hepatitis A) with probability breakdowns, 3x3 grid-style village risk heatmap for 9 wards, ward priority scoring with vulnerability weighting, alert history system with filtering, 14-day predictive forecast, disease distribution visualizations (bar + pie charts), EmailJS integration for automated/manual alerts, patient case trend graphs, resource deployment recommendations, comparative ward analytics, CSV export capability, and advanced visualizations including environmental factor contribution and resource requirement estimation. Built with modular architecture for government deployment readiness.",
+  "projectStateVersion": 19,
+  "summary": "Community Health Sentinel - A production-grade AI-powered early warning system for water-borne diseases in Coimbatore District. Features full-screen role selection with strict role-based data control and workflow separation: Common Citizen (view-only Public Transparency Dashboard showing Last Government Inspection Report with ward data, water quality metrics, disease risk distribution, safety guidelines, village heatmap, and read-only alert history), Hospital/PHC (ward-specific data entry with case reporting and 7-14 day forecast), and Government Health Authority (full control panel with 12-15 field Government Data Update Panel for environmental and infrastructure data, Update & Recalculate Risk functionality, comprehensive analytics including disease classification system with Cholera/Typhoid/Dysentery/Hepatitis A probabilities, 3x3 grid-style village risk heatmap for 9 wards, ward priority scoring with vulnerability weighting formula, full audit log alert history with all environmental metrics and email status, EmailJS integration with automatic triggering at >70% risk and manual send capability, 14-day predictive forecast, disease distribution visualizations, patient case trend graphs, resource deployment recommendations, comparative ward analytics, CSV export capability, and advanced visualizations). Built with modular architecture for government deployment readiness.",
   "architectural_notes": [
     "Color-coded risk system: Green <40%, Orange 40-70%, Red >70%",
     "Maintain light theme with white and blue medical analytics styling",
@@ -15,7 +15,7 @@
     "Role-based views: Community Member (risk index + safety advisory), Healthcare Facility (forecast + case volume projection), Administrative Authority (full analytics)"
   ],
   "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-create-a-landing-page-with-a-hero-section-containing-the-title-ai-powered-early-warning-system-for-water-borne-diseases-subtitle-predict-outbreaks-7-14-days-in-advance-using-environmental-and-water-quality-data-and-a-launch-dashboard-call-to-action-button-that-navigates-to-the-dashboard-page",
@@ -544,6 +544,126 @@
         "REQ-70"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-all-environmental-input-forms-rainfall-humidity-turbidity-bacteria-index-fields-and-risk-calculation-controls-from-the-common-citizen-dashboard-view-in-dashboardpage-tsx-ensuring-common-citizen-users-have-zero-ability-to-enter-data-or-trigger-calculations",
+      "title": "Remove all environmental input forms (rainfall, humidity, turbidity, bacteria index fields) and risk calculation controls from the Common Citizen dashboard view in DashboardPage.tsx, ensuring Common Citizen users have zero ability to enter data or trigger calculations",
+      "reqIds": [
+        "REQ-71"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-lastgovernmentreport-component-frontend-src-components-lastgovernmentreport-tsx-displaying-a-read-only-card-titled-last-government-inspection-report-with-prominent-timestamp-label-and-fields-ward-water-quality-index-bacteria-level-turbidity-rainfall-humidity-sanitation-coverage-water-treatment-coverage-risk-level-using-white-card-styling-with-professional-blue-accents",
+      "title": "Create a new LastGovernmentReport component (frontend/src/components/LastGovernmentReport.tsx) displaying a read-only card titled 'Last Government Inspection Report' with prominent timestamp label and fields: Ward, Water Quality Index, Bacteria Level, Turbidity, Rainfall, Humidity, Sanitation Coverage %, Water Treatment Coverage %, Risk Level, using white card styling with professional blue accents",
+      "reqIds": [
+        "REQ-72"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-page-title-public-transparency-dashboard-at-the-top-of-the-common-citizen-view-in-dashboardpage-tsx-styled-with-large-bold-text-and-professional-blue-color-2563eb",
+      "title": "Add page title 'Public Transparency Dashboard' at the top of the Common Citizen view in DashboardPage.tsx, styled with large bold text and professional blue color (#2563EB)",
+      "reqIds": [
+        "REQ-73"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-dashboardpage-tsx-to-render-only-these-components-for-common-citizen-view-lastgovernmentreport-new-riskgauge-read-only-current-status-diseaseclassification-safetyadvisory-preventiverecommendations-wardheatmap-read-only-alerthistory-read-only-filterable-removing-all-other-dashboard-sections",
+      "title": "Update DashboardPage.tsx to render only these components for Common Citizen view: LastGovernmentReport (new), RiskGauge (read-only current status), DiseaseClassification, SafetyAdvisory, PreventiveRecommendations, WardHeatmap (read-only), AlertHistory (read-only, filterable), removing all other dashboard sections",
+      "reqIds": [
+        "REQ-74"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-displaying-a-card-titled-government-data-update-panel-with-15-input-fields-ward-dropdown-1-9-rainfall-mm-7-day-avg-rainfall-auto-calculated-from-history-humidity-7-day-avg-humidity-auto-calculated-turbidity-ntu-bacteria-index-sanitation-coverage-water-treatment-coverage-population-density-reported-cases-7-day-count-water-source-type-dropdown-municipal-well-river-mixed-chlorination-status-yes-no-toggle-phc-capacity-dropdown-low-medium-high-emergency-response-status-dropdown-standby-active-critical-with-proper-validation-and-white-card-styling",
+      "title": "Create a new GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) displaying a card titled 'Government Data Update Panel' with 15 input fields: Ward (dropdown 1-9), Rainfall (mm), 7-day avg rainfall (auto-calculated from history), Humidity (%), 7-day avg humidity (auto-calculated), Turbidity (NTU), Bacteria Index, Sanitation Coverage (%), Water Treatment Coverage (%), Population Density, Reported Cases (7-day count), Water Source Type (dropdown: Municipal/Well/River/Mixed), Chlorination Status (Yes/No toggle), PHC Capacity (dropdown: Low/Medium/High), Emergency Response Status (dropdown: Standby/Active/Critical), with proper validation and white card styling",
+      "reqIds": [
+        "REQ-75"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-update-recalculate-risk-button-to-governmentdatapanel-component-that-when-clicked-1-validates-all-input-fields-2-calls-backend-predictoutbreakrisk-with-environmental-data-3-updates-all-dashboard-visualizations-riskgauge-diseaseclassification-wardheatmap-interventionpriority-4-creates-new-entry-in-alerthistory-with-all-input-data-plus-calculated-risk-5-shows-loading-state-during-calculation-6-displays-success-confirmation-or-validation-errors",
+      "title": "Add 'Update & Recalculate Risk' button to GovernmentDataPanel component that, when clicked: (1) validates all input fields, (2) calls backend predictOutbreakRisk with environmental data, (3) updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates new entry in AlertHistory with all input data plus calculated risk, (5) shows loading state during calculation, (6) displays success confirmation or validation errors",
+      "reqIds": [
+        "REQ-76"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-dashboardpage-tsx-to-render-governmentdatapanel-component-only-in-government-view-positioning-it-prominently-at-the-top-of-the-dashboard-before-other-analytics-sections",
+      "title": "Update DashboardPage.tsx to render GovernmentDataPanel component only in Government view, positioning it prominently at the top of the dashboard before other analytics sections",
+      "reqIds": [
+        "REQ-77"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-emailalertservice-ts-to-implement-automatic-email-triggering-when-risk-percentage-exceeds-70-using-emailjs-send-with-parameters-service-id-here-template-id-here-template-variables-risk-level-risk-percentage-time-rainfall-humidity-turbidity-bacteria-ward-priority-score-public-key-here-and-return-promise-with-success-failure-status",
+      "title": "Update EmailAlertService.ts to implement automatic email triggering when risk_percentage exceeds 70, using emailjs.send() with parameters: SERVICE_ID_HERE, TEMPLATE_ID_HERE, template variables {risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, priority_score}, PUBLIC_KEY_HERE, and return Promise with success/failure status",
+      "reqIds": [
+        "REQ-78"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-automatic-email-alert-triggering-in-governmentdatapanel-component-that-calls-emailalertservice-sendalert-immediately-after-risk-calculation-when-risk-percentage-70-and-displays-ui-toast-notification-government-alert-sent-successfully-on-success-or-email-alert-failed-error-message-on-failure",
+      "title": "Integrate automatic email alert triggering in GovernmentDataPanel component that calls EmailAlertService.sendAlert() immediately after risk calculation when risk_percentage > 70, and displays UI toast notification 'Government Alert Sent Successfully' on success or 'Email Alert Failed: [error message]' on failure",
+      "reqIds": [
+        "REQ-79"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-manual-send-alert-email-button-to-governmentdatapanel-component-positioned-below-the-update-recalculate-risk-button-that-triggers-emailalertservice-sendalert-with-current-risk-data-regardless-of-risk-level-displaying-loading-spinner-during-send-and-success-failure-notification-after-completion",
+      "title": "Add manual 'Send Alert Email' button to GovernmentDataPanel component positioned below the 'Update & Recalculate Risk' button that triggers EmailAlertService.sendAlert() with current risk data regardless of risk level, displaying loading spinner during send and success/failure notification after completion",
+      "reqIds": [
+        "REQ-80"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-alerthistory-component-to-expand-columns-to-include-date-time-ward-rainfall-humidity-turbidity-bacteria-sanitation-water-treatment-risk-level-badge-risk-numeric-disease-most-likely-text-priority-score-numeric-email-sent-yes-no-badge-recommended-action-text-maintaining-filterable-table-with-ward-and-risk-level-filters",
+      "title": "Update AlertHistory component to expand columns to include: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level (badge), Risk % (numeric), Disease Most Likely (text), Priority Score (numeric), Email Sent (Yes/No badge), Recommended Action (text), maintaining filterable table with ward and risk level filters",
+      "reqIds": [
+        "REQ-81"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-alert-storage-logic-in-governmentdatapanel-and-riskpredictionpanel-components-to-store-complete-alert-records-including-all-environmental-inputs-rainfall-humidity-turbidity-bacteria-sanitation-water-treatment-calculated-outputs-risk-level-risk-percentage-disease-classification-priority-score-email-status-yes-no-and-recommended-action-text-in-localstorage-under-key-cholera-alerts",
+      "title": "Update the alert storage logic in GovernmentDataPanel and RiskPredictionPanel components to store complete alert records including all environmental inputs (rainfall, humidity, turbidity, bacteria, sanitation, water treatment), calculated outputs (risk level, risk percentage, disease classification, priority score), email status (Yes/No), and recommended action text in localStorage under key 'cholera_alerts'",
+      "reqIds": [
+        "REQ-82"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-interventionpriority-component-to-implement-priority-score-calculation-using-formula-priority-score-outbreak-probability-vulnerability-weight-where-vulnerability-weight-base-1-0-1-0-if-sanitation-50-1-0-if-water-treatment-60-1-0-if-population-density-2000-normalized-to-0-100-scale-and-highlight-the-top-3-highest-priority-wards-with-red-background-and-immediate-intervention-required-badge",
+      "title": "Update InterventionPriority component to implement priority score calculation using formula: priority_score = outbreak_probability × vulnerability_weight, where vulnerability_weight = base 1.0 + 1.0 if sanitation < 50 + 1.0 if water_treatment < 60 + 1.0 if population_density > 2000, normalized to 0-100 scale, and highlight the top 3 highest priority wards with red background and 'Immediate Intervention Required' badge",
+      "reqIds": [
+        "REQ-83"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-maintain-consistent-visual-styling-across-all-dashboard-components-white-backgrounds-ffffff-professional-blue-headers-2563eb-red-color-for-high-risk-70-dc2626-yellow-amber-color-for-medium-risk-30-70-f59e0b-or-fcd34d-green-color-for-low-risk-30-16a34a-clean-card-borders-e2e8f0-soft-shadows-structured-spacing-24px-padding-and-government-grade-professional-aesthetic",
+      "title": "Verify and maintain consistent visual styling across all dashboard components: white backgrounds (#FFFFFF), professional blue headers (#2563EB), red color for high risk (>70%, #DC2626), yellow/amber color for medium risk (30-70%, #F59E0B or #FCD34D), green color for low risk (<30%, #16A34A), clean card borders (#E2E8F0), soft shadows, structured spacing (24px padding), and government-grade professional aesthetic",
+      "reqIds": [
+        "REQ-84"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-riskpredictionpanel-component-to-hide-it-completely-from-common-citizen-view-and-simplify-it-for-hospital-phc-view-by-removing-government-only-fields-water-source-type-chlorination-status-phc-capacity-emergency-response-status-keeping-only-core-environmental-inputs-and-hospital-specific-fields-reported-cases-sanitation-coverage-water-treatment-coverage-population-density",
+      "title": "Update RiskPredictionPanel component to hide it completely from Common Citizen view and simplify it for Hospital/PHC view by removing government-only fields (water source type, chlorination status, PHC capacity, emergency response status), keeping only core environmental inputs and hospital-specific fields (reported cases, sanitation coverage, water treatment coverage, population density)",
+      "reqIds": [
+        "REQ-85"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -763,6 +883,36 @@
       "reqIds": [
         "REQ-65"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-61",
+      "summary": "Implement strict role-based data control: Common Citizen view-only with Last Government Inspection Report section showing ward, water quality index, bacteria level, turbidity, rainfall, humidity, sanitation coverage, water treatment coverage, risk level, and timestamp, labeled 'Public Transparency Dashboard', with no editable fields or environmental input forms",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-62",
+      "summary": "Create Government Data Update Panel with 12-15 fields (Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage %, Water Treatment Coverage %, Population Density, Reported Cases 7-day, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status) and 'Update & Recalculate Risk' button that recomputes outbreak probability, updates disease distribution, heatmap, priority score, and stores entry in alert history",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-63",
+      "summary": "Implement complete EmailJS integration with automatic trigger when risk_percentage > 70, manual 'Send Alert' button, template variables (risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, priority_score), UI indicators for success/failure, alert history storage of email status, and placeholder keys SERVICE_ID_HERE, TEMPLATE_ID_HERE, PUBLIC_KEY_HERE",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-64",
+      "summary": "Upgrade Alert History to full audit log with columns: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level, Risk %, Disease Most Likely, Priority Score, Email Sent (Yes/No), Recommended Action, with filtering by ward and risk level",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-65",
+      "summary": "Implement priority score formula: priority_score = outbreak_probability × vulnerability_weight where vulnerability_weight = base 1 + 1 if sanitation < 50 + 1 if water_treatment < 60 + 1 if population_density > 2000, normalized to 0-100 scale, with top 3 wards highlighted in red with 'Immediate Intervention Required' badge",
+      "reqIds": [],
       "status": "pending"
     }
   ],

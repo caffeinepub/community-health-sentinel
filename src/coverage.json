@@ -1,62 +1,128 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T19:14:19.333Z",
+  "generatedAt": "2026-02-20T19:29:11.701Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 25,
-    "implemented": 24,
+    "total": 15,
+    "implemented": 15,
     "items": [
       {
-        "id": "REQ-46",
-        "summary": "Replace the existing RoleSelector component title from 'Select User Category' to 'Select User Type' and update the three role option labels to: 'Common Citizen' (instead of Community Member), 'Hospital / PHC' (instead of Healthcare Facility), and 'Government Health Authority' (instead of Administrative Authority), maintaining the existing icon-based card design",
+        "id": "REQ-71",
+        "summary": "Remove all environmental input forms (rainfall, humidity, turbidity, bacteria index fields) and risk calculation controls from the Common Citizen dashboard view in DashboardPage.tsx, ensuring Common Citizen users have zero ability to enter data or trigger calculations",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/RoleSelector.tsx"
+          "frontend/src/pages/DashboardPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/RoleSelector.tsx"
+          "frontend/src/pages/DashboardPage.tsx"
         ]
       },
       {
-        "id": "REQ-47",
-        "summary": "Create a Disease Classification System component (frontend/src/components/DiseaseClassification.tsx) displaying title 'Disease Risk Distribution' with simulated probability percentages for four diseases: Cholera, Typhoid, Dysentery, and Hepatitis A, showing both a horizontal bar chart and a pie chart visualization with the highest probability disease highlighted in red and all values displayed as percentages",
+        "id": "REQ-72",
+        "summary": "Create a new LastGovernmentReport component (frontend/src/components/LastGovernmentReport.tsx) displaying a read-only card titled 'Last Government Inspection Report' with prominent timestamp label and fields: Ward, Water Quality Index, Bacteria Level, Turbidity, Rainfall, Humidity, Sanitation Coverage %, Water Treatment Coverage %, Risk Level, using white card styling with professional blue accents",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DiseaseClassification.tsx"
+          "frontend/src/components/LastGovernmentReport.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/DiseaseClassification.tsx"
+          "frontend/src/components/LastGovernmentReport.tsx"
         ]
       },
       {
-        "id": "REQ-48",
-        "summary": "Update WardHeatmap component (frontend/src/components/WardHeatmap.tsx) to display a 3x3 grid showing 9 wards (Ward 1 through Ward 9) instead of the current 8 wards, with title 'Village Risk Heatmap – Coimbatore District', where each cell displays ward number, outbreak probability percentage, and color-coded background: Green for <30%, Yellow for 30-70%, Red for >70%, creating a visually strong and clear grid layout",
+        "id": "REQ-73",
+        "summary": "Add page title 'Public Transparency Dashboard' at the top of the Common Citizen view in DashboardPage.tsx, styled with large bold text and professional blue color (#2563EB)",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/WardHeatmap.tsx"
+          "frontend/src/pages/DashboardPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/WardHeatmap.tsx"
+          "frontend/src/pages/DashboardPage.tsx"
         ]
       },
       {
-        "id": "REQ-49",
-        "summary": "Create a Ward Priority Score component (frontend/src/components/InterventionPriority.tsx) implementing a priority scoring system with formula: Priority Score = outbreak_probability × vulnerability_weight, where vulnerability_weight is calculated as: base 1 + 1 if sanitation_coverage < 50% + 1 if water_treatment_coverage < 60% + 1 if population_density > 2000, normalized to 0-100 scale, displaying a sortable table with columns: Ward Name, Outbreak Probability, Vulnerability Weight, Priority Score, Priority Rank, highlighting the top 3 rows in red with 'Immediate Intervention Required' badge, plus a bar chart of Priority Score by ward and a recommendation box (e.g., 'Deploy chlorination teams to Ward 4 and Ward 7 first') using simulated ward data",
+        "id": "REQ-74",
+        "summary": "Update DashboardPage.tsx to render only these components for Common Citizen view: LastGovernmentReport (new), RiskGauge (read-only current status), DiseaseClassification, SafetyAdvisory, PreventiveRecommendations, WardHeatmap (read-only), AlertHistory (read-only, filterable), removing all other dashboard sections",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/InterventionPriority.tsx"
+          "frontend/src/pages/DashboardPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/InterventionPriority.tsx"
+          "frontend/src/pages/DashboardPage.tsx"
         ]
       },
       {
-        "id": "REQ-50",
-        "summary": "Create an Alert History System component (frontend/src/components/AlertHistory.tsx) that stores and displays all predictions where Risk Level is MEDIUM or HIGH, showing a table with columns: Date & Time, Ward, Risk Level, Probability, Action Recommended, with filters for ward and risk level, storing data locally in React state or localStorage if backend storage is not available",
+        "id": "REQ-75",
+        "summary": "Create a new GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) displaying a card titled 'Government Data Update Panel' with 15 input fields: Ward (dropdown 1-9), Rainfall (mm), 7-day avg rainfall (auto-calculated from history), Humidity (%), 7-day avg humidity (auto-calculated), Turbidity (NTU), Bacteria Index, Sanitation Coverage (%), Water Treatment Coverage (%), Population Density, Reported Cases (7-day count), Water Source Type (dropdown: Municipal/Well/River/Mixed), Chlorination Status (Yes/No toggle), PHC Capacity (dropdown: Low/Medium/High), Emergency Response Status (dropdown: Standby/Active/Critical), with proper validation and white card styling",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-76",
+        "summary": "Add 'Update & Recalculate Risk' button to GovernmentDataPanel component that, when clicked: (1) validates all input fields, (2) calls backend predictOutbreakRisk with environmental data, (3) updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates new entry in AlertHistory with all input data plus calculated risk, (5) shows loading state during calculation, (6) displays success confirmation or validation errors",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-77",
+        "summary": "Update DashboardPage.tsx to render GovernmentDataPanel component only in Government view, positioning it prominently at the top of the dashboard before other analytics sections",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-78",
+        "summary": "Update EmailAlertService.ts to implement automatic email triggering when risk_percentage exceeds 70, using emailjs.send() with parameters: SERVICE_ID_HERE, TEMPLATE_ID_HERE, template variables {risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, priority_score}, PUBLIC_KEY_HERE, and return Promise with success/failure status",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/services/EmailAlertService.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/services/EmailAlertService.ts"
+        ]
+      },
+      {
+        "id": "REQ-79",
+        "summary": "Integrate automatic email alert triggering in GovernmentDataPanel component that calls EmailAlertService.sendAlert() immediately after risk calculation when risk_percentage > 70, and displays UI toast notification 'Government Alert Sent Successfully' on success or 'Email Alert Failed: [error message]' on failure",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-80",
+        "summary": "Add manual 'Send Alert Email' button to GovernmentDataPanel component positioned below the 'Update & Recalculate Risk' button that triggers EmailAlertService.sendAlert() with current risk data regardless of risk level, displaying loading spinner during send and success/failure notification after completion",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-81",
+        "summary": "Update AlertHistory component to expand columns to include: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level (badge), Risk % (numeric), Disease Most Likely (text), Priority Score (numeric), Email Sent (Yes/No badge), Recommended Action (text), maintaining filterable table with ward and risk level filters",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/AlertHistory.tsx"
@@ -66,262 +132,72 @@
         ]
       },
       {
-        "id": "REQ-51",
-        "summary": "Create a Patient Case Trend Graph component (frontend/src/components/PatientCaseTrend.tsx) displaying a line chart showing simulated historical case volume trends over the past 30 days, with x-axis showing dates and y-axis showing number of reported cases, using the same chart styling as ForecastChart with blue line color and white background",
+        "id": "REQ-82",
+        "summary": "Update the alert storage logic in GovernmentDataPanel and RiskPredictionPanel components to store complete alert records including all environmental inputs (rainfall, humidity, turbidity, bacteria, sanitation, water treatment), calculated outputs (risk level, risk percentage, disease classification, priority score), email status (Yes/No), and recommended action text in localStorage under key 'cholera_alerts'",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/PatientCaseTrend.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/PatientCaseTrend.tsx"
-        ]
-      },
-      {
-        "id": "REQ-52",
-        "summary": "Create a Ward Comparison Bar Chart component (frontend/src/components/WardComparison.tsx) displaying a horizontal or vertical bar chart comparing current outbreak probability across all 9 wards, with bars color-coded by risk level (Green <30%, Yellow 30-70%, Red >70%), showing ward names and percentage values on the chart",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WardComparison.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WardComparison.tsx"
-        ]
-      },
-      {
-        "id": "REQ-53",
-        "summary": "Create a Resource Requirement Estimation Chart component (frontend/src/components/ResourceEstimation.tsx) displaying a bar chart showing estimated resource needs (medical staff, hospital beds, water purification units, chlorination teams) based on current risk level and projected case volume, with numerical values and unit labels",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ResourceEstimation.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/ResourceEstimation.tsx"
-        ]
-      },
-      {
-        "id": "REQ-54",
-        "summary": "Integrate EmailJS library into the frontend by installing the emailjs-com package and creating an EmailAlertService utility (frontend/src/services/EmailAlertService.ts) that exports functions for sending alert emails using placeholder configuration values 'SERVICE_ID_HERE', 'TEMPLATE_ID_HERE', and 'PUBLIC_KEY_HERE', with template variables: risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, ensuring modular and clean integration without hardcoded real keys",
-        "status": "implemented",
-        "plannedFiles": [
-          "package.json",
-          "frontend/src/services/EmailAlertService.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/services/EmailAlertService.ts"
-        ]
-      },
-      {
-        "id": "REQ-55",
-        "summary": "Add automatic email alert triggering to the RiskPredictionPanel component that calls the EmailAlertService when outbreak_probability exceeds 70%, and add a manual 'Send Alert Email' button that displays success confirmation 'Alert Email Sent Successfully' or error message if failed, only triggering for MEDIUM or HIGH risk levels",
-        "status": "implemented",
-        "plannedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx",
           "frontend/src/components/RiskPredictionPanel.tsx"
         ],
         "matchedFiles": [
+          "frontend/src/components/GovernmentDataPanel.tsx",
           "frontend/src/components/RiskPredictionPanel.tsx"
         ]
       },
       {
-        "id": "REQ-56",
-        "summary": "Add CSV export functionality to the Government dashboard view by creating an ExportButton component that generates and downloads a CSV file containing all ward data including: Ward Name, Outbreak Probability, Risk Level, Vulnerability Weight, Priority Score, Sanitation Coverage, Water Treatment Coverage, Population Density, with filename format 'coimbatore-district-risk-analysis-[date].csv'",
+        "id": "REQ-83",
+        "summary": "Update InterventionPriority component to implement priority score calculation using formula: priority_score = outbreak_probability × vulnerability_weight, where vulnerability_weight = base 1.0 + 1.0 if sanitation < 50 + 1.0 if water_treatment < 60 + 1.0 if population_density > 2000, normalized to 0-100 scale, and highlight the top 3 highest priority wards with red background and 'Immediate Intervention Required' badge",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ExportButton.tsx"
+          "frontend/src/components/InterventionPriority.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/ExportButton.tsx"
+          "frontend/src/components/InterventionPriority.tsx"
         ]
       },
       {
-        "id": "REQ-57",
-        "summary": "Update DashboardPage.tsx to render the DiseaseClassification component for Common Citizen view (below RiskGauge) and Government view (in analytics section), ensuring it displays for appropriate user roles",
+        "id": "REQ-84",
+        "summary": "Verify and maintain consistent visual styling across all dashboard components: white backgrounds (#FFFFFF), professional blue headers (#2563EB), red color for high risk (>70%, #DC2626), yellow/amber color for medium risk (30-70%, #F59E0B or #FCD34D), green color for low risk (<30%, #16A34A), clean card borders (#E2E8F0), soft shadows, structured spacing (24px padding), and government-grade professional aesthetic",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-58",
-        "summary": "Update DashboardPage.tsx to conditionally render InterventionPriority component only in Government dashboard view, positioning it as a dedicated analytics section below the ward heatmap",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-59",
-        "summary": "Update DashboardPage.tsx to conditionally render AlertHistory component only in Government dashboard view (showing all alerts) and Hospital/PHC view (showing alerts filtered by their selected ward), hiding it from Common Citizen view",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-60",
-        "summary": "Update DashboardPage.tsx to render PatientCaseTrend component only in Hospital/PHC and Government dashboard views, positioning it in the analytics section below the forecast chart",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-61",
-        "summary": "Update DashboardPage.tsx to render WardComparison component only in Government dashboard view, positioning it in the analytics section after the intervention priority section",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-62",
-        "summary": "Update DashboardPage.tsx to render ResourceEstimation component only in Government dashboard view, positioning it in the analytics section after the ward comparison",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-63",
-        "summary": "Add ward input functionality to Hospital/PHC dashboard view by creating a WardSelector dropdown component (mandatory field) at the top of the dashboard that stores the selected ward (1-9) in state and passes it as context to all Hospital/PHC specific components for filtering and data display",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WardSelector.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WardSelector.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-64",
-        "summary": "Add Hospital/PHC input form fields to RiskPredictionPanel when in Hospital/PHC role view, including: Number of Reported Cases (numeric input), Sanitation Coverage % (0-100), Water Treatment Coverage % (0-100), and Population Density (numeric input), in addition to the existing environmental parameter fields, with appropriate validation",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/RiskPredictionPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/RiskPredictionPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-65",
-        "summary": "Enhance the backend predictOutbreakRisk function in backend/main.mo to implement 7-day moving average calculation for all environmental inputs (rainfall, humidity, turbidity, bacteria) by maintaining a history array for each parameter and calculating the average of the last 7 values before applying the weighted risk formula",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-66",
-        "summary": "Generate realistic simulated ward-level data in the frontend for all 9 wards including: sanitation coverage (40-85%), water treatment coverage (45-90%), population density (1500-3500), and historical outbreak trends, using deterministic random generation based on ward ID to ensure consistency across renders",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/utils/wardDataGenerator.ts",
-          "frontend/src/components/InterventionPriority.tsx",
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/components/RiskGauge.tsx",
+          "frontend/src/components/SafetyAdvisory.tsx",
+          "frontend/src/components/AlertHistory.tsx",
           "frontend/src/components/WardHeatmap.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/utils/wardDataGenerator.ts",
-          "frontend/src/components/InterventionPriority.tsx",
-          "frontend/src/components/WardHeatmap.tsx"
+          "frontend/src/pages/DashboardPage.tsx",
+          "frontend/src/components/AlertHistory.tsx"
         ]
       },
       {
-        "id": "REQ-67",
-        "summary": "Update all color thresholds throughout the application to use the new risk classification: Green for <30% (Low Risk), Yellow/Amber for 30-70% (Medium Risk), and Red for >70% (High Risk), replacing the previous 40% and 40-70% thresholds in RiskGauge, WardHeatmap, AlertEngine, and all visualization components",
+        "id": "REQ-85",
+        "summary": "Update RiskPredictionPanel component to hide it completely from Common Citizen view and simplify it for Hospital/PHC view by removing government-only fields (water source type, chlorination status, PHC capacity, emergency response status), keeping only core environmental inputs and hospital-specific fields (reported cases, sanitation coverage, water treatment coverage, population density)",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/RiskGauge.tsx",
-          "frontend/src/components/WardHeatmap.tsx",
-          "frontend/src/components/AlertEngine.tsx",
-          "frontend/src/components/RiskComponentBreakdown.tsx",
-          "frontend/src/components/SafetyAdvisory.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/RiskGauge.tsx",
-          "frontend/src/components/WardHeatmap.tsx",
-          "frontend/src/components/AlertEngine.tsx"
-        ]
-      },
-      {
-        "id": "REQ-68",
-        "summary": "Update the global color theme to ensure pure white backgrounds (#FFFFFF) are used consistently across all components, yellow/amber warning colors (#F59E0B or #FCD34D) for medium risk states, and maintain professional blue primary accent (#2563EB), green success (#16A34A), and red danger (#DC2626) colors as specified in the UI requirements",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ]
-      },
-      {
-        "id": "REQ-69",
-        "summary": "Add tab-based navigation to DashboardPage.tsx for Government view with tabs: 'Overview', 'Intervention Priority', 'Alert History', 'Analytics', allowing users to switch between different dashboard sections while maintaining the role-based component rendering logic",
-        "status": "implemented",
-        "plannedFiles": [
+          "frontend/src/components/RiskPredictionPanel.tsx",
           "frontend/src/pages/DashboardPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-70",
-        "summary": "Add a 'Send Alert Email' button to the Hospital/PHC dashboard view positioned near the risk prediction results that manually triggers an email alert using EmailAlertService with current ward data and risk metrics, displaying loading state, success confirmation, or error message",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
+          "frontend/src/components/RiskPredictionPanel.tsx",
           "frontend/src/pages/DashboardPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/AlertEngine.tsx",
     "frontend/src/components/AlertHistory.tsx",
-    "frontend/src/components/DiseaseClassification.tsx",
-    "frontend/src/components/ExportButton.tsx",
+    "frontend/src/components/GovernmentDataPanel.tsx",
     "frontend/src/components/InterventionPriority.tsx",
-    "frontend/src/components/PatientCaseTrend.tsx",
-    "frontend/src/components/ResourceEstimation.tsx",
-    "frontend/src/components/RiskGauge.tsx",
+    "frontend/src/components/LastGovernmentReport.tsx",
     "frontend/src/components/RiskPredictionPanel.tsx",
-    "frontend/src/components/RoleSelector.tsx",
-    "frontend/src/components/WardComparison.tsx",
-    "frontend/src/components/WardHeatmap.tsx",
-    "frontend/src/components/WardSelector.tsx",
-    "frontend/src/index.css",
     "frontend/src/pages/DashboardPage.tsx",
     "frontend/src/services/EmailAlertService.ts",
-    "frontend/src/utils/wardDataGenerator.ts",
-    "frontend/tailwind.config.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
