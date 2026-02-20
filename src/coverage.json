@@ -1,0 +1,131 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-20T14:15:29.669Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 8,
+    "implemented": 8,
+    "items": [
+      {
+        "id": "REQ-10",
+        "summary": "Add a 14-Day Predictive Forecast section below the existing Risk Trends section with title '14-Day Predictive Forecast', displaying a line chart that projects outbreak probability for the next 14 days, and includes labels showing Confidence Score (e.g., 87%) and Model AUC (e.g., 0.91), matching the existing line chart visual style",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/ForecastChart.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ForecastChart.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-11",
+        "summary": "Enhance the existing Real-Time Risk Analysis card by adding color-coded status text that displays 'Low Risk' in green, 'Moderate Risk' in orange, or 'High Risk' in red based on the risk percentage, and add a label under the gauge showing 'Prediction Confidence: 87%' without changing the card layout",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/RiskGauge.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/RiskGauge.tsx"
+        ]
+      },
+      {
+        "id": "REQ-12",
+        "summary": "Add an Automated Response Recommendation panel directly below the Real-Time Risk Analysis section with title 'Automated Response Recommendation', displaying a red alert box for risk >70% with text 'HIGH RISK DETECTED – Immediate Action Required' and recommended actions (Conduct emergency water testing, Initiate chlorination protocols, Issue public advisory, Mobilize PHC response teams), a yellow warning version for moderate risk, and a green informational version for low risk, using consistent card styling",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AlertEngine.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AlertEngine.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-13",
+        "summary": "Add a Ward Risk Distribution section below the Alert panel with title 'Ward Risk Distribution', displaying a responsive grid of 8 ward cards (Ward 1 – Central, Ward 2 – North, Ward 3 – South, Ward 4 – East, Ward 5 – West, Ward 6 – Northeast, Ward 7 – Southeast, Ward 8 – Northwest), where each card shows risk percentage, risk level label, and color-coded border based on risk level, plus a legend indicating Green (<40%), Orange (40–70%), Red (>70%), maintaining the light theme styling",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/WardHeatmap.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/WardHeatmap.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Add an Explainable AI – Factor Contribution section below the ward grid with title 'Explainable AI – Factor Contribution', displaying horizontal impact bars for Rainfall Impact, Humidity Impact, Turbidity Impact, and Bacteria Index Impact, followed by explanation text stating 'The outbreak risk is primarily driven by rainfall and bacterial load. Elevated turbidity and humidity further increase disease transmission probability.', matching the existing UI style",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/ExplainableAI.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ExplainableAI.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-15",
+        "summary": "Add a data freshness footer at the bottom of the dashboard displaying 'Last Data Updated:' with a dynamic timestamp and 'Data Sources: IMD Rainfall API, Water Quality Sensors, PHC Surveillance Reports' in small grey text with minimal styling",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DataFreshnessFooter.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DataFreshnessFooter.tsx",
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-16",
+        "summary": "Generate realistic mock data for the 14-day forecast projection showing outbreak probability percentages for each of the next 14 days with appropriate variance to simulate predictive trends",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/ForecastChart.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ForecastChart.tsx"
+        ]
+      },
+      {
+        "id": "REQ-17",
+        "summary": "Generate realistic mock risk data for each of the 8 wards (Central, North, South, East, West, Northeast, Southeast, Northwest) with risk percentages and levels that vary across wards to create a meaningful heatmap visualization",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/WardHeatmap.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/WardHeatmap.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "build-template/README.md",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/AlertEngine.tsx",
+    "frontend/src/components/DataFreshnessFooter.tsx",
+    "frontend/src/components/ExplainableAI.tsx",
+    "frontend/src/components/ForecastChart.tsx",
+    "frontend/src/components/RiskGauge.tsx",
+    "frontend/src/components/WardHeatmap.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

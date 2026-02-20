@@ -1,0 +1,154 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-a-14-day-predictive-forecast-section-below-the-existing-risk-trends-section-with-title-14-day-predictive-forecast-displaying-a-line-chart-that-projects-outbreak-probability-for-the-next-14-days-and-includes-labels-showing-confidence-score-e-g-87-and-model-auc-e-g-0-91-matching-the-existing-line-chart-visual-style",
+      "featureTitle": "Add a 14-Day Predictive Forecast section below the existing Risk Trends section with title '14-Day Predictive Forecast', displaying a line chart that projects outbreak probability for the next 14 days, and includes labels showing Confidence Score (e.g., 87%) and Model AUC (e.g., 0.91), matching the existing line chart visual style",
+      "files": [
+        "frontend/src/components/ForecastChart.tsx",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-enhance-the-existing-real-time-risk-analysis-card-by-adding-color-coded-status-text-that-displays-low-risk-in-green-moderate-risk-in-orange-or-high-risk-in-red-based-on-the-risk-percentage-and-add-a-label-under-the-gauge-showing-prediction-confidence-87-without-changing-the-card-layout",
+      "featureTitle": "Enhance the existing Real-Time Risk Analysis card by adding color-coded status text that displays 'Low Risk' in green, 'Moderate Risk' in orange, or 'High Risk' in red based on the risk percentage, and add a label under the gauge showing 'Prediction Confidence: 87%' without changing the card layout",
+      "files": [
+        "frontend/src/components/RiskGauge.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-an-automated-response-recommendation-panel-directly-below-the-real-time-risk-analysis-section-with-title-automated-response-recommendation-displaying-a-red-alert-box-for-risk-70-with-text-high-risk-detected-immediate-action-required-and-recommended-actions-conduct-emergency-water-testing-initiate-chlorination-protocols-issue-public-advisory-mobilize-phc-response-teams-a-yellow-warning-version-for-moderate-risk-and-a-green-informational-version-for-low-risk-using-consistent-card-styling",
+      "featureTitle": "Add an Automated Response Recommendation panel directly below the Real-Time Risk Analysis section with title 'Automated Response Recommendation', displaying a red alert box for risk >70% with text 'HIGH RISK DETECTED – Immediate Action Required' and recommended actions (Conduct emergency water testing, Initiate chlorination protocols, Issue public advisory, Mobilize PHC response teams), a yellow warning version for moderate risk, and a green informational version for low risk, using consistent card styling",
+      "files": [
+        "frontend/src/components/AlertEngine.tsx",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-12"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-ward-risk-distribution-section-below-the-alert-panel-with-title-ward-risk-distribution-displaying-a-responsive-grid-of-8-ward-cards-ward-1-central-ward-2-north-ward-3-south-ward-4-east-ward-5-west-ward-6-northeast-ward-7-southeast-ward-8-northwest-where-each-card-shows-risk-percentage-risk-level-label-and-color-coded-border-based-on-risk-level-plus-a-legend-indicating-green-40-orange-40-70-red-70-maintaining-the-light-theme-styling",
+      "featureTitle": "Add a Ward Risk Distribution section below the Alert panel with title 'Ward Risk Distribution', displaying a responsive grid of 8 ward cards (Ward 1 – Central, Ward 2 – North, Ward 3 – South, Ward 4 – East, Ward 5 – West, Ward 6 – Northeast, Ward 7 – Southeast, Ward 8 – Northwest), where each card shows risk percentage, risk level label, and color-coded border based on risk level, plus a legend indicating Green (<40%), Orange (40–70%), Red (>70%), maintaining the light theme styling",
+      "files": [
+        "frontend/src/components/WardHeatmap.tsx",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-13"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-an-explainable-ai-factor-contribution-section-below-the-ward-grid-with-title-explainable-ai-factor-contribution-displaying-horizontal-impact-bars-for-rainfall-impact-humidity-impact-turbidity-impact-and-bacteria-index-impact-followed-by-explanation-text-stating-the-outbreak-risk-is-primarily-driven-by-rainfall-and-bacterial-load-elevated-turbidity-and-humidity-further-increase-disease-transmission-probability-matching-the-existing-ui-style",
+      "featureTitle": "Add an Explainable AI – Factor Contribution section below the ward grid with title 'Explainable AI – Factor Contribution', displaying horizontal impact bars for Rainfall Impact, Humidity Impact, Turbidity Impact, and Bacteria Index Impact, followed by explanation text stating 'The outbreak risk is primarily driven by rainfall and bacterial load. Elevated turbidity and humidity further increase disease transmission probability.', matching the existing UI style",
+      "files": [
+        "frontend/src/components/ExplainableAI.tsx",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-14"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-data-freshness-footer-at-the-bottom-of-the-dashboard-displaying-last-data-updated-with-a-dynamic-timestamp-and-data-sources-imd-rainfall-api-water-quality-sensors-phc-surveillance-reports-in-small-grey-text-with-minimal-styling",
+      "featureTitle": "Add a data freshness footer at the bottom of the dashboard displaying 'Last Data Updated:' with a dynamic timestamp and 'Data Sources: IMD Rainfall API, Water Quality Sensors, PHC Surveillance Reports' in small grey text with minimal styling",
+      "files": [
+        "frontend/src/components/DataFreshnessFooter.tsx",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-15"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-generate-realistic-mock-data-for-the-14-day-forecast-projection-showing-outbreak-probability-percentages-for-each-of-the-next-14-days-with-appropriate-variance-to-simulate-predictive-trends",
+      "featureTitle": "Generate realistic mock data for the 14-day forecast projection showing outbreak probability percentages for each of the next 14 days with appropriate variance to simulate predictive trends",
+      "files": [
+        "frontend/src/components/ForecastChart.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-16"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-generate-realistic-mock-risk-data-for-each-of-the-8-wards-central-north-south-east-west-northeast-southeast-northwest-with-risk-percentages-and-levels-that-vary-across-wards-to-create-a-meaningful-heatmap-visualization",
+      "featureTitle": "Generate realistic mock risk data for each of the 8 wards (Central, North, South, East, West, Northeast, Southeast, Northwest) with risk percentages and levels that vary across wards to create a meaningful heatmap visualization",
+      "files": [
+        "frontend/src/components/WardHeatmap.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-17"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

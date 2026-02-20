@@ -1,0 +1,188 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Enhance Community Health Monitor dashboard with 14-day forecast, enhanced risk analysis, alert panel, ward heatmap, explainable AI, and data freshness footer",
+  "requirements": [
+    {
+      "id": "REQ-10",
+      "summary": "Add 14-Day Predictive Forecast section with line chart displaying projected outbreak probability, confidence score, and model AUC below Risk Trends section",
+      "acceptanceCriteria": [
+        "Section appears below the Risk Trends section",
+        "Title displays '14-Day Predictive Forecast'",
+        "Line chart shows 14 data points representing future days",
+        "Confidence Score displays as percentage (e.g., 87%)",
+        "Model AUC displays as decimal (e.g., 0.91)",
+        "Visual styling matches existing line chart components"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ForecastChart.tsx",
+          "operation": "create",
+          "description": "Create a new component to display the 14-day predictive forecast with a line chart matching the existing visual style. Include labels for Confidence Score (percentage) and Model AUC (decimal). Generate realistic mock data for 14 future days showing outbreak probability with appropriate variance. Use Recharts library consistent with existing chart implementations and apply light theme styling matching the government health dashboard aesthetic."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Import and render the ForecastChart component below the RiskPredictionPanel component (which contains the Risk Trends section). Position it after the existing risk trends display to maintain the flow specified in the BuildRequest. Ensure the section integrates seamlessly with the existing card-based layout and maintains consistent spacing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Enhance Real-Time Risk Analysis card with color-coded status text (Low/Moderate/High Risk) and Prediction Confidence label below the gauge",
+      "acceptanceCriteria": [
+        "Risk status text displays with appropriate color coding",
+        "Green color applied for Low Risk (<40%)",
+        "Orange color applied for Moderate Risk (40-70%)",
+        "Red color applied for High Risk (>70%)",
+        "Prediction Confidence label displays below the gauge",
+        "Confidence percentage shows dynamic value (e.g., 87%)",
+        "Existing card layout remains unchanged"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/RiskGauge.tsx",
+          "operation": "modify",
+          "description": "Add color-coded status text component that displays 'Low Risk' in green (<40%), 'Moderate Risk' in orange (40-70%), or 'High Risk' in red (>70%) based on the risk percentage prop. Add a 'Prediction Confidence' label below the gauge displaying a dynamic percentage value (e.g., 87%). Ensure the additions do not alter the existing card layout structure and use consistent typography and spacing with the current light theme design."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Add Automated Response Recommendation panel below Real-Time Risk Analysis with color-coded alert boxes (red/yellow/green) showing risk-appropriate actions",
+      "acceptanceCriteria": [
+        "Panel appears directly below Real-Time Risk Analysis section",
+        "Title displays 'Automated Response Recommendation'",
+        "Red alert box displays for risk >70%",
+        "Alert text shows 'HIGH RISK DETECTED – Immediate Action Required'",
+        "Four recommended actions list displays for high risk",
+        "Yellow warning version displays for moderate risk (40-70%)",
+        "Green informational version displays for low risk (<40%)",
+        "Card styling matches existing dashboard cards"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AlertEngine.tsx",
+          "operation": "modify",
+          "description": "Update the component title to 'Automated Response Recommendation' and ensure it displays color-coded alert boxes: red for risk >70% with text 'HIGH RISK DETECTED – Immediate Action Required' and four recommended actions (Conduct emergency water testing, Initiate chlorination protocols, Issue public advisory, Mobilize PHC response teams), yellow warning for moderate risk (40-70%), and green informational for low risk (<40%). Maintain consistent card styling with existing dashboard components and preserve the current light theme aesthetic."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Ensure the AlertEngine component is positioned directly below the RiskPredictionPanel component (which contains the Real-Time Risk Analysis section). Verify proper spacing and layout integration to match the BuildRequest specification."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Add Ward Risk Distribution section with responsive grid of 8 ward cards showing risk percentage, level, and color-coded borders, plus legend",
+      "acceptanceCriteria": [
+        "Section appears below the Alert panel",
+        "Title displays 'Ward Risk Distribution'",
+        "Grid displays exactly 8 ward cards",
+        "Each card shows ward name with geographic identifier",
+        "Risk percentage displays on each card",
+        "Risk level label displays on each card",
+        "Border color changes based on risk level",
+        "Legend displays three risk thresholds with colors",
+        "Grid is responsive across screen sizes",
+        "Light theme styling maintained"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WardHeatmap.tsx",
+          "operation": "modify",
+          "description": "Update the component to display a responsive grid of exactly 8 ward cards with names: Ward 1 – Central, Ward 2 – North, Ward 3 – South, Ward 4 – East, Ward 5 – West, Ward 6 – Northeast, Ward 7 – Southeast, Ward 8 – Northwest. Each card should show risk percentage, risk level label (Low/Moderate/High), and color-coded borders (green <40%, orange 40-70%, red >70%). Add a legend indicating the three risk thresholds with corresponding colors. Generate realistic mock risk data for each ward with varying percentages to create a meaningful heatmap visualization. Ensure responsive grid layout and maintain light theme styling consistent with the government health dashboard aesthetic."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Verify the WardHeatmap component is positioned below the AlertEngine component and ensure proper section ordering per the BuildRequest specification."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Add Explainable AI – Factor Contribution section with horizontal impact bars and explanation text below ward grid",
+      "acceptanceCriteria": [
+        "Section appears below the ward risk grid",
+        "Title displays 'Explainable AI – Factor Contribution'",
+        "Four horizontal bars display for each impact factor",
+        "Bars show visual proportions of factor contributions",
+        "Explanation text displays below the bars",
+        "Text content matches the specified wording",
+        "Visual style matches existing dashboard components"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ExplainableAI.tsx",
+          "operation": "modify",
+          "description": "Update the component title to 'Explainable AI – Factor Contribution' and ensure it displays horizontal impact bars for Rainfall Impact, Humidity Impact, Turbidity Impact, and Bacteria Index Impact with visual proportions showing their contributions. Add explanation text below the bars stating: 'The outbreak risk is primarily driven by rainfall and bacterial load. Elevated turbidity and humidity further increase disease transmission probability.' Maintain visual styling consistent with existing dashboard components and preserve the light theme design."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Verify the ExplainableAI component is positioned below the WardHeatmap component to maintain the correct section ordering specified in the BuildRequest."
+        }
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "summary": "Add data freshness footer at dashboard bottom displaying last updated timestamp and data sources in minimal grey text styling",
+      "acceptanceCriteria": [
+        "Footer appears at the bottom of the dashboard",
+        "Text displays 'Last Data Updated:' label",
+        "Dynamic timestamp shows current or last update time",
+        "Data sources text lists all three sources",
+        "Text color is grey",
+        "Styling is minimal and unobtrusive"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DataFreshnessFooter.tsx",
+          "operation": "create",
+          "description": "Create a minimal footer component displaying 'Last Data Updated:' with a dynamic timestamp and 'Data Sources: IMD Rainfall API, Water Quality Sensors, PHC Surveillance Reports' in small grey text. Use minimal, unobtrusive styling that does not distract from the main dashboard content. The timestamp should show the current time or last update time formatted appropriately."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Import and render the DataFreshnessFooter component at the bottom of the dashboard page, below all existing sections including the ExplainableAI component. Ensure proper spacing and that it serves as the final element on the page."
+        }
+      ]
+    },
+    {
+      "id": "REQ-16",
+      "summary": "Generate realistic mock data for 14-day forecast showing outbreak probability percentages with appropriate variance",
+      "acceptanceCriteria": [
+        "14 data points generated for future days",
+        "Values represent realistic outbreak probabilities",
+        "Data shows logical progression patterns",
+        "Values vary appropriately to simulate uncertainty"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ForecastChart.tsx",
+          "operation": "modify",
+          "description": "Implement mock data generation function within the component that creates 14 data points representing future days with realistic outbreak probability percentages. Ensure values show logical progression patterns with appropriate variance to simulate predictive trends and uncertainty. The data should create a meaningful visualization when rendered in the line chart."
+        }
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "summary": "Generate realistic mock risk data for 8 wards with varying risk percentages and levels for meaningful heatmap visualization",
+      "acceptanceCriteria": [
+        "Each ward has a unique risk percentage",
+        "Risk levels vary across different wards",
+        "Data creates a visually meaningful heatmap",
+        "Risk values are realistic for district distribution"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WardHeatmap.tsx",
+          "operation": "modify",
+          "description": "Implement mock data generation within the component that assigns unique risk percentages to each of the 8 wards (Central, North, South, East, West, Northeast, Southeast, Northwest). Ensure risk levels vary meaningfully across wards to create a visually informative heatmap with realistic values representing district distribution patterns. Include a mix of low, moderate, and high risk wards."
+        }
+      ]
+    }
+  ]
+}

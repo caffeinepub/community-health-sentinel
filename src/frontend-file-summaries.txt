@@ -1,0 +1,15 @@
+{
+  "frontend/src/App.tsx": "Main application component with TanStack Router configuration for landing page (/) and dashboard (/dashboard) routes.",
+  "frontend/src/pages/LandingPage.tsx": "Landing page with hero section featuring title, subtitle, Launch Dashboard CTA button, feature grid, and professional government-style design with dark blue and teal colors.",
+  "frontend/src/pages/DashboardPage.tsx": "Main dashboard page orchestrating all components including the new ForecastChart and DataFreshnessFooter, with proper section ordering per requirements while maintaining the existing light theme and layout structure.",
+  "frontend/src/components/DistrictRiskOverview.tsx": "District Risk Overview Panel displaying four key metrics (Risk Index, High-Risk Wards, Monsoon Impact, System Status) in a responsive grid layout with professional card design.",
+  "frontend/src/components/RiskPredictionPanel.tsx": "Interactive Risk Prediction Panel with input fields for environmental parameters (rainfall, humidity, turbidity, bacteria index), prediction button that calls backend API, and displays RiskGauge component with results.",
+  "frontend/src/components/RiskGauge.tsx": "Enhanced risk gauge component now includes color-coded status text (Low/Moderate/High Risk) and a \"Prediction Confidence: 87%\" label below the gauge while maintaining the existing visual design.",
+  "frontend/src/components/AlertEngine.tsx": "Updated alert component with new title \"Automated Response Recommendation\" displaying risk-appropriate color-coded alert boxes (red/yellow/green) with specific recommended actions based on risk levels.",
+  "frontend/src/components/WardHeatmap.tsx": "Updated ward heatmap component displaying 8 wards with geographic identifiers (Central, North, South, East, West, Northeast, Southeast, Northwest), color-coded borders, and a legend showing risk thresholds.",
+  "frontend/src/components/ExplainableAI.tsx": "Updated explainable AI component with new title \"Explainable AI – Factor Contribution\" showing horizontal impact bars for four environmental factors and standardized explanation text about risk drivers.",
+  "frontend/src/index.css": "Global styles with OKLCH color system defining government-style dark blue and teal palette, professional typography with high contrast, smooth transitions, and custom utility classes for theme colors.",
+  "frontend/tailwind.config.js": "Tailwind configuration extended with government theme colors (dark blue, teal), larger readable font sizes, custom shadows, and professional design tokens for accessibility and polish.",
+  "frontend/src/components/ForecastChart.tsx": "New component displaying a 14-day predictive forecast line chart with confidence score (87%) and model AUC (0.91) using Recharts, with properly typed forecast data interface and realistic mock data showing outbreak probability trends.",
+  "frontend/src/components/DataFreshnessFooter.tsx": "New minimal footer component displaying dynamic timestamp for last data update and listing three data sources (IMD Rainfall API, Water Quality Sensors, PHC Surveillance Reports) in grey text."
+}

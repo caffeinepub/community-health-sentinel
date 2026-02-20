@@ -1,0 +1,238 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "Community Health Sentinel - A professional district-level health intelligence dashboard with AI-powered outbreak prediction for water-borne diseases. Features government-style landing page, analytics dashboard with real-time risk assessment, ward heatmaps, interactive prediction tools, automated alerts for high-risk scenarios, and explainable AI visualizations.",
+  "architectural_notes": [
+    "Responsive layout suitable for hackathon presentation",
+    "Color-coded risk system: Green <40%, Orange 40-70%, Red >70%",
+    "High contrast colors and accessible typography for readability",
+    "Smooth transitions between dashboard states",
+    "Maintain light theme with white and blue medical analytics styling",
+    "Extend existing dashboard structure without redesigning UI",
+    "All new sections must visually match existing card and chart styles"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-landing-page-with-a-hero-section-containing-the-title-ai-powered-early-warning-system-for-water-borne-diseases-subtitle-predict-outbreaks-7-14-days-in-advance-using-environmental-and-water-quality-data-and-a-launch-dashboard-call-to-action-button-that-navigates-to-the-dashboard-page",
+      "title": "Create a landing page with a hero section containing the title 'AI-Powered Early Warning System for Water-Borne Diseases', subtitle 'Predict outbreaks 7–14 days in advance using environmental and water quality data', and a 'Launch Dashboard' call-to-action button that navigates to the dashboard page",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-professional-government-style-visual-theme-using-dark-blue-and-teal-colors-with-clean-layout-professional-typography-high-contrast-for-accessibility-large-readable-fonts-and-smooth-transitions-between-states",
+      "title": "Implement a professional government-style visual theme using dark blue and teal colors with clean layout, professional typography, high contrast for accessibility, large readable fonts, and smooth transitions between states",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-dashboard-page-with-a-district-risk-overview-panel-displaying-four-key-metrics-district-risk-index-as-a-percentage-active-high-risk-wards-count-monsoon-impact-level-and-system-status-with-an-operational-badge",
+      "title": "Create a dashboard page with a District Risk Overview Panel displaying four key metrics: District Risk Index as a percentage, Active High-Risk Wards count, Monsoon Impact Level, and System Status with an 'Operational' badge",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-interactive-risk-prediction-panel-with-input-fields-for-rainfall-mm-humidity-turbidity-ntu-and-bacteria-index-plus-a-predict-14-day-outbreak-risk-button-that-displays-a-risk-gauge-0-100-with-color-coding-green-for-40-orange-for-40-70-and-red-for-70",
+      "title": "Build an Interactive Risk Prediction Panel with input fields for Rainfall (mm), Humidity (%), Turbidity (NTU), and Bacteria Index, plus a 'Predict 14-Day Outbreak Risk' button that displays a risk gauge (0-100%) with color coding: Green for <40%, Orange for 40-70%, and Red for >70%",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-alert-engine-section-that-displays-risk-appropriate-alert-boxes-red-alert-for-risk-70-showing-high-risk-detected-immediate-action-required-with-recommended-actions-water-testing-chlorination-public-advisory-phc-mobilization-and-corresponding-orange-and-green-variants-for-moderate-and-low-risk-levels",
+      "title": "Create an Alert Engine Section that displays risk-appropriate alert boxes: Red alert for risk >70% showing 'HIGH RISK DETECTED – Immediate Action Required' with recommended actions (Water testing, Chlorination, Public advisory, PHC mobilization), and corresponding orange and green variants for moderate and low risk levels",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-ward-heatmap-section-displaying-8-wards-in-a-grid-layout-where-each-ward-is-color-coded-by-risk-level-to-visualize-the-district-risk-distribution-like-a-geographic-risk-map",
+      "title": "Build a Ward Heatmap Section displaying 8 wards in a grid layout where each ward is color-coded by risk level to visualize the district risk distribution like a geographic risk map",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-explainable-ai-section-with-a-horizontal-bar-chart-showing-the-impact-contribution-of-each-factor-rainfall-impact-humidity-impact-turbidity-impact-bacteria-index-impact-and-a-short-text-explanation-of-why-the-current-risk-level-was-calculated",
+      "title": "Create an Explainable AI Section with a horizontal bar chart showing the impact contribution of each factor (Rainfall impact, Humidity impact, Turbidity impact, Bacteria index impact) and a short text explanation of why the current risk level was calculated",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-entire-application-is-fully-responsive-with-layouts-that-adapt-to-different-screen-sizes-while-maintaining-professional-appearance-and-usability-across-desktop-tablet-and-mobile-devices",
+      "title": "Ensure the entire application is fully responsive with layouts that adapt to different screen sizes while maintaining professional appearance and usability across desktop, tablet, and mobile devices",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-14-day-predictive-forecast-section-below-the-existing-risk-trends-section-with-title-14-day-predictive-forecast-displaying-a-line-chart-that-projects-outbreak-probability-for-the-next-14-days-and-includes-labels-showing-confidence-score-e-g-87-and-model-auc-e-g-0-91-matching-the-existing-line-chart-visual-style",
+      "title": "Add a 14-Day Predictive Forecast section below the existing Risk Trends section with title '14-Day Predictive Forecast', displaying a line chart that projects outbreak probability for the next 14 days, and includes labels showing Confidence Score (e.g., 87%) and Model AUC (e.g., 0.91), matching the existing line chart visual style",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-existing-real-time-risk-analysis-card-by-adding-color-coded-status-text-that-displays-low-risk-in-green-moderate-risk-in-orange-or-high-risk-in-red-based-on-the-risk-percentage-and-add-a-label-under-the-gauge-showing-prediction-confidence-87-without-changing-the-card-layout",
+      "title": "Enhance the existing Real-Time Risk Analysis card by adding color-coded status text that displays 'Low Risk' in green, 'Moderate Risk' in orange, or 'High Risk' in red based on the risk percentage, and add a label under the gauge showing 'Prediction Confidence: 87%' without changing the card layout",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-automated-response-recommendation-panel-directly-below-the-real-time-risk-analysis-section-with-title-automated-response-recommendation-displaying-a-red-alert-box-for-risk-70-with-text-high-risk-detected-immediate-action-required-and-recommended-actions-conduct-emergency-water-testing-initiate-chlorination-protocols-issue-public-advisory-mobilize-phc-response-teams-a-yellow-warning-version-for-moderate-risk-and-a-green-informational-version-for-low-risk-using-consistent-card-styling",
+      "title": "Add an Automated Response Recommendation panel directly below the Real-Time Risk Analysis section with title 'Automated Response Recommendation', displaying a red alert box for risk >70% with text 'HIGH RISK DETECTED – Immediate Action Required' and recommended actions (Conduct emergency water testing, Initiate chlorination protocols, Issue public advisory, Mobilize PHC response teams), a yellow warning version for moderate risk, and a green informational version for low risk, using consistent card styling",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-ward-risk-distribution-section-below-the-alert-panel-with-title-ward-risk-distribution-displaying-a-responsive-grid-of-8-ward-cards-ward-1-central-ward-2-north-ward-3-south-ward-4-east-ward-5-west-ward-6-northeast-ward-7-southeast-ward-8-northwest-where-each-card-shows-risk-percentage-risk-level-label-and-color-coded-border-based-on-risk-level-plus-a-legend-indicating-green-40-orange-40-70-red-70-maintaining-the-light-theme-styling",
+      "title": "Add a Ward Risk Distribution section below the Alert panel with title 'Ward Risk Distribution', displaying a responsive grid of 8 ward cards (Ward 1 – Central, Ward 2 – North, Ward 3 – South, Ward 4 – East, Ward 5 – West, Ward 6 – Northeast, Ward 7 – Southeast, Ward 8 – Northwest), where each card shows risk percentage, risk level label, and color-coded border based on risk level, plus a legend indicating Green (<40%), Orange (40–70%), Red (>70%), maintaining the light theme styling",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-explainable-ai-factor-contribution-section-below-the-ward-grid-with-title-explainable-ai-factor-contribution-displaying-horizontal-impact-bars-for-rainfall-impact-humidity-impact-turbidity-impact-and-bacteria-index-impact-followed-by-explanation-text-stating-the-outbreak-risk-is-primarily-driven-by-rainfall-and-bacterial-load-elevated-turbidity-and-humidity-further-increase-disease-transmission-probability-matching-the-existing-ui-style",
+      "title": "Add an Explainable AI – Factor Contribution section below the ward grid with title 'Explainable AI – Factor Contribution', displaying horizontal impact bars for Rainfall Impact, Humidity Impact, Turbidity Impact, and Bacteria Index Impact, followed by explanation text stating 'The outbreak risk is primarily driven by rainfall and bacterial load. Elevated turbidity and humidity further increase disease transmission probability.', matching the existing UI style",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-data-freshness-footer-at-the-bottom-of-the-dashboard-displaying-last-data-updated-with-a-dynamic-timestamp-and-data-sources-imd-rainfall-api-water-quality-sensors-phc-surveillance-reports-in-small-grey-text-with-minimal-styling",
+      "title": "Add a data freshness footer at the bottom of the dashboard displaying 'Last Data Updated:' with a dynamic timestamp and 'Data Sources: IMD Rainfall API, Water Quality Sensors, PHC Surveillance Reports' in small grey text with minimal styling",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-realistic-mock-data-for-the-14-day-forecast-projection-showing-outbreak-probability-percentages-for-each-of-the-next-14-days-with-appropriate-variance-to-simulate-predictive-trends",
+      "title": "Generate realistic mock data for the 14-day forecast projection showing outbreak probability percentages for each of the next 14 days with appropriate variance to simulate predictive trends",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-realistic-mock-risk-data-for-each-of-the-8-wards-central-north-south-east-west-northeast-southeast-northwest-with-risk-percentages-and-levels-that-vary-across-wards-to-create-a-meaningful-heatmap-visualization",
+      "title": "Generate realistic mock risk data for each of the 8 wards (Central, North, South, East, West, Northeast, Southeast, Northwest) with risk percentages and levels that vary across wards to create a meaningful heatmap visualization",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Landing page with hero section, professional government-style theme, and dashboard launch CTA",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "District Risk Overview Panel showing risk index, high-risk ward count, monsoon impact, and system status",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Interactive Risk Prediction Panel with input fields for rainfall, humidity, turbidity, bacteria index and color-coded risk gauge",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Alert Engine with risk-based alerts (high/moderate/low) and recommended actions for health officials",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Ward Heatmap showing 8 wards in grid layout with color-coded risk levels",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Explainable AI Section with horizontal bar chart showing impact factors and risk explanation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Simulated prediction logic combining environmental factors to calculate outbreak risk percentage",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Implement backend prediction logic that combines rainfall, humidity, turbidity, and bacteria index inputs to calculate a realistic outbreak risk percentage (0-100%) using a simulated algorithm suitable for demonstration purposes",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Add 14-Day Predictive Forecast section with line chart projecting outbreak probability, confidence score, and model AUC",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Enhance Real-Time Risk Analysis panel with color-coded status text (Low/Moderate/High) and prediction confidence label",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Add Automated Response Recommendation panel with risk-based alerts and recommended actions for health officials",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add Ward Risk Distribution heatmap section with 8 ward cards showing risk percentage, level, and color-coded borders",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Add Explainable AI section with horizontal impact bars for each factor and risk explanation text",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add data freshness footer with dynamic timestamp and data source information",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Community Health Sentinel",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

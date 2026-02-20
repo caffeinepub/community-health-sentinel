@@ -1,0 +1,195 @@
+{
+  "kind": "build_request",
+  "title": "Enhance Community Health Monitor dashboard with 14-day forecast, enhanced risk analysis, alert panel, ward heatmap, explainable AI, and data freshness footer",
+  "projectName": "Community Health Sentinel",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-10",
+      "text": "Add a 14-Day Predictive Forecast section below the existing Risk Trends section with title '14-Day Predictive Forecast', displaying a line chart that projects outbreak probability for the next 14 days, and includes labels showing Confidence Score (e.g., 87%) and Model AUC (e.g., 0.91), matching the existing line chart visual style",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Below the existing \"Risk Trends (Last 50 Predictions)\" section, add: Section Title: \"14-Day Predictive Forecast\""
+        ]
+      },
+      "acceptanceCriteria": [
+        "Section appears below the Risk Trends section",
+        "Title displays '14-Day Predictive Forecast'",
+        "Line chart shows 14 data points representing future days",
+        "Confidence Score displays as percentage (e.g., 87%)",
+        "Model AUC displays as decimal (e.g., 0.91)",
+        "Visual styling matches existing line chart components"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Enhance the existing Real-Time Risk Analysis card by adding color-coded status text that displays 'Low Risk' in green, 'Moderate Risk' in orange, or 'High Risk' in red based on the risk percentage, and add a label under the gauge showing 'Prediction Confidence: 87%' without changing the card layout",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Inside the existing Real-Time Risk card: Add color-coded status text: Low Risk (Green) Moderate Risk (Orange) High Risk (Red)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Risk status text displays with appropriate color coding",
+        "Green color applied for Low Risk (<40%)",
+        "Orange color applied for Moderate Risk (40-70%)",
+        "Red color applied for High Risk (>70%)",
+        "Prediction Confidence label displays below the gauge",
+        "Confidence percentage shows dynamic value (e.g., 87%)",
+        "Existing card layout remains unchanged"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Add an Automated Response Recommendation panel directly below the Real-Time Risk Analysis section with title 'Automated Response Recommendation', displaying a red alert box for risk >70% with text 'HIGH RISK DETECTED – Immediate Action Required' and recommended actions (Conduct emergency water testing, Initiate chlorination protocols, Issue public advisory, Mobilize PHC response teams), a yellow warning version for moderate risk, and a green informational version for low risk, using consistent card styling",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Directly below the Real-Time Risk Analysis section, add: Title: \"Automated Response Recommendation\""
+        ]
+      },
+      "acceptanceCriteria": [
+        "Panel appears directly below Real-Time Risk Analysis section",
+        "Title displays 'Automated Response Recommendation'",
+        "Red alert box displays for risk >70%",
+        "Alert text shows 'HIGH RISK DETECTED – Immediate Action Required'",
+        "Four recommended actions list displays for high risk",
+        "Yellow warning version displays for moderate risk (40-70%)",
+        "Green informational version displays for low risk (<40%)",
+        "Card styling matches existing dashboard cards"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Add a Ward Risk Distribution section below the Alert panel with title 'Ward Risk Distribution', displaying a responsive grid of 8 ward cards (Ward 1 – Central, Ward 2 – North, Ward 3 – South, Ward 4 – East, Ward 5 – West, Ward 6 – Northeast, Ward 7 – Southeast, Ward 8 – Northwest), where each card shows risk percentage, risk level label, and color-coded border based on risk level, plus a legend indicating Green (<40%), Orange (40–70%), Red (>70%), maintaining the light theme styling",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Below the Alert section, add: Title: \"Ward Risk Distribution\" Create a responsive grid of 8 ward cards"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Section appears below the Alert panel",
+        "Title displays 'Ward Risk Distribution'",
+        "Grid displays exactly 8 ward cards",
+        "Each card shows ward name with geographic identifier",
+        "Risk percentage displays on each card",
+        "Risk level label displays on each card",
+        "Border color changes based on risk level",
+        "Legend displays three risk thresholds with colors",
+        "Grid is responsive across screen sizes",
+        "Light theme styling maintained"
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Add an Explainable AI – Factor Contribution section below the ward grid with title 'Explainable AI – Factor Contribution', displaying horizontal impact bars for Rainfall Impact, Humidity Impact, Turbidity Impact, and Bacteria Index Impact, followed by explanation text stating 'The outbreak risk is primarily driven by rainfall and bacterial load. Elevated turbidity and humidity further increase disease transmission probability.', matching the existing UI style",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Below the ward grid, add: Title: \"Explainable AI – Factor Contribution\" Include horizontal impact bars for: Rainfall Impact Humidity Impact Turbidity Impact Bacteria Index Impact"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Section appears below the ward risk grid",
+        "Title displays 'Explainable AI – Factor Contribution'",
+        "Four horizontal bars display for each impact factor",
+        "Bars show visual proportions of factor contributions",
+        "Explanation text displays below the bars",
+        "Text content matches the specified wording",
+        "Visual style matches existing dashboard components"
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Add a data freshness footer at the bottom of the dashboard displaying 'Last Data Updated:' with a dynamic timestamp and 'Data Sources: IMD Rainfall API, Water Quality Sensors, PHC Surveillance Reports' in small grey text with minimal styling",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "At bottom of dashboard, add small grey text: Last Data Updated: Dynamic timestamp Data Sources: IMD Rainfall API, Water Quality Sensors, PHC Surveillance Reports"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Footer appears at the bottom of the dashboard",
+        "Text displays 'Last Data Updated:' label",
+        "Dynamic timestamp shows current or last update time",
+        "Data sources text lists all three sources",
+        "Text color is grey",
+        "Styling is minimal and unobtrusive"
+      ]
+    },
+    {
+      "id": "REQ-16",
+      "text": "Generate realistic mock data for the 14-day forecast projection showing outbreak probability percentages for each of the next 14 days with appropriate variance to simulate predictive trends",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ]
+      },
+      "acceptanceCriteria": [
+        "14 data points generated for future days",
+        "Values represent realistic outbreak probabilities",
+        "Data shows logical progression patterns",
+        "Values vary appropriately to simulate uncertainty"
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "text": "Generate realistic mock risk data for each of the 8 wards (Central, North, South, East, West, Northeast, Southeast, Northwest) with risk percentages and levels that vary across wards to create a meaningful heatmap visualization",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each ward has a unique risk percentage",
+        "Risk levels vary across different wards",
+        "Data creates a visually meaningful heatmap",
+        "Risk values are realistic for district distribution"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not change the current light theme or layout structure",
+    "Maintain the clean white and blue medical analytics style",
+    "Do not redesign existing UI components",
+    "Preserve the existing card layout when extending components",
+    "Keep consistent card styling across all new sections",
+    "Match the visual style of existing line charts for new forecast section",
+    "Maintain the government health dashboard aesthetic"
+  ],
+  "nonGoals": [
+    "Changing the color theme from light to dark",
+    "Redesigning existing dashboard components",
+    "Modifying the overall layout structure",
+    "Integrating actual XGBoost model or real API connections",
+    "Adding authentication or user management features",
+    "Creating backend endpoints for forecast or ward data"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
