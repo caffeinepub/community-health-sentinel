@@ -1,12 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the IC0508 canister rejection error preventing the outbreak risk calculation from completing successfully in the Government Data Panel.
+**Goal:** Make the Disease Risk Distribution calculate disease probabilities dynamically based on environmental input data instead of using hardcoded values.
 
 **Planned changes:**
-- Debug and resolve the IC0508 canister stopped error occurring when predictOutbreakRisk is called from the GovernmentDataPanel component
-- Verify backend predictOutbreakRisk function handles all input parameters correctly and implements the 7-day moving average calculation without runtime errors
-- Add comprehensive error handling in GovernmentDataPanel's handleUpdateRisk function with specific error messages for canister rejections, network failures, and validation errors
-- Ensure risk calculation completes successfully and updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority)
+- Update DiseaseClassification component to calculate Cholera, Typhoid, Dysentery, and Hepatitis A probabilities using weighted formulas based on rainfall, humidity, turbidity, and bacteria index
+- Add custom event dispatching in GovernmentDataPanel after successful risk calculation to trigger disease probability recalculation
+- Add custom event dispatching in RiskPredictionPanel after successful prediction to trigger disease probability recalculation
+- Add event listener in DiseaseClassification to handle disease-classification-updated events and recalculate probabilities
+- Normalize all calculated probabilities to sum to 100%
+- Maintain existing UI with bar chart, pie chart, and red highlighting for highest probability disease
 
-**User-visible outcome:** Users can successfully click "Update & Recalculate Risk" button to calculate outbreak probability without seeing canister rejection errors. The dashboard displays valid risk percentages and updates all visualization components, with meaningful error messages shown if calculation fails.
+**User-visible outcome:** Disease risk percentages in the Disease Classification panel will automatically update based on the environmental data entered (rainfall, humidity, turbidity, bacteria index) rather than showing static hardcoded values.

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-debug-and-fix-the-ic0508-canister-rejection-error-occurring-when-the-governmentdatapanel-component-calls-the-backend-predictoutbreakrisk-function-ensuring-the-http-call-completes-successfully-without-canister-id-4ctyt-niaaa-aaaal-auroq-cai-non-replicated-rejection-or-reject-code-5-errors",
-      "featureTitle": "Debug and fix the IC0508 canister rejection error occurring when the GovernmentDataPanel component calls the backend predictOutbreakRisk function, ensuring the HTTP call completes successfully without 'canister_id', '4ctyt-niaaa-aaaal-auroq-cai', 'non_replicated_rejection', or 'reject_code 5' errors",
+      "featureId": "feature-update-the-diseaseclassification-component-frontend-src-components-diseaseclassification-tsx-to-calculate-disease-probability-percentages-dynamically-based-on-environmental-input-data-instead-of-using-hardcoded-values-implementing-a-formula-that-derives-cholera-typhoid-dysentery-and-hepatitis-a-probabilities-from-rainfall-humidity-turbidity-and-bacteria-index-parameters",
+      "featureTitle": "Update the DiseaseClassification component (frontend/src/components/DiseaseClassification.tsx) to calculate disease probability percentages dynamically based on environmental input data instead of using hardcoded values, implementing a formula that derives Cholera, Typhoid, Dysentery, and Hepatitis A probabilities from rainfall, humidity, turbidity, and bacteria index parameters",
       "files": [
-        "frontend/src/components/GovernmentDataPanel.tsx"
+        "frontend/src/components/DiseaseClassification.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -16,13 +16,13 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-101"
+        "REQ-116"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-comprehensive-error-handling-and-logging-to-the-governmentdatapanel-component-s-handleupdaterisk-function-to-catch-and-display-specific-backend-call-failures-canister-errors-or-network-issues-with-user-friendly-error-messages-in-toast-notifications",
-      "featureTitle": "Add comprehensive error handling and logging to the GovernmentDataPanel component's handleUpdateRisk function to catch and display specific backend call failures, canister errors, or network issues with user-friendly error messages in toast notifications",
+      "featureId": "feature-update-the-governmentdatapanel-component-to-dispatch-a-disease-classification-updated-custom-event-whenever-the-update-recalculate-risk-button-successfully-completes-passing-the-current-environmental-parameters-rainfall-humidity-turbidity-bacteria-index-in-the-event-detail-so-diseaseclassification-can-recalculate-probabilities",
+      "featureTitle": "Update the GovernmentDataPanel component to dispatch a 'disease-classification-updated' custom event whenever the 'Update & Recalculate Risk' button successfully completes, passing the current environmental parameters (rainfall, humidity, turbidity, bacteria index) in the event detail so DiseaseClassification can recalculate probabilities",
       "files": [
         "frontend/src/components/GovernmentDataPanel.tsx"
       ],
@@ -35,7 +35,45 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-103"
+        "REQ-117"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-riskpredictionpanel-component-hospital-phc-view-to-dispatch-the-same-disease-classification-updated-custom-event-after-successful-risk-prediction-ensuring-disease-probabilities-update-in-both-government-and-hospital-views",
+      "featureTitle": "Update the RiskPredictionPanel component (Hospital/PHC view) to dispatch the same 'disease-classification-updated' custom event after successful risk prediction, ensuring disease probabilities update in both Government and Hospital views",
+      "files": [
+        "frontend/src/components/RiskPredictionPanel.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-118"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-listener-in-the-diseaseclassification-component-to-handle-disease-classification-updated-events-extract-the-environmental-parameters-from-the-event-detail-recalculate-the-four-disease-probabilities-using-the-weighted-formulas-normalize-them-to-sum-to-100-and-update-the-component-state-to-trigger-re-rendering-of-both-charts",
+      "featureTitle": "Add a listener in the DiseaseClassification component to handle 'disease-classification-updated' events, extract the environmental parameters from the event detail, recalculate the four disease probabilities using the weighted formulas, normalize them to sum to 100%, and update the component state to trigger re-rendering of both charts",
+      "files": [
+        "frontend/src/components/DiseaseClassification.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-119"
       ],
       "confidence": "high"
     }

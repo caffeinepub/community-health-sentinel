@@ -1,9 +1,13 @@
 import Array "mo:core/Array";
 import Float "mo:core/Float";
 import Int "mo:core/Int";
-import Debug "mo:core/Debug";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
+import Map "mo:core/Map";
+import Nat "mo:core/Nat";
+import Debug "mo:core/Debug";
+
+
 
 actor {
   public type RiskPrediction = {
@@ -13,10 +17,85 @@ actor {
     timestamp : Time.Time;
   };
 
+  public type WardKey = Nat;
+  public type WardData = {
+    rainfall : Float;
+    humidity : Float;
+    turbidity : Float;
+    bacteriaIndex : Float;
+    riskPrediction : RiskPrediction;
+  };
+
+  public type WardReference = {
+    wardNumber : WardKey;
+    fullName : Text;
+    riskColor : Text;
+    mapCellDescription : Text;
+  };
+
+  let wardReferences : [WardReference] = [
+    {
+      wardNumber = 1;
+      fullName = "North Wind";
+      riskColor = "Green";
+      mapCellDescription = "Row 1, Column 1";
+    },
+    {
+      wardNumber = 2;
+      fullName = "Sunny Haven";
+      riskColor = "Yellow";
+      mapCellDescription = "Row 1, Column 2";
+    },
+    {
+      wardNumber = 3;
+      fullName = "Misty Ridge";
+      riskColor = "Red";
+      mapCellDescription = "Row 1, Column 3";
+    },
+    {
+      wardNumber = 4;
+      fullName = "Willow Creek";
+      riskColor = "Green";
+      mapCellDescription = "Row 2, Column 1";
+    },
+    {
+      wardNumber = 5;
+      fullName = "Lakeside Meadows";
+      riskColor = "Red";
+      mapCellDescription = "Row 2, Column 2";
+    },
+    {
+      wardNumber = 6;
+      fullName = "Blossom Hill";
+      riskColor = "Yellow";
+      mapCellDescription = "Row 2, Column 3";
+    },
+    {
+      wardNumber = 7;
+      fullName = "Pine Valley";
+      riskColor = "Green";
+      mapCellDescription = "Row 3, Column 1";
+    },
+    {
+      wardNumber = 8;
+      fullName = "Sunset Cross";
+      riskColor = "Green";
+      mapCellDescription = "Row 3, Column 2";
+    },
+    {
+      wardNumber = 9;
+      fullName = "Riverbend";
+      riskColor = "Yellow";
+      mapCellDescription = "Row 3, Column 3";
+    },
+  ];
+
   var rainfallHistory : [Float] = Array.repeat<Float>(0.0, 7);
   var humidityHistory : [Float] = Array.repeat<Float>(0.0, 7);
   var turbidityHistory : [Float] = Array.repeat<Float>(0.0, 7);
   var bacteriaHistory : [Float] = Array.repeat<Float>(0.0, 7);
+
+  let wardDataMap = Map.empty<WardKey, WardData>();
 
   func calculateSum(slice : [Float]) : Float {
     slice.foldLeft(0.0, func(acc, value) { acc + value });
@@ -33,14 +112,6 @@ actor {
       sum := calculateSum(data);
       sum / data.size().toFloat();
     };
-  };
-
-  public shared ({ caller }) func resetHistoricalData() : async () {
-    rainfallHistory := Array.repeat<Float>(0.0, 7);
-    humidityHistory := Array.repeat<Float>(0.0, 7);
-    turbidityHistory := Array.repeat<Float>(0.0, 7);
-    bacteriaHistory := Array.repeat<Float>(0.0, 7);
-    Debug.print("Historical data arrays have been reset to all zeros.");
   };
 
   func updateHistory(newValue : Float, history : [Float]) : [Float] {
@@ -65,12 +136,12 @@ actor {
     Debug.print(logMsg);
   };
 
-  public shared ({ caller }) func predictOutbreakRisk(
+  func calculateRisk(
     rainfall : Float,
     humidity : Float,
     turbidity : Float,
     bacteriaIndex : Float,
-  ) : async RiskPrediction {
+  ) : RiskPrediction {
     logInput("rainfall", rainfall);
     logInput("humidity", humidity);
     logInput("turbidity", turbidity);
@@ -133,5 +204,84 @@ actor {
       message;
       timestamp = Time.now();
     };
+  };
+
+  public query ({ caller }) func getWardReferences() : async [WardReference] {
+    wardReferences;
+  };
+
+  public query ({ caller }) func getAllWardColors() : async [(WardKey, Text)] {
+    let colors = [
+      (1, "Green"),
+      (2, "Yellow"),
+      (3, "Red"),
+      (4, "Green"),
+      (5, "Red"),
+      (6, "Yellow"),
+      (7, "Green"),
+      (8, "Green"),
+      (9, "Yellow"),
+    ];
+    colors;
+  };
+
+  public query ({ caller }) func getExistingRiskPrediction(wardKey : WardKey) : async ?RiskPrediction {
+    switch (wardDataMap.get(wardKey)) {
+      case (null) { null };
+      case (?data) { ?data.riskPrediction };
+    };
+  };
+
+  public shared ({ caller }) func calculateAndPersistRisk(
+    wardKey : WardKey,
+    rainfall : Float,
+    humidity : Float,
+    turbidity : Float,
+    bacteriaIndex : Float,
+  ) : async ?RiskPrediction {
+    if (wardKey < 1 or wardKey > 9) {
+      Debug.print("wardKey " # wardKey.toText() # " is out of range. Returning null.");
+      return null;
+    };
+
+    let risk = calculateRisk(rainfall, humidity, turbidity, bacteriaIndex);
+
+    let newWardData : WardData = {
+      rainfall;
+      humidity;
+      turbidity;
+      bacteriaIndex;
+      riskPrediction = risk;
+    };
+    wardDataMap.add(wardKey, newWardData);
+
+    ?risk;
+  };
+
+  public shared ({ caller }) func resetHistoricalData() : async () {
+    rainfallHistory := Array.repeat<Float>(0.0, 7);
+    humidityHistory := Array.repeat<Float>(0.0, 7);
+    turbidityHistory := Array.repeat<Float>(0.0, 7);
+    bacteriaHistory := Array.repeat<Float>(0.0, 7);
+
+    let emptyMap = Map.empty<WardKey, WardData>();
+    while (wardDataMap.size() > 0) {
+      let firstKey = switch (wardDataMap.keys().next()) {
+        case (null) { return };
+        case (?key) { key };
+      };
+      switch (wardDataMap.get(firstKey)) {
+        case (null) {};
+        case (?wardData) {
+          emptyMap.add(firstKey, wardData);
+        };
+      };
+    };
+
+    Debug.print("Data arrays have been reset to all zeros. Persisted data cleared.");
+  };
+
+  public query ({ caller }) func getAllPersistedWardData() : async [(WardKey, WardData)] {
+    wardDataMap.toArray();
   };
 };

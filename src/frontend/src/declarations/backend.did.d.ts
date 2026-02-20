@@ -17,11 +17,29 @@ export interface RiskPrediction {
   'timestamp' : Time,
 }
 export type Time = bigint;
+export interface WardData {
+  'turbidity' : number,
+  'bacteriaIndex' : number,
+  'humidity' : number,
+  'rainfall' : number,
+  'riskPrediction' : RiskPrediction,
+}
+export type WardKey = bigint;
+export interface WardReference {
+  'fullName' : string,
+  'riskColor' : string,
+  'mapCellDescription' : string,
+  'wardNumber' : WardKey,
+}
 export interface _SERVICE {
-  'predictOutbreakRisk' : ActorMethod<
-    [number, number, number, number],
-    RiskPrediction
+  'calculateAndPersistRisk' : ActorMethod<
+    [WardKey, number, number, number, number],
+    [] | [RiskPrediction]
   >,
+  'getAllPersistedWardData' : ActorMethod<[], Array<[WardKey, WardData]>>,
+  'getAllWardColors' : ActorMethod<[], Array<[WardKey, string]>>,
+  'getExistingRiskPrediction' : ActorMethod<[WardKey], [] | [RiskPrediction]>,
+  'getWardReferences' : ActorMethod<[], Array<WardReference>>,
   'resetHistoricalData' : ActorMethod<[], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;

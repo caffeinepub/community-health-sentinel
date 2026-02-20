@@ -1,41 +1,76 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix IC0508 canister rejection error in predictOutbreakRisk backend call",
+  "title": "Calculate Disease Risk Distribution dynamically from environmental input data",
   "requirements": [
     {
-      "id": "REQ-101",
-      "summary": "Fix IC0508 canister rejection error when GovernmentDataPanel calls backend predictOutbreakRisk function",
+      "id": "REQ-116",
+      "summary": "Update DiseaseClassification component to calculate disease probabilities dynamically based on environmental input data using weighted formulas instead of hardcoded values",
       "acceptanceCriteria": [
-        "The 'Update & Recalculate Risk' button in GovernmentDataPanel successfully calls backend predictOutbreakRisk without IC0508 errors",
-        "Risk calculation completes and returns valid outbreak probability percentage",
-        "All dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority) update correctly after risk calculation",
-        "No canister rejection errors appear in the UI or browser console",
-        "Alert history entry is created successfully with calculated risk outputs"
+        "Disease probabilities update dynamically when risk-data-updated or ward-data-updated events are dispatched",
+        "Cholera probability calculation weighs bacteria index and turbidity heavily (e.g., 40% bacteria, 30% turbidity, 20% rainfall, 10% humidity)",
+        "Typhoid probability calculation weighs contamination and sanitation factors (e.g., 35% bacteria, 25% turbidity, 25% humidity, 15% rainfall)",
+        "Dysentery probability calculation emphasizes water quality and bacteria (e.g., 45% bacteria, 30% turbidity, 15% rainfall, 10% humidity)",
+        "Hepatitis A probability calculation weighs sanitation and contamination (e.g., 30% bacteria, 30% turbidity, 25% humidity, 15% rainfall)",
+        "All four disease probabilities sum to 100% by normalizing the calculated values",
+        "The highest probability disease is highlighted in red as before",
+        "Both bar chart and pie chart visualizations update to reflect the calculated probabilities"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/GovernmentDataPanel.tsx",
+          "path": "frontend/src/components/DiseaseClassification.tsx",
           "operation": "modify",
-          "description": "Fix the backend actor call in handleUpdateRisk function to ensure predictOutbreakRisk is invoked correctly. Verify the actor is properly authenticated and available before making the call. Add checks to ensure the canister is running and the connection is established. Ensure input parameters (rainfall, humidity, turbidity, bacteriaIndex) are passed with correct types and valid ranges."
+          "description": "Replace hardcoded disease probabilities with dynamic calculation logic. Add a calculateDiseaseProbabilities function that takes environmental parameters (rainfall, humidity, turbidity, bacteriaIndex) and returns normalized probabilities for Cholera (40% bacteria, 30% turbidity, 20% rainfall, 10% humidity), Typhoid (35% bacteria, 25% turbidity, 25% humidity, 15% rainfall), Dysentery (45% bacteria, 30% turbidity, 15% rainfall, 10% humidity), and Hepatitis A (30% bacteria, 30% turbidity, 25% humidity, 15% rainfall). Normalize all four values to sum to exactly 100%. Update the component state to use these calculated values and maintain the existing red highlighting for the highest probability disease. Preserve the existing bar chart and pie chart visualizations."
         }
       ]
     },
     {
-      "id": "REQ-103",
-      "summary": "Add comprehensive error handling and logging to GovernmentDataPanel's handleUpdateRisk function",
+      "id": "REQ-117",
+      "summary": "Update GovernmentDataPanel to dispatch disease-classification-updated event after successful risk calculation with environmental parameters",
       "acceptanceCriteria": [
-        "Try-catch block wraps the backend predictOutbreakRisk call",
-        "Specific error types are identified: canister rejection, network failure, validation errors",
-        "Error messages display the actual failure reason from the backend response",
-        "Console logs include full error details for debugging",
-        "User sees actionable error message in UI (not generic 'Risk Calculation Failed')"
+        "Custom event is dispatched after successful backend risk calculation",
+        "Event detail includes all four environmental parameters with their current values",
+        "Event is dispatched from the handleUpdateRisk function after localStorage update"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/GovernmentDataPanel.tsx",
           "operation": "modify",
-          "description": "Enhance error handling in handleUpdateRisk with detailed try-catch logic. Parse and categorize error types: IC0508 canister stopped errors, canister rejection errors (reject_code 5), network failures, and validation errors. Extract meaningful error details from rejection messages including canister_id, reject_code, and reject_text. Display user-friendly, actionable error messages in toast notifications that explain the specific failure (e.g., 'Backend service is temporarily unavailable' for IC0508, 'Invalid input parameters' for validation errors). Log full error objects with stack traces to console for debugging. Replace generic 'Risk Calculation Failed' message with context-specific error information."
+          "description": "Add a new custom event dispatch in the handleUpdateRisk function after the successful backend call and localStorage update. Dispatch a 'disease-classification-updated' event with detail containing the four environmental parameters: { rainfall, humidity, turbidity, bacteriaIndex }. Ensure the event is dispatched to window so DiseaseClassification can listen for it."
+        }
+      ]
+    },
+    {
+      "id": "REQ-118",
+      "summary": "Update RiskPredictionPanel to dispatch disease-classification-updated event after successful prediction for Hospital/PHC users",
+      "acceptanceCriteria": [
+        "Event is dispatched after successful backend prediction call",
+        "Event includes the environmental parameters used for prediction",
+        "Disease classification updates correctly for Hospital/PHC users"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/RiskPredictionPanel.tsx",
+          "operation": "modify",
+          "description": "Add a new custom event dispatch in the handlePredict function after the successful backend prediction call. Dispatch a 'disease-classification-updated' event with detail containing the four environmental parameters: { rainfall, humidity, turbidity, bacteriaIndex }. Ensure the event is dispatched to window so DiseaseClassification can listen for it across different user roles."
+        }
+      ]
+    },
+    {
+      "id": "REQ-119",
+      "summary": "Add event listener in DiseaseClassification to handle disease-classification-updated events and recalculate probabilities using weighted formulas",
+      "acceptanceCriteria": [
+        "Event listener is registered on component mount and cleaned up on unmount",
+        "Disease probabilities are recalculated using scientifically plausible weighting formulas",
+        "All probabilities are normalized to ensure they sum to exactly 100%",
+        "Bar chart and pie chart both reflect the updated calculated values",
+        "The highest probability disease is correctly highlighted in red"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DiseaseClassification.tsx",
+          "operation": "modify",
+          "description": "Add a useEffect hook that registers an event listener for 'disease-classification-updated' events on window. Extract the environmental parameters (rainfall, humidity, turbidity, bacteriaIndex) from event.detail. Call the calculateDiseaseProbabilities function (created in REQ-116) with these parameters to compute the four disease probabilities. Update the component state with the new calculated probabilities, triggering re-render of both bar chart and pie chart. Clean up the event listener on component unmount. Ensure the red highlighting logic for the highest probability disease continues to work with the dynamically calculated values."
         }
       ]
     }

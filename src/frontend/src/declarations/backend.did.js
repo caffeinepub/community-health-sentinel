@@ -8,6 +8,7 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const WardKey = IDL.Nat;
 export const Time = IDL.Int;
 export const RiskPrediction = IDL.Record({
   'riskCategory' : IDL.Text,
@@ -15,19 +16,49 @@ export const RiskPrediction = IDL.Record({
   'message' : IDL.Text,
   'timestamp' : Time,
 });
+export const WardData = IDL.Record({
+  'turbidity' : IDL.Float64,
+  'bacteriaIndex' : IDL.Float64,
+  'humidity' : IDL.Float64,
+  'rainfall' : IDL.Float64,
+  'riskPrediction' : RiskPrediction,
+});
+export const WardReference = IDL.Record({
+  'fullName' : IDL.Text,
+  'riskColor' : IDL.Text,
+  'mapCellDescription' : IDL.Text,
+  'wardNumber' : WardKey,
+});
 
 export const idlService = IDL.Service({
-  'predictOutbreakRisk' : IDL.Func(
-      [IDL.Float64, IDL.Float64, IDL.Float64, IDL.Float64],
-      [RiskPrediction],
+  'calculateAndPersistRisk' : IDL.Func(
+      [WardKey, IDL.Float64, IDL.Float64, IDL.Float64, IDL.Float64],
+      [IDL.Opt(RiskPrediction)],
       [],
     ),
+  'getAllPersistedWardData' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(WardKey, WardData))],
+      ['query'],
+    ),
+  'getAllWardColors' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(WardKey, IDL.Text))],
+      ['query'],
+    ),
+  'getExistingRiskPrediction' : IDL.Func(
+      [WardKey],
+      [IDL.Opt(RiskPrediction)],
+      ['query'],
+    ),
+  'getWardReferences' : IDL.Func([], [IDL.Vec(WardReference)], ['query']),
   'resetHistoricalData' : IDL.Func([], [], []),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const WardKey = IDL.Nat;
   const Time = IDL.Int;
   const RiskPrediction = IDL.Record({
     'riskCategory' : IDL.Text,
@@ -35,13 +66,42 @@ export const idlFactory = ({ IDL }) => {
     'message' : IDL.Text,
     'timestamp' : Time,
   });
+  const WardData = IDL.Record({
+    'turbidity' : IDL.Float64,
+    'bacteriaIndex' : IDL.Float64,
+    'humidity' : IDL.Float64,
+    'rainfall' : IDL.Float64,
+    'riskPrediction' : RiskPrediction,
+  });
+  const WardReference = IDL.Record({
+    'fullName' : IDL.Text,
+    'riskColor' : IDL.Text,
+    'mapCellDescription' : IDL.Text,
+    'wardNumber' : WardKey,
+  });
   
   return IDL.Service({
-    'predictOutbreakRisk' : IDL.Func(
-        [IDL.Float64, IDL.Float64, IDL.Float64, IDL.Float64],
-        [RiskPrediction],
+    'calculateAndPersistRisk' : IDL.Func(
+        [WardKey, IDL.Float64, IDL.Float64, IDL.Float64, IDL.Float64],
+        [IDL.Opt(RiskPrediction)],
         [],
       ),
+    'getAllPersistedWardData' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(WardKey, WardData))],
+        ['query'],
+      ),
+    'getAllWardColors' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(WardKey, IDL.Text))],
+        ['query'],
+      ),
+    'getExistingRiskPrediction' : IDL.Func(
+        [WardKey],
+        [IDL.Opt(RiskPrediction)],
+        ['query'],
+      ),
+    'getWardReferences' : IDL.Func([], [IDL.Vec(WardReference)], ['query']),
     'resetHistoricalData' : IDL.Func([], [], []),
   });
 };

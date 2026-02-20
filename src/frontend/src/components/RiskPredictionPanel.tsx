@@ -156,8 +156,31 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
     setIsLoading(true);
 
     try {
-      const result = await actor.predictOutbreakRisk(rainfallNum, humidityNum, turbidityNum, bacteriaNum);
+      // Extract ward number from selectedWard (e.g., "Ward 5" -> 5)
+      // Default to ward 1 if not available (for citizen view)
+      let wardNumber = 1;
+      if (selectedWard && selectedWard.startsWith('Ward ')) {
+        const wardNum = parseInt(selectedWard.replace('Ward ', ''));
+        if (!isNaN(wardNum) && wardNum >= 1 && wardNum <= 9) {
+          wardNumber = wardNum;
+        }
+      }
+
+      // Call backend calculateAndPersistRisk
+      // Note: This will calculate risk but won't overwrite government data
+      // since Hospital/PHC users typically assess without persisting official records
+      const result = await actor.calculateAndPersistRisk(
+        BigInt(wardNumber),
+        rainfallNum,
+        humidityNum,
+        turbidityNum,
+        bacteriaNum
+      );
       
+      if (!result) {
+        throw new Error('Backend returned null response. Please try again.');
+      }
+
       if (typeof result.riskPercentage !== 'number' || isNaN(result.riskPercentage)) {
         throw new Error('Invalid response from backend: risk percentage is not a valid number');
       }
@@ -169,6 +192,17 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
         inputs: { rainfall: rainfallNum, humidity: humidityNum, turbidity: turbidityNum, bacteriaIndex: bacteriaNum }
       });
       setError(null);
+
+      // Dispatch disease-classification-updated event with environmental parameters
+      console.log('[RiskPredictionPanel] Dispatching disease-classification-updated event');
+      window.dispatchEvent(new CustomEvent('disease-classification-updated', {
+        detail: {
+          rainfall: rainfallNum,
+          humidity: humidityNum,
+          turbidity: turbidityNum,
+          bacteriaIndex: bacteriaNum
+        }
+      }));
 
       // Store alert in history if MEDIUM or HIGH (for Hospital/PHC)
       if (result.riskPercentage >= 30 && userRole === 'healthcare') {

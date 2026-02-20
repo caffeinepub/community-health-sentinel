@@ -190,9 +190,9 @@ export default function GovernmentDataPanel() {
     const errorString = error?.toString() || '';
     const errorMessage = error?.message || errorString;
     
-    console.error('Full error object:', error);
-    console.error('Error string:', errorString);
-    console.error('Error message:', errorMessage);
+    console.error('[GovernmentDataPanel] Full error object:', error);
+    console.error('[GovernmentDataPanel] Error string:', errorString);
+    console.error('[GovernmentDataPanel] Error message:', errorMessage);
     
     // Check for IC0508 canister stopped error
     if (errorString.includes('IC0508') || errorMessage.includes('IC0508')) {
@@ -279,21 +279,39 @@ export default function GovernmentDataPanel() {
       const waterNum = parseFloat(waterTreatmentCoverage);
       const densityNum = parseFloat(populationDensity);
       const casesNum = parseFloat(reportedCases);
+      const wardId = parseInt(ward);
       
-      // Call backend to calculate risk
-      console.log('🔄 Calling backend predictOutbreakRisk with:', { 
+      console.log(`[GovernmentDataPanel] Starting risk update for ward ${wardId}`);
+      console.log('[GovernmentDataPanel] Selected ward number:', wardId);
+      
+      // Call backend to calculate and persist risk
+      console.log('[GovernmentDataPanel] Calling backend calculateAndPersistRisk with:', { 
+        wardKey: wardId,
         rainfall: rainfallNum, 
         humidity: humidityNum, 
         turbidity: turbidityNum, 
-        bacteriaIndex: bacteriaNum 
+        bacteriaIndex: bacteriaNum
       });
       
-      const result = await actor.predictOutbreakRisk(rainfallNum, humidityNum, turbidityNum, bacteriaNum);
+      const result = await actor.calculateAndPersistRisk(
+        BigInt(wardId),
+        rainfallNum,
+        humidityNum,
+        turbidityNum,
+        bacteriaNum
+      );
       
-      console.log('✅ Backend response received:', result);
+      console.log('[GovernmentDataPanel] Backend response received:', result);
+      
+      // Validate backend response
+      if (!result) {
+        throw new Error('Backend returned null response. Ward key may be out of range (1-9).');
+      }
       
       const riskPercentage = result.riskPercentage;
       const riskCategory = result.riskCategory;
+      
+      console.log('[GovernmentDataPanel] Risk calculation successful:', { riskPercentage, riskCategory });
       
       // Calculate priority score
       const priorityScore = calculatePriorityScore(riskPercentage, sanitationNum, waterNum, densityNum);
@@ -312,20 +330,33 @@ export default function GovernmentDataPanel() {
       });
       localStorage.setItem('environmental_input_history', JSON.stringify(history.slice(0, 7)));
       
-      // Store ward-specific data for heatmap calculation
+      // Store complete ward-specific data with risk prediction for heatmap
       const wardData = {
-        wardId: parseInt(ward),
+        wardId: wardId,
+        rainfall: rainfallNum,
+        humidity: humidityNum,
+        turbidity: turbidityNum,
+        bacteriaIndex: bacteriaNum,
         sanitationCoverage: sanitationNum,
         waterTreatmentCoverage: waterNum,
         populationDensity: densityNum,
+        riskPrediction: {
+          riskPercentage: riskPercentage,
+          riskCategory: riskCategory
+        },
         timestamp: new Date().toISOString()
       };
-      localStorage.setItem(`ward_${ward}_data`, JSON.stringify(wardData));
+      
+      const storageKey = `ward_${wardId}_data`;
+      console.log(`[GovernmentDataPanel] Writing to localStorage key: ${storageKey}`);
+      console.log('[GovernmentDataPanel] Complete data object being saved:', wardData);
+      localStorage.setItem(storageKey, JSON.stringify(wardData));
+      console.log('[GovernmentDataPanel] localStorage write complete');
       
       // Update last government report
       localStorage.setItem('last_government_report', JSON.stringify({
         timestamp: new Date().toISOString(),
-        ward: `Ward ${ward}`,
+        ward: `Ward ${wardId}`,
         waterQualityIndex: Math.round(100 - riskPercentage),
         bacteriaLevel: bacteriaNum,
         turbidity: turbidityNum,
@@ -336,41 +367,24 @@ export default function GovernmentDataPanel() {
         riskLevel: riskCategory
       }));
       
-      // Determine if email should be sent automatically for high risk
-      let emailSent = 'No';
-      if (riskPercentage > 70) {
-        console.log('⚠️ High risk detected (>70%), sending automatic alert email...');
-        try {
-          await sendAlertEmail({
-            risk_level: riskCategory,
-            risk_percentage: riskPercentage,
-            time: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-            rainfall: rainfallNum,
-            humidity: humidityNum,
-            turbidity: turbidityNum,
-            bacteria: bacteriaNum,
-            ward: `Ward ${ward}`,
-            priority_score: priorityScore
-          });
-          emailSent = 'Yes';
-          console.log('✅ Automatic alert email sent successfully');
-          toast.success('Government Alert Sent Successfully', {
-            description: `High risk alert email sent for Ward ${ward}`,
-            duration: 5000
-          });
-        } catch (emailError) {
-          console.error('❌ Automatic email send failed:', emailError);
-          toast.error('Email Alert Failed', {
-            description: emailError instanceof Error ? emailError.message : 'Failed to send email',
-            duration: 5000
-          });
+      // Dispatch disease-classification-updated event with environmental parameters
+      console.log('[GovernmentDataPanel] Dispatching disease-classification-updated event');
+      window.dispatchEvent(new CustomEvent('disease-classification-updated', {
+        detail: {
+          rainfall: rainfallNum,
+          humidity: humidityNum,
+          turbidity: turbidityNum,
+          bacteriaIndex: bacteriaNum
         }
-      }
+      }));
       
-      // Store complete alert record
-      const alertRecord = {
+      // Determine if email should be sent automatically for high risk
+      const shouldSendEmail = riskPercentage >= 70;
+      
+      // Store alert in history
+      const alert = {
         timestamp: new Date().toISOString(),
-        ward: `Ward ${ward}`,
+        ward: `Ward ${wardId}`,
         rainfall: rainfallNum,
         humidity: humidityNum,
         turbidity: turbidityNum,
@@ -381,379 +395,336 @@ export default function GovernmentDataPanel() {
         riskPercentage: riskPercentage,
         diseaseMostLikely: diseaseClass.mostLikely,
         priorityScore: priorityScore,
-        emailSent: emailSent,
+        emailSent: shouldSendEmail ? 'Yes' : 'No',
         recommendedAction: getRecommendedAction(riskPercentage),
-        waterSourceType,
-        chlorinationStatus: chlorinationStatus ? 'Yes' : 'No',
-        phcCapacity,
-        emergencyResponseStatus,
         populationDensity: densityNum,
         reportedCases: casesNum
       };
       
-      const alerts = JSON.parse(localStorage.getItem('cholera_alerts') || '[]');
-      alerts.unshift(alertRecord);
-      localStorage.setItem('cholera_alerts', JSON.stringify(alerts.slice(0, 100)));
+      const existingAlerts = JSON.parse(localStorage.getItem('cholera_alerts') || '[]');
+      existingAlerts.unshift(alert);
+      localStorage.setItem('cholera_alerts', JSON.stringify(existingAlerts.slice(0, 100)));
       
-      // Emit custom event for dashboard refresh (including ward data update)
-      window.dispatchEvent(new CustomEvent('risk-data-updated', { 
-        detail: {
-          riskPercentage,
-          riskCategory,
-          inputs: { rainfall: rainfallNum, humidity: humidityNum, turbidity: turbidityNum, bacteriaIndex: bacteriaNum }
+      // Dispatch events for other components
+      console.log('[GovernmentDataPanel] Dispatching ward-data-updated event for ward:', wardId);
+      window.dispatchEvent(new CustomEvent('ward-data-updated', {
+        detail: { wardId, riskPercentage, riskCategory }
+      }));
+      
+      window.dispatchEvent(new CustomEvent('risk-data-updated', {
+        detail: { riskPercentage, riskCategory }
+      }));
+      
+      // Send email if high risk
+      if (shouldSendEmail) {
+        setIsSendingEmail(true);
+        try {
+          await sendAlertEmail({
+            ward: `Ward ${wardId}`,
+            risk_level: riskCategory,
+            risk_percentage: riskPercentage,
+            rainfall: rainfallNum,
+            humidity: humidityNum,
+            turbidity: turbidityNum,
+            bacteria: bacteriaNum,
+            time: new Date().toLocaleString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              dateStyle: 'medium',
+              timeStyle: 'medium'
+            }),
+            priority_score: priorityScore
+          });
+          
+          toast.success('High Risk Alert Sent', {
+            description: `Email notification sent for Ward ${wardId} (${riskPercentage.toFixed(1)}% risk)`,
+            duration: 5000
+          });
+        } catch (emailError) {
+          console.error('[GovernmentDataPanel] Email send failed:', emailError);
+          toast.error('Email Alert Failed', {
+            description: 'Risk data saved but email notification could not be sent.',
+            duration: 5000
+          });
+        } finally {
+          setIsSendingEmail(false);
         }
-      }));
+      }
       
-      // Emit ward data update event for WardHeatmap
-      window.dispatchEvent(new CustomEvent('wardDataUpdated', {
-        detail: wardData
-      }));
-      
-      toast.success('Risk Calculation Complete', {
-        description: `Ward ${ward}: ${riskCategory} (${riskPercentage.toFixed(1)}%)`,
+      toast.success('Risk Data Updated Successfully', {
+        description: `Ward ${wardId}: ${riskCategory} (${riskPercentage.toFixed(1)}%)`,
         duration: 5000
       });
       
     } catch (error) {
-      console.error('❌ Risk calculation error:', error);
-      
-      // Parse and display specific error
+      console.error('[GovernmentDataPanel] Risk calculation error:', error);
       const { title, description } = parseCanisterError(error);
-      
       toast.error(title, {
-        description: description,
-        duration: 5000
+        description,
+        duration: 7000
       });
     } finally {
       setIsCalculating(false);
     }
   };
   
-  const handleSendAlertManually = async () => {
-    if (!ward) {
-      toast.error('Please select a ward first', { duration: 5000 });
-      return;
-    }
-    
-    setIsSendingEmail(true);
-    
-    try {
-      const rainfallNum = parseFloat(rainfall) || 0;
-      const humidityNum = parseFloat(humidity) || 0;
-      const turbidityNum = parseFloat(turbidity) || 0;
-      const bacteriaNum = parseFloat(bacteriaIndex) || 0;
-      const sanitationNum = parseFloat(sanitationCoverage) || 0;
-      const waterNum = parseFloat(waterTreatmentCoverage) || 0;
-      const densityNum = parseFloat(populationDensity) || 0;
-      
-      // Get last calculated risk from localStorage
-      const lastReport = localStorage.getItem('last_government_report');
-      let riskPercentage = 50;
-      let riskCategory = 'Medium (Yellow/Amber)';
-      let priorityScore = 50;
-      
-      if (lastReport) {
-        const report = JSON.parse(lastReport);
-        riskPercentage = 100 - report.waterQualityIndex;
-        riskCategory = report.riskLevel;
-        priorityScore = calculatePriorityScore(riskPercentage, sanitationNum, waterNum, densityNum);
-      }
-      
-      console.log('📧 Sending manual alert email...');
-      await sendAlertEmail({
-        risk_level: riskCategory,
-        risk_percentage: riskPercentage,
-        time: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-        rainfall: rainfallNum,
-        humidity: humidityNum,
-        turbidity: turbidityNum,
-        bacteria: bacteriaNum,
-        ward: `Ward ${ward}`,
-        priority_score: priorityScore
-      });
-      
-      console.log('✅ Manual alert email sent successfully');
-      toast.success('Alert Email Sent Successfully', {
-        description: `Manual alert sent for Ward ${ward} at ${new Date().toLocaleTimeString('en-IN')}`,
-        duration: 5000
-      });
-    } catch (error) {
-      console.error('❌ Manual email send failed:', error);
-      toast.error('Email Alert Failed', {
-        description: error instanceof Error ? error.message : 'Failed to send email',
-        duration: 5000
-      });
-    } finally {
-      setIsSendingEmail(false);
-    }
-  };
-  
   return (
-    <Card className="bg-white shadow-lg rounded-lg border-gray-200">
-      <CardHeader className="p-6 bg-blue-600 text-white rounded-t-lg">
-        <CardTitle className="text-2xl font-bold">Government Data Update Panel</CardTitle>
+    <Card className="bg-white border-medical-border shadow-medical rounded-xl">
+      <CardHeader className="p-6 bg-medical-blue text-white rounded-t-xl">
+        <CardTitle className="text-2xl">Government Data Entry & Risk Calculation</CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
-        <div className="grid grid-cols-2 gap-6">
-          {/* Ward */}
+        {/* Ward Selection */}
+        <div className="space-y-2">
+          <Label htmlFor="ward" className="text-sm font-semibold text-medical-slate">
+            Select Ward <span className="text-medical-red">*</span>
+          </Label>
+          <Select value={ward} onValueChange={setWard}>
+            <SelectTrigger id="ward" className="border-medical-border">
+              <SelectValue placeholder="Choose ward..." />
+            </SelectTrigger>
+            <SelectContent>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((w) => (
+                <SelectItem key={w} value={w.toString()}>
+                  Ward {w}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Environmental Parameters */}
+        <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="ward" className="text-sm font-semibold text-gray-700">Ward <span className="text-red-600">*</span></Label>
-            <Select value={ward} onValueChange={setWard}>
-              <SelectTrigger id="ward" className="border-gray-300">
-                <SelectValue placeholder="Select Ward" />
-              </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: 9 }, (_, i) => i + 1).map((w) => (
-                  <SelectItem key={w} value={w.toString()}>Ward {w}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {/* Rainfall */}
-          <div className="space-y-2">
-            <Label htmlFor="rainfall" className="text-sm font-semibold text-gray-700">Rainfall (mm) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="rainfall" className="text-sm font-semibold text-medical-slate">
+              Rainfall (mm) <span className="text-medical-red">*</span>
+            </Label>
             <Input
               id="rainfall"
               type="number"
-              min="0"
               step="0.1"
               value={rainfall}
               onChange={(e) => setRainfall(e.target.value)}
-              placeholder="e.g., 50.5"
-              className="border-gray-300"
+              placeholder="0.0"
+              className="border-medical-border"
             />
             {avg7DayRainfall > 0 && (
-              <p className="text-xs text-gray-500">7-day avg: {avg7DayRainfall.toFixed(1)} mm</p>
+              <p className="text-xs text-medical-grey">7-day avg: {avg7DayRainfall.toFixed(1)} mm</p>
             )}
           </div>
-          
-          {/* Humidity */}
+
           <div className="space-y-2">
-            <Label htmlFor="humidity" className="text-sm font-semibold text-gray-700">Humidity (%) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="humidity" className="text-sm font-semibold text-medical-slate">
+              Humidity (%) <span className="text-medical-red">*</span>
+            </Label>
             <Input
               id="humidity"
               type="number"
-              min="0"
-              max="100"
               step="0.1"
               value={humidity}
               onChange={(e) => setHumidity(e.target.value)}
-              placeholder="e.g., 75.0"
-              className="border-gray-300"
+              placeholder="0-100"
+              className="border-medical-border"
             />
             {avg7DayHumidity > 0 && (
-              <p className="text-xs text-gray-500">7-day avg: {avg7DayHumidity.toFixed(1)}%</p>
+              <p className="text-xs text-medical-grey">7-day avg: {avg7DayHumidity.toFixed(1)}%</p>
             )}
           </div>
-          
-          {/* Turbidity */}
+
           <div className="space-y-2">
-            <Label htmlFor="turbidity" className="text-sm font-semibold text-gray-700">Turbidity (NTU) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="turbidity" className="text-sm font-semibold text-medical-slate">
+              Turbidity (NTU) <span className="text-medical-red">*</span>
+            </Label>
             <Input
               id="turbidity"
               type="number"
-              min="0"
               step="0.1"
               value={turbidity}
               onChange={(e) => setTurbidity(e.target.value)}
-              placeholder="e.g., 10.5"
-              className="border-gray-300"
+              placeholder="0.0"
+              className="border-medical-border"
             />
           </div>
-          
-          {/* Bacteria Index */}
+
           <div className="space-y-2">
-            <Label htmlFor="bacteriaIndex" className="text-sm font-semibold text-gray-700">Bacteria Index <span className="text-red-600">*</span></Label>
+            <Label htmlFor="bacteriaIndex" className="text-sm font-semibold text-medical-slate">
+              Bacteria Index <span className="text-medical-red">*</span>
+            </Label>
             <Input
               id="bacteriaIndex"
               type="number"
-              min="0"
               step="0.1"
               value={bacteriaIndex}
               onChange={(e) => setBacteriaIndex(e.target.value)}
-              placeholder="e.g., 50.0"
-              className="border-gray-300"
+              placeholder="0.0"
+              className="border-medical-border"
             />
           </div>
-          
-          {/* Sanitation Coverage */}
+        </div>
+
+        {/* Infrastructure & Health Data */}
+        <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="sanitationCoverage" className="text-sm font-semibold text-gray-700">Sanitation Coverage (%) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="sanitationCoverage" className="text-sm font-semibold text-medical-slate">
+              Sanitation Coverage (%) <span className="text-medical-red">*</span>
+            </Label>
             <Input
               id="sanitationCoverage"
               type="number"
-              min="0"
-              max="100"
               step="0.1"
               value={sanitationCoverage}
               onChange={(e) => setSanitationCoverage(e.target.value)}
-              placeholder="e.g., 65.0"
-              className="border-gray-300"
+              placeholder="0-100"
+              className="border-medical-border"
             />
           </div>
-          
-          {/* Water Treatment Coverage */}
+
           <div className="space-y-2">
-            <Label htmlFor="waterTreatmentCoverage" className="text-sm font-semibold text-gray-700">Water Treatment Coverage (%) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="waterTreatmentCoverage" className="text-sm font-semibold text-medical-slate">
+              Water Treatment Coverage (%) <span className="text-medical-red">*</span>
+            </Label>
             <Input
               id="waterTreatmentCoverage"
               type="number"
-              min="0"
-              max="100"
               step="0.1"
               value={waterTreatmentCoverage}
               onChange={(e) => setWaterTreatmentCoverage(e.target.value)}
-              placeholder="e.g., 70.0"
-              className="border-gray-300"
+              placeholder="0-100"
+              className="border-medical-border"
             />
           </div>
-          
-          {/* Population Density */}
+
           <div className="space-y-2">
-            <Label htmlFor="populationDensity" className="text-sm font-semibold text-gray-700">Population Density (per sq km) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="populationDensity" className="text-sm font-semibold text-medical-slate">
+              Population Density <span className="text-medical-red">*</span>
+            </Label>
             <Input
               id="populationDensity"
               type="number"
-              min="0"
-              step="1"
               value={populationDensity}
               onChange={(e) => setPopulationDensity(e.target.value)}
-              placeholder="e.g., 2500"
-              className="border-gray-300"
+              placeholder="per sq km"
+              className="border-medical-border"
             />
           </div>
-          
-          {/* Reported Cases */}
+
           <div className="space-y-2">
-            <Label htmlFor="reportedCases" className="text-sm font-semibold text-gray-700">Reported Cases (Last 7 Days) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="reportedCases" className="text-sm font-semibold text-medical-slate">
+              Reported Cases (7-day) <span className="text-medical-red">*</span>
+            </Label>
             <Input
               id="reportedCases"
               type="number"
-              min="0"
-              step="1"
               value={reportedCases}
               onChange={(e) => setReportedCases(e.target.value)}
-              placeholder="e.g., 15"
-              className="border-gray-300"
+              placeholder="0"
+              className="border-medical-border"
             />
           </div>
-          
-          {/* Water Source Type */}
+        </div>
+
+        {/* Water Source & Infrastructure */}
+        <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="waterSourceType" className="text-sm font-semibold text-gray-700">Water Source Type <span className="text-red-600">*</span></Label>
+            <Label htmlFor="waterSourceType" className="text-sm font-semibold text-medical-slate">
+              Water Source Type <span className="text-medical-red">*</span>
+            </Label>
             <Select value={waterSourceType} onValueChange={setWaterSourceType}>
-              <SelectTrigger id="waterSourceType" className="border-gray-300">
-                <SelectValue placeholder="Select Source" />
+              <SelectTrigger id="waterSourceType" className="border-medical-border">
+                <SelectValue placeholder="Select source..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Municipal Supply">Municipal Supply</SelectItem>
-                <SelectItem value="Borewell">Borewell</SelectItem>
-                <SelectItem value="River/Lake">River/Lake</SelectItem>
-                <SelectItem value="Well">Well</SelectItem>
+                <SelectItem value="municipal">Municipal Supply</SelectItem>
+                <SelectItem value="borewell">Borewell</SelectItem>
+                <SelectItem value="river">River/Stream</SelectItem>
+                <SelectItem value="well">Open Well</SelectItem>
+                <SelectItem value="tanker">Water Tanker</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          
-          {/* PHC Capacity */}
+
           <div className="space-y-2">
-            <Label htmlFor="phcCapacity" className="text-sm font-semibold text-gray-700">PHC Capacity <span className="text-red-600">*</span></Label>
+            <Label htmlFor="phcCapacity" className="text-sm font-semibold text-medical-slate">
+              PHC Capacity <span className="text-medical-red">*</span>
+            </Label>
             <Select value={phcCapacity} onValueChange={setPhcCapacity}>
-              <SelectTrigger id="phcCapacity" className="border-gray-300">
-                <SelectValue placeholder="Select Capacity" />
+              <SelectTrigger id="phcCapacity" className="border-medical-border">
+                <SelectValue placeholder="Select capacity..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Adequate">Adequate</SelectItem>
-                <SelectItem value="Moderate">Moderate</SelectItem>
-                <SelectItem value="Insufficient">Insufficient</SelectItem>
+                <SelectItem value="adequate">Adequate</SelectItem>
+                <SelectItem value="moderate">Moderate</SelectItem>
+                <SelectItem value="limited">Limited</SelectItem>
+                <SelectItem value="critical">Critical</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          
-          {/* Emergency Response Status */}
+        </div>
+
+        {/* Chlorination & Emergency Response */}
+        <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="emergencyResponseStatus" className="text-sm font-semibold text-gray-700">Emergency Response Status <span className="text-red-600">*</span></Label>
-            <Select value={emergencyResponseStatus} onValueChange={setEmergencyResponseStatus}>
-              <SelectTrigger id="emergencyResponseStatus" className="border-gray-300">
-                <SelectValue placeholder="Select Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Standby">Standby</SelectItem>
-                <SelectItem value="Not Deployed">Not Deployed</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {/* Chlorination Status */}
-          <div className="space-y-2 col-span-2">
-            <div className="flex items-center space-x-3">
+            <Label htmlFor="chlorinationStatus" className="text-sm font-semibold text-medical-slate">
+              Chlorination Active
+            </Label>
+            <div className="flex items-center space-x-2 pt-2">
               <Switch
                 id="chlorinationStatus"
                 checked={chlorinationStatus}
                 onCheckedChange={setChlorinationStatus}
               />
-              <Label htmlFor="chlorinationStatus" className="text-sm font-semibold text-gray-700 cursor-pointer">
-                Chlorination Active
-              </Label>
+              <span className="text-sm text-medical-grey">
+                {chlorinationStatus ? 'Yes' : 'No'}
+              </span>
             </div>
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="emergencyResponseStatus" className="text-sm font-semibold text-medical-slate">
+              Emergency Response Status <span className="text-medical-red">*</span>
+            </Label>
+            <Select value={emergencyResponseStatus} onValueChange={setEmergencyResponseStatus}>
+              <SelectTrigger id="emergencyResponseStatus" className="border-medical-border">
+                <SelectValue placeholder="Select status..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ready">Ready</SelectItem>
+                <SelectItem value="standby">Standby</SelectItem>
+                <SelectItem value="deployed">Deployed</SelectItem>
+                <SelectItem value="unavailable">Unavailable</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        
+
         {/* Action Buttons */}
-        <div className="flex gap-4 pt-4 border-t border-gray-200">
+        <div className="flex gap-4 pt-4">
           <Button
             onClick={handleUpdateAndRecalculate}
-            disabled={isCalculating || isFetching}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
+            disabled={isCalculating || isSendingEmail || isFetching}
+            className="flex-1 bg-medical-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold"
           >
             {isCalculating ? (
               <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Calculating Risk...
               </>
-            ) : (
+            ) : isSendingEmail ? (
               <>
-                <Calculator className="mr-2 h-5 w-5" />
-                Update & Recalculate Risk
-              </>
-            )}
-          </Button>
-          
-          <Button
-            onClick={handleSendAlertManually}
-            disabled={isSendingEmail || !ward}
-            variant="outline"
-            className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 rounded-lg transition-colors"
-          >
-            {isSendingEmail ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Sending Email...
+                <Mail className="w-4 h-4 mr-2" />
+                Sending Alert...
               </>
             ) : (
               <>
-                <Mail className="mr-2 h-5 w-5" />
-                Send Alert Email
+                <Calculator className="w-4 h-4 mr-2" />
+                Update & Calculate Risk
               </>
             )}
           </Button>
         </div>
-        
-        {/* Email Alert Policy Info */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
-          <div className="flex items-start space-x-2">
-            <Mail className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
-            <div className="space-y-1">
-              <p className="text-sm font-semibold text-blue-900">Email Alert Policy:</p>
-              <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                <li>Automatic email alerts are sent when risk exceeds 70% (High Risk)</li>
-                <li>Use "Send Alert Email" button to manually send alerts for any risk level</li>
-                <li>All alerts are logged in the Alert History with email status</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+
+        <p className="text-xs text-medical-grey text-center">
+          High risk alerts (≥70%) will automatically trigger email notifications to health authorities.
+        </p>
       </CardContent>
     </Card>
   );

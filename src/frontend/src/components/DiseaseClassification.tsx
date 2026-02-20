@@ -8,54 +8,141 @@ interface DiseaseData {
   color: string;
 }
 
+interface EnvironmentalParams {
+  rainfall: number;
+  humidity: number;
+  turbidity: number;
+  bacteriaIndex: number;
+}
+
 export default function DiseaseClassification() {
   const [diseaseData, setDiseaseData] = useState<DiseaseData[]>([]);
   
-  // Generate disease probabilities based on current risk
-  const generateDiseaseData = (riskPercentage: number): DiseaseData[] => {
-    const diseases = ['Cholera', 'Typhoid', 'Dysentery', 'Hepatitis A'];
-    let probabilities: number[];
+  // Calculate disease probabilities based on environmental parameters
+  const calculateDiseaseProbabilities = (params: EnvironmentalParams): DiseaseData[] => {
+    // Normalize parameters to 0-1 scale
+    const normalizedRainfall = Math.min(params.rainfall / 200, 1);
+    const normalizedHumidity = params.humidity / 100;
+    const normalizedTurbidity = Math.min(params.turbidity / 50, 1);
+    const normalizedBacteria = Math.min(params.bacteriaIndex / 1000, 1);
     
-    if (riskPercentage >= 70) {
-      probabilities = [45, 30, 15, 10];
-    } else if (riskPercentage >= 30) {
-      probabilities = [30, 35, 20, 15];
-    } else {
-      probabilities = [15, 20, 35, 30];
+    // Calculate raw scores using weighted formulas
+    // Cholera: heavily influenced by bacteria and turbidity
+    const choleraScore = (
+      normalizedBacteria * 0.40 +
+      normalizedTurbidity * 0.30 +
+      normalizedRainfall * 0.20 +
+      normalizedHumidity * 0.10
+    );
+    
+    // Typhoid: contamination and sanitation factors
+    const typhoidScore = (
+      normalizedBacteria * 0.35 +
+      normalizedTurbidity * 0.25 +
+      normalizedHumidity * 0.25 +
+      normalizedRainfall * 0.15
+    );
+    
+    // Dysentery: water quality and bacteria
+    const dysenteryScore = (
+      normalizedBacteria * 0.45 +
+      normalizedTurbidity * 0.30 +
+      normalizedRainfall * 0.15 +
+      normalizedHumidity * 0.10
+    );
+    
+    // Hepatitis A: sanitation and contamination
+    const hepatitisAScore = (
+      normalizedBacteria * 0.30 +
+      normalizedTurbidity * 0.30 +
+      normalizedHumidity * 0.25 +
+      normalizedRainfall * 0.15
+    );
+    
+    // Normalize to sum to 100%
+    const totalScore = choleraScore + typhoidScore + dysenteryScore + hepatitisAScore;
+    
+    const diseases = [
+      {
+        name: 'Cholera',
+        probability: totalScore > 0 ? Math.round((choleraScore / totalScore) * 100) : 25,
+        color: '#2563EB'
+      },
+      {
+        name: 'Typhoid',
+        probability: totalScore > 0 ? Math.round((typhoidScore / totalScore) * 100) : 25,
+        color: '#2563EB'
+      },
+      {
+        name: 'Dysentery',
+        probability: totalScore > 0 ? Math.round((dysenteryScore / totalScore) * 100) : 25,
+        color: '#2563EB'
+      },
+      {
+        name: 'Hepatitis A',
+        probability: totalScore > 0 ? Math.round((hepatitisAScore / totalScore) * 100) : 25,
+        color: '#2563EB'
+      }
+    ];
+    
+    // Adjust for rounding errors to ensure sum is exactly 100
+    const sum = diseases.reduce((acc, d) => acc + d.probability, 0);
+    if (sum !== 100 && diseases.length > 0) {
+      diseases[0].probability += (100 - sum);
     }
     
-    return diseases.map((name, index) => ({
-      name,
-      probability: probabilities[index],
-      color: index === 0 ? '#DC2626' : '#2563EB'
-    }));
+    // Sort by probability (highest first) and highlight the highest in red
+    diseases.sort((a, b) => b.probability - a.probability);
+    diseases[0].color = '#DC2626'; // Red for highest risk
+    
+    return diseases;
   };
   
   // Initialize with default data
   useEffect(() => {
     const lastReport = localStorage.getItem('last_government_report');
-    let initialRisk = 50;
-    
-    if (lastReport) {
-      const report = JSON.parse(lastReport);
-      initialRisk = 100 - report.waterQualityIndex;
-    }
-    
-    setDiseaseData(generateDiseaseData(initialRisk));
-  }, []);
-  
-  // Listen for risk data updates
-  useEffect(() => {
-    const handleRiskUpdate = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      const { riskPercentage } = customEvent.detail;
-      setDiseaseData(generateDiseaseData(riskPercentage));
+    let defaultParams: EnvironmentalParams = {
+      rainfall: 50,
+      humidity: 60,
+      turbidity: 10,
+      bacteriaIndex: 200
     };
     
-    window.addEventListener('risk-data-updated', handleRiskUpdate);
+    if (lastReport) {
+      try {
+        const report = JSON.parse(lastReport);
+        defaultParams = {
+          rainfall: report.rainfall || 50,
+          humidity: report.humidity || 60,
+          turbidity: report.turbidity || 10,
+          bacteriaIndex: report.bacteriaLevel || 200
+        };
+      } catch (e) {
+        console.error('[DiseaseClassification] Error parsing last report:', e);
+      }
+    }
+    
+    setDiseaseData(calculateDiseaseProbabilities(defaultParams));
+  }, []);
+  
+  // Listen for disease classification updates
+  useEffect(() => {
+    const handleDiseaseClassificationUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent<EnvironmentalParams>;
+      const params = customEvent.detail;
+      
+      console.log('[DiseaseClassification] Received environmental parameters:', params);
+      
+      const newDiseaseData = calculateDiseaseProbabilities(params);
+      console.log('[DiseaseClassification] Calculated disease probabilities:', newDiseaseData);
+      
+      setDiseaseData(newDiseaseData);
+    };
+    
+    window.addEventListener('disease-classification-updated', handleDiseaseClassificationUpdate);
     
     return () => {
-      window.removeEventListener('risk-data-updated', handleRiskUpdate);
+      window.removeEventListener('disease-classification-updated', handleDiseaseClassificationUpdate);
     };
   }, []);
 

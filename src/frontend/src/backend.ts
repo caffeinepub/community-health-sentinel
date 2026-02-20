@@ -89,30 +89,105 @@ export class ExternalBlob {
         return this;
     }
 }
+export interface WardReference {
+    fullName: string;
+    riskColor: string;
+    mapCellDescription: string;
+    wardNumber: WardKey;
+}
+export interface WardData {
+    turbidity: number;
+    bacteriaIndex: number;
+    humidity: number;
+    rainfall: number;
+    riskPrediction: RiskPrediction;
+}
+export type Time = bigint;
 export interface RiskPrediction {
     riskCategory: string;
     riskPercentage: number;
     message: string;
     timestamp: Time;
 }
-export type Time = bigint;
+export type WardKey = bigint;
 export interface backendInterface {
-    predictOutbreakRisk(rainfall: number, humidity: number, turbidity: number, bacteriaIndex: number): Promise<RiskPrediction>;
+    calculateAndPersistRisk(wardKey: WardKey, rainfall: number, humidity: number, turbidity: number, bacteriaIndex: number): Promise<RiskPrediction | null>;
+    getAllPersistedWardData(): Promise<Array<[WardKey, WardData]>>;
+    getAllWardColors(): Promise<Array<[WardKey, string]>>;
+    getExistingRiskPrediction(wardKey: WardKey): Promise<RiskPrediction | null>;
+    getWardReferences(): Promise<Array<WardReference>>;
     resetHistoricalData(): Promise<void>;
 }
+import type { RiskPrediction as _RiskPrediction } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
-    async predictOutbreakRisk(arg0: number, arg1: number, arg2: number, arg3: number): Promise<RiskPrediction> {
+    async calculateAndPersistRisk(arg0: WardKey, arg1: number, arg2: number, arg3: number, arg4: number): Promise<RiskPrediction | null> {
         if (this.processError) {
             try {
-                const result = await this.actor.predictOutbreakRisk(arg0, arg1, arg2, arg3);
+                const result = await this.actor.calculateAndPersistRisk(arg0, arg1, arg2, arg3, arg4);
+                return from_candid_opt_n1(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.calculateAndPersistRisk(arg0, arg1, arg2, arg3, arg4);
+            return from_candid_opt_n1(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getAllPersistedWardData(): Promise<Array<[WardKey, WardData]>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllPersistedWardData();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.predictOutbreakRisk(arg0, arg1, arg2, arg3);
+            const result = await this.actor.getAllPersistedWardData();
+            return result;
+        }
+    }
+    async getAllWardColors(): Promise<Array<[WardKey, string]>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllWardColors();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllWardColors();
+            return result;
+        }
+    }
+    async getExistingRiskPrediction(arg0: WardKey): Promise<RiskPrediction | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getExistingRiskPrediction(arg0);
+                return from_candid_opt_n1(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getExistingRiskPrediction(arg0);
+            return from_candid_opt_n1(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getWardReferences(): Promise<Array<WardReference>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getWardReferences();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getWardReferences();
             return result;
         }
     }
@@ -130,6 +205,9 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+}
+function from_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_RiskPrediction]): RiskPrediction | null {
+    return value.length === 0 ? null : value[0];
 }
 export interface CreateActorOptions {
     agent?: Agent;

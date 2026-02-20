@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 29,
+  "projectStateVersion": 35,
   "summary": "Community Health Sentinel - A production-grade AI-powered early warning system for water-borne diseases in Coimbatore District. Features full-screen role selection with strict role-based data control and workflow separation: Common Citizen (view-only Public Transparency Dashboard showing Last Government Inspection Report with ward data, water quality metrics, disease risk distribution, safety guidelines, village heatmap, and read-only alert history), Hospital/PHC (ward-specific data entry with case reporting and 7-14 day forecast), and Government Health Authority (full control panel with 12-15 field Government Data Update Panel for environmental and infrastructure data, Update & Recalculate Risk functionality, comprehensive analytics including disease classification system with Cholera/Typhoid/Dysentery/Hepatitis A probabilities, 3x3 grid-style village risk heatmap for 9 wards, ward priority scoring with vulnerability weighting formula, full audit log alert history with all environmental metrics and email status, EmailJS integration with automatic triggering at >70% risk and manual send capability, 14-day predictive forecast, disease distribution visualizations, patient case trend graphs, resource deployment recommendations, comparative ward analytics, CSV export capability, and advanced visualizations). Built with modular architecture for government deployment readiness.",
   "architectural_notes": [
     "Color-coded risk system: Green <40%, Orange 40-70%, Red >70%",
@@ -15,7 +15,10 @@
     "Role-based views: Community Member (risk index + safety advisory), Healthcare Facility (forecast + case volume projection), Administrative Authority (full analytics)"
   ],
   "known_issues": [
-    "Ward-specific outbreak probability logic needs review for scientific accuracy"
+    "Ward-specific outbreak probability logic needs review for scientific accuracy",
+    "Ward heatmap not reflecting correct ward when updating specific ward data - shows changes in wrong ward cell",
+    "Backend service unavailability error preventing proper backend calls",
+    "Heatmap data persistence not working as expected - changes not saving and reflecting correctly"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -786,6 +789,126 @@
         "REQ-103"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-debug-and-fix-the-wardheatmap-component-frontend-src-components-wardheatmap-tsx-to-ensure-that-when-a-government-user-selects-ward-5-in-the-governmentdatapanel-dropdown-and-updates-its-environmental-data-the-heatmap-correctly-reflects-the-changes-in-the-ward-5-cell-not-in-a-different-ward-cell",
+      "title": "Debug and fix the WardHeatmap component (frontend/src/components/WardHeatmap.tsx) to ensure that when a government user selects Ward 5 in the GovernmentDataPanel dropdown and updates its environmental data, the heatmap correctly reflects the changes in the Ward 5 cell, not in a different ward cell",
+      "reqIds": [
+        "REQ-104"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-review-and-fix-the-ward-data-propagation-logic-in-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-to-ensure-the-selected-ward-id-from-the-dropdown-is-correctly-passed-to-all-visualization-update-events-particularly-the-ward-data-updated-custom-event-that-triggers-wardheatmap-re-rendering",
+      "title": "Review and fix the ward data propagation logic in GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) to ensure the selected ward ID from the dropdown is correctly passed to all visualization update events, particularly the 'ward-data-updated' custom event that triggers WardHeatmap re-rendering",
+      "reqIds": [
+        "REQ-105"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-debugging-console-logs-to-the-wardheatmap-component-to-trace-ward-data-updates-showing-which-ward-id-is-being-updated-what-the-new-risk-value-is-and-which-cell-in-the-grid-is-being-modified-to-help-identify-any-indexing-or-mapping-errors",
+      "title": "Add debugging console logs to the WardHeatmap component to trace ward data updates, showing which ward ID is being updated, what the new risk value is, and which cell in the grid is being modified, to help identify any indexing or mapping errors",
+      "reqIds": [
+        "REQ-106"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-fix-the-ward-data-storage-mechanism-in-localstorage-to-ensure-ward-specific-updates-are-correctly-saved-with-the-proper-ward-id-key-and-that-the-wardheatmap-component-reads-from-the-correct-localstorage-keys-when-rendering-the-grid",
+      "title": "Verify and fix the ward data storage mechanism in localStorage to ensure ward-specific updates are correctly saved with the proper ward ID key, and that the WardHeatmap component reads from the correct localStorage keys when rendering the grid",
+      "reqIds": [
+        "REQ-107"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-persistent-localstorage-based-data-storage-for-ward-specific-updates-in-governmentdatapanel-component-ensuring-that-when-a-government-user-updates-ward-data-rainfall-humidity-turbidity-bacteria-sanitation-coverage-water-treatment-coverage-population-density-and-clicks-update-recalculate-risk-the-data-is-saved-to-localstorage-with-the-correct-ward-id-key-e-g-ward-1-data-ward-2-data",
+      "title": "Implement persistent localStorage-based data storage for ward-specific updates in GovernmentDataPanel component, ensuring that when a government user updates ward data (rainfall, humidity, turbidity, bacteria, sanitation coverage, water treatment coverage, population density) and clicks 'Update & Recalculate Risk', the data is saved to localStorage with the correct ward ID key (e.g., 'ward_1_data', 'ward_2_data')",
+      "reqIds": [
+        "REQ-109"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-wardheatmap-component-frontend-src-components-wardheatmap-tsx-to-load-ward-specific-outbreak-probability-data-from-localstorage-on-component-mount-and-on-ward-data-updated-events-ensuring-that-the-correct-ward-cell-displays-the-updated-risk-value-when-government-users-modify-data-for-that-specific-ward",
+      "title": "Update WardHeatmap component (frontend/src/components/WardHeatmap.tsx) to load ward-specific outbreak probability data from localStorage on component mount and on 'ward-data-updated' events, ensuring that the correct ward cell displays the updated risk value when government users modify data for that specific ward",
+      "reqIds": [
+        "REQ-110"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-ward-id-mapping-logic-in-governmentdatapanel-component-to-ensure-the-selected-ward-from-the-dropdown-1-9-is-correctly-passed-to-the-ward-data-updated-custom-event-and-stored-with-the-correct-key-in-localstorage-preventing-the-current-bug-where-updating-ward-5-shows-changes-in-a-different-ward-cell",
+      "title": "Fix the ward ID mapping logic in GovernmentDataPanel component to ensure the selected ward from the dropdown (1-9) is correctly passed to the 'ward-data-updated' custom event and stored with the correct key in localStorage, preventing the current bug where updating Ward 5 shows changes in a different ward cell",
+      "reqIds": [
+        "REQ-111"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-initialization-logic-to-wardheatmap-component-that-checks-for-existing-ward-data-in-localstorage-on-first-load-and-if-no-data-exists-for-a-ward-generates-default-simulated-values-using-the-warddatagenerator-utility-ensuring-the-heatmap-always-displays-meaningful-data",
+      "title": "Add initialization logic to WardHeatmap component that checks for existing ward data in localStorage on first load, and if no data exists for a ward, generates default simulated values using the wardDataGenerator utility, ensuring the heatmap always displays meaningful data",
+      "reqIds": [
+        "REQ-112"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-handleupdaterisk-function-in-governmentdatapanel-component-to-properly-validate-the-backend-response-handle-all-error-cases-network-failures-canister-errors-invalid-responses-update-localstorage-only-on-successful-calculation-emit-ward-data-updated-event-with-complete-ward-data-and-display-clear-success-or-error-feedback-to-the-user",
+      "title": "Update the handleUpdateRisk function in GovernmentDataPanel component to properly validate the backend response, handle all error cases (network failures, canister errors, invalid responses), update localStorage only on successful calculation, emit 'ward-data-updated' event with complete ward data, and display clear success or error feedback to the user",
+      "reqIds": [
+        "REQ-113"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-debugging-console-logs-throughout-the-ward-data-update-flow-in-governmentdatapanel-and-wardheatmap-components-logging-1-selected-ward-id-from-dropdown-2-localstorage-key-being-written-to-3-data-being-saved-4-custom-event-ward-id-5-wardheatmap-receiving-event-6-which-grid-cell-is-being-updated-7-final-displayed-risk-value",
+      "title": "Add comprehensive debugging console logs throughout the ward data update flow in GovernmentDataPanel and WardHeatmap components, logging: (1) selected ward ID from dropdown, (2) localStorage key being written to, (3) data being saved, (4) custom event ward ID, (5) WardHeatmap receiving event, (6) which grid cell is being updated, (7) final displayed risk value",
+      "reqIds": [
+        "REQ-114"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-test-the-complete-end-to-end-ward-data-update-workflow-1-government-user-selects-ward-5-from-dropdown-2-enters-environmental-data-values-3-clicks-update-recalculate-risk-4-backend-calculates-risk-5-data-saves-to-localstorage-under-ward-5-data-6-wardheatmap-updates-ward-5-cell-with-new-risk-color-and-percentage-7-page-refresh-shows-persistent-data-8-subsequent-updates-to-ward-5-modify-only-ward-5-cell",
+      "title": "Verify and test the complete end-to-end ward data update workflow: (1) Government user selects Ward 5 from dropdown, (2) enters environmental data values, (3) clicks 'Update & Recalculate Risk', (4) backend calculates risk, (5) data saves to localStorage under 'ward_5_data', (6) WardHeatmap updates Ward 5 cell with new risk color and percentage, (7) page refresh shows persistent data, (8) subsequent updates to Ward 5 modify only Ward 5 cell",
+      "reqIds": [
+        "REQ-115"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-diseaseclassification-component-frontend-src-components-diseaseclassification-tsx-to-calculate-disease-probability-percentages-dynamically-based-on-environmental-input-data-instead-of-using-hardcoded-values-implementing-a-formula-that-derives-cholera-typhoid-dysentery-and-hepatitis-a-probabilities-from-rainfall-humidity-turbidity-and-bacteria-index-parameters",
+      "title": "Update the DiseaseClassification component (frontend/src/components/DiseaseClassification.tsx) to calculate disease probability percentages dynamically based on environmental input data instead of using hardcoded values, implementing a formula that derives Cholera, Typhoid, Dysentery, and Hepatitis A probabilities from rainfall, humidity, turbidity, and bacteria index parameters",
+      "reqIds": [
+        "REQ-116"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-governmentdatapanel-component-to-dispatch-a-disease-classification-updated-custom-event-whenever-the-update-recalculate-risk-button-successfully-completes-passing-the-current-environmental-parameters-rainfall-humidity-turbidity-bacteria-index-in-the-event-detail-so-diseaseclassification-can-recalculate-probabilities",
+      "title": "Update the GovernmentDataPanel component to dispatch a 'disease-classification-updated' custom event whenever the 'Update & Recalculate Risk' button successfully completes, passing the current environmental parameters (rainfall, humidity, turbidity, bacteria index) in the event detail so DiseaseClassification can recalculate probabilities",
+      "reqIds": [
+        "REQ-117"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-riskpredictionpanel-component-hospital-phc-view-to-dispatch-the-same-disease-classification-updated-custom-event-after-successful-risk-prediction-ensuring-disease-probabilities-update-in-both-government-and-hospital-views",
+      "title": "Update the RiskPredictionPanel component (Hospital/PHC view) to dispatch the same 'disease-classification-updated' custom event after successful risk prediction, ensuring disease probabilities update in both Government and Hospital views",
+      "reqIds": [
+        "REQ-118"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-listener-in-the-diseaseclassification-component-to-handle-disease-classification-updated-events-extract-the-environmental-parameters-from-the-event-detail-recalculate-the-four-disease-probabilities-using-the-weighted-formulas-normalize-them-to-sum-to-100-and-update-the-component-state-to-trigger-re-rendering-of-both-charts",
+      "title": "Add a listener in the DiseaseClassification component to handle 'disease-classification-updated' events, extract the environmental parameters from the event detail, recalculate the four disease probabilities using the weighted formulas, normalize them to sum to 100%, and update the component state to trigger re-rendering of both charts",
+      "reqIds": [
+        "REQ-119"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -1089,6 +1212,26 @@
       "reqIds": [
         "REQ-102"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-78",
+      "summary": "Fix ward data update bug: when Government user updates Ward 5 data in GovernmentDataPanel and clicks 'Update & Recalculate Risk', the heatmap shows changes in a different ward instead of Ward 5",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-79",
+      "summary": "Debug and fix the backend service unavailability error that prevents the GovernmentDataPanel component from successfully calling the backend predictOutbreakRisk function, ensuring HTTP requests complete without IC0508 canister rejection errors, 'non_replicated_rejection', or 'reject_code 5' errors",
+      "reqIds": [
+        "REQ-108"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-80",
+      "summary": "Replace hardcoded Disease Risk Distribution values in DiseaseClassification component with dynamic calculations based on actual environmental input data (rainfall, humidity, turbidity, bacteria) to predict realistic probabilities for Cholera, Typhoid, Dysentery, and Hepatitis A",
+      "reqIds": [],
       "status": "pending"
     }
   ],

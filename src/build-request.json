@@ -1,78 +1,90 @@
 {
   "kind": "build_request",
-  "title": "Fix IC0508 canister rejection error in predictOutbreakRisk backend call",
-  "priority": "high",
+  "title": "Calculate Disease Risk Distribution dynamically from environmental input data",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-101",
-      "text": "Debug and fix the IC0508 canister rejection error occurring when the GovernmentDataPanel component calls the backend predictOutbreakRisk function, ensuring the HTTP call completes successfully without 'canister_id', '4ctyt-niaaa-aaaal-auroq-cai', 'non_replicated_rejection', or 'reject_code 5' errors",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "Risk Calculation Failed",
-          "The replica returned a rejection error: Request ID: 6632e119afcbb738d570b59585001690402be9fc886dcee62f330bae970ff7ef Reject code: 5 Reject text: Canister 4ctyt-niaaa-aaaal-auroq-cai is stopped Error code: IC0508 Call context: Canister ID: 4ctyt-niaaa-aaaal-auroq-cai Method name: predictOutbreakRisk"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The 'Update & Recalculate Risk' button in GovernmentDataPanel successfully calls backend predictOutbreakRisk without IC0508 errors",
-        "Risk calculation completes and returns valid outbreak probability percentage",
-        "All dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority) update correctly after risk calculation",
-        "No canister rejection errors appear in the UI or browser console",
-        "Alert history entry is created successfully with calculated risk outputs"
-      ]
-    },
-    {
-      "id": "REQ-102",
-      "text": "Verify the backend predictOutbreakRisk function in backend/main.mo handles all input parameters correctly, validates numeric ranges, implements the 7-day moving average calculation properly, and returns a valid response structure without throwing runtime errors",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend function accepts rainfall, humidity, turbidity, and bacteria index parameters",
-        "7-day moving average calculation executes without errors",
-        "Weighted risk formula (30% rainfall, 25% turbidity, 25% bacteria, 20% humidity) calculates correctly",
-        "Function returns normalized risk percentage (0-100%) and risk category (Low/Medium/High)",
-        "No runtime exceptions or canister stopping errors occur during calculation"
-      ]
-    },
-    {
-      "id": "REQ-103",
-      "text": "Add comprehensive error handling and logging to the GovernmentDataPanel component's handleUpdateRisk function to catch and display specific backend call failures, canister errors, or network issues with user-friendly error messages in toast notifications",
+      "id": "REQ-116",
+      "text": "Update the DiseaseClassification component (frontend/src/components/DiseaseClassification.tsx) to calculate disease probability percentages dynamically based on environmental input data instead of using hardcoded values, implementing a formula that derives Cholera, Typhoid, Dysentery, and Hepatitis A probabilities from rainfall, humidity, turbidity, and bacteria index parameters",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-final"
+        ],
+        "quotes": [
+          "Disease Risk Distribution is hard coded i want it to be calculated based on the data imput given aldready and then predict the percemtage of it"
         ]
       },
       "acceptanceCriteria": [
-        "Try-catch block wraps the backend predictOutbreakRisk call",
-        "Specific error types are identified: canister rejection, network failure, validation errors",
-        "Error messages display the actual failure reason from the backend response",
-        "Console logs include full error details for debugging",
-        "User sees actionable error message in UI (not generic 'Risk Calculation Failed')"
+        "Disease probabilities update dynamically when risk-data-updated or ward-data-updated events are dispatched",
+        "Cholera probability calculation weighs bacteria index and turbidity heavily (e.g., 40% bacteria, 30% turbidity, 20% rainfall, 10% humidity)",
+        "Typhoid probability calculation weighs contamination and sanitation factors (e.g., 35% bacteria, 25% turbidity, 25% humidity, 15% rainfall)",
+        "Dysentery probability calculation emphasizes water quality and bacteria (e.g., 45% bacteria, 30% turbidity, 15% rainfall, 10% humidity)",
+        "Hepatitis A probability calculation weighs sanitation and contamination (e.g., 30% bacteria, 30% turbidity, 25% humidity, 15% rainfall)",
+        "All four disease probabilities sum to 100% by normalizing the calculated values",
+        "The highest probability disease is highlighted in red as before",
+        "Both bar chart and pie chart visualizations update to reflect the calculated probabilities"
+      ]
+    },
+    {
+      "id": "REQ-117",
+      "text": "Update the GovernmentDataPanel component to dispatch a 'disease-classification-updated' custom event whenever the 'Update & Recalculate Risk' button successfully completes, passing the current environmental parameters (rainfall, humidity, turbidity, bacteria index) in the event detail so DiseaseClassification can recalculate probabilities",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Custom event is dispatched after successful backend risk calculation",
+        "Event detail includes all four environmental parameters with their current values",
+        "Event is dispatched from the handleUpdateRisk function after localStorage update"
+      ]
+    },
+    {
+      "id": "REQ-118",
+      "text": "Update the RiskPredictionPanel component (Hospital/PHC view) to dispatch the same 'disease-classification-updated' custom event after successful risk prediction, ensuring disease probabilities update in both Government and Hospital views",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Event is dispatched after successful backend prediction call",
+        "Event includes the environmental parameters used for prediction",
+        "Disease classification updates correctly for Hospital/PHC users"
+      ]
+    },
+    {
+      "id": "REQ-119",
+      "text": "Add a listener in the DiseaseClassification component to handle 'disease-classification-updated' events, extract the environmental parameters from the event detail, recalculate the four disease probabilities using the weighted formulas, normalize them to sum to 100%, and update the component state to trigger re-rendering of both charts",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Event listener is registered on component mount and cleaned up on unmount",
+        "Disease probabilities are recalculated using scientifically plausible weighting formulas",
+        "All probabilities are normalized to ensure they sum to exactly 100%",
+        "Bar chart and pie chart both reflect the updated calculated values",
+        "The highest probability disease is correctly highlighted in red"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any other components, files, or functionality beyond the risk calculation error fix",
-    "Maintain all existing GovernmentDataPanel UI elements and form fields",
-    "Preserve the current EmailJS integration and alert history storage logic",
-    "Keep all role-based access control and dashboard view logic unchanged",
-    "Do not alter the visual styling, color theme, or component layout"
+    "Do not modify the backend/main.mo file or backend prediction logic",
+    "Maintain the existing DiseaseClassification component UI structure with both bar and pie charts",
+    "Preserve the red highlighting for the highest probability disease",
+    "Ensure calculations use the environmental parameters already being collected in GovernmentDataPanel and RiskPredictionPanel"
   ],
   "nonGoals": [
-    "Adding new dashboard features or visualization components",
-    "Modifying the role selection system or user authentication",
-    "Changing the EmailJS configuration or alert email logic",
-    "Updating the UI theme, colors, or styling",
-    "Refactoring unrelated components or utility functions",
-    "Adding new ward data fields or calculation parameters"
+    "Implementing real machine learning models for disease prediction",
+    "Adding new backend endpoints for disease classification",
+    "Modifying the visual design of the DiseaseClassification component",
+    "Creating new input fields for disease-specific parameters"
   ],
   "imageRequirements": {
     "required": [],

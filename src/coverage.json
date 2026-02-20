@@ -1,18 +1,29 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T20:24:38.580Z",
+  "generatedAt": "2026-02-20T23:04:19.331Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 2,
+    "total": 4,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-101",
-        "summary": "Debug and fix the IC0508 canister rejection error occurring when the GovernmentDataPanel component calls the backend predictOutbreakRisk function, ensuring the HTTP call completes successfully without 'canister_id', '4ctyt-niaaa-aaaal-auroq-cai', 'non_replicated_rejection', or 'reject_code 5' errors",
+        "id": "REQ-116",
+        "summary": "Update the DiseaseClassification component (frontend/src/components/DiseaseClassification.tsx) to calculate disease probability percentages dynamically based on environmental input data instead of using hardcoded values, implementing a formula that derives Cholera, Typhoid, Dysentery, and Hepatitis A probabilities from rainfall, humidity, turbidity, and bacteria index parameters",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DiseaseClassification.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DiseaseClassification.tsx"
+        ]
+      },
+      {
+        "id": "REQ-117",
+        "summary": "Update the GovernmentDataPanel component to dispatch a 'disease-classification-updated' custom event whenever the 'Update & Recalculate Risk' button successfully completes, passing the current environmental parameters (rainfall, humidity, turbidity, bacteria index) in the event detail so DiseaseClassification can recalculate probabilities",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/GovernmentDataPanel.tsx"
@@ -22,36 +33,37 @@
         ]
       },
       {
-        "id": "REQ-102",
-        "summary": "Verify the backend predictOutbreakRisk function in backend/main.mo handles all input parameters correctly, validates numeric ranges, implements the 7-day moving average calculation properly, and returns a valid response structure without throwing runtime errors",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-103",
-        "summary": "Add comprehensive error handling and logging to the GovernmentDataPanel component's handleUpdateRisk function to catch and display specific backend call failures, canister errors, or network issues with user-friendly error messages in toast notifications",
+        "id": "REQ-118",
+        "summary": "Update the RiskPredictionPanel component (Hospital/PHC view) to dispatch the same 'disease-classification-updated' custom event after successful risk prediction, ensuring disease probabilities update in both Government and Hospital views",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
+          "frontend/src/components/RiskPredictionPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
+          "frontend/src/components/RiskPredictionPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-119",
+        "summary": "Add a listener in the DiseaseClassification component to handle 'disease-classification-updated' events, extract the environmental parameters from the event detail, recalculate the four disease probabilities using the weighted formulas, normalize them to sum to 100%, and update the component state to trigger re-rendering of both charts",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DiseaseClassification.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DiseaseClassification.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
+    "frontend/src/components/DiseaseClassification.tsx",
     "frontend/src/components/GovernmentDataPanel.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
+    "frontend/src/components/RiskPredictionPanel.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
