@@ -1,16 +1,73 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T23:04:19.323Z",
-  "summary": "The implementation successfully addresses all four requirements (REQ-116, REQ-117, REQ-118, REQ-119). DiseaseClassification.tsx now calculates disease probabilities dynamically using weighted formulas based on environmental parameters, includes an event listener for 'disease-classification-updated' events, normalizes probabilities to sum to 100%, and highlights the highest risk disease in red. GovernmentDataPanel.tsx dispatches the custom event after successful risk calculation with all environmental parameters. RiskPredictionPanel.tsx dispatches the same event after successful prediction. All acceptance criteria appear to be met based on the diff evidence.",
-  "missing_requirements": [],
+  "generatedAt": "2026-02-20T23:39:40.746Z",
+  "summary": "The diff shows a partial reversion toward Version 17, with several components modified (AlertHistory, DiseaseClassification, GovernmentDataPanel, RiskPredictionPanel, DashboardPage, backend/main.mo) and supporting files updated. However, critical evidence is limited due to truncation. Key observations: AlertHistory retains 13 columns (Version 17 requires specific columns without 'Confidence'); DiseaseClassification shows 4 diseases as required; GovernmentDataPanel and RiskPredictionPanel claim correct field counts but truncation prevents full verification; DiagnosticReasoning.tsx and FeatureImportance.tsx appear in modified list but show no content (unclear if removed or emptied); diseaseClassifier.ts also modified with no content shown. Backend truncation prevents verification of REQ-141. Overall, partial alignment is evident, but truncation prevents definitive assessment of completeness.",
+  "missing_requirements": [
+    {
+      "id": "REQ-135",
+      "requirement": "Remove diseaseClassifier.ts utility file",
+      "reason": "File appears in modified list, not removed list. Truncated content shows no code, but requirement specifies removal, not emptying.",
+      "evidence": [
+        "frontend/src/utils/diseaseClassifier.ts"
+      ]
+    },
+    {
+      "id": "REQ-135",
+      "requirement": "Remove FeatureImportance.tsx component file",
+      "reason": "File appears in modified list, not removed list. No content shown due to truncation, but requirement specifies file removal.",
+      "evidence": [
+        "frontend/src/components/FeatureImportance.tsx"
+      ]
+    },
+    {
+      "id": "REQ-135",
+      "requirement": "Remove DiagnosticReasoning.tsx component file",
+      "reason": "File appears in modified list, not removed list. No content shown due to truncation, but requirement specifies file removal.",
+      "evidence": [
+        "frontend/src/components/DiagnosticReasoning.tsx"
+      ]
+    },
+    {
+      "id": "REQ-139",
+      "requirement": "Remove rendering of FeatureImportance and DiagnosticReasoning components from DashboardPage.tsx",
+      "reason": "DashboardPage.tsx is truncated after imports section. Cannot verify these components are not rendered in the JSX.",
+      "evidence": [
+        "frontend/src/pages/DashboardPage.tsx"
+      ]
+    },
+    {
+      "id": "REQ-140",
+      "requirement": "AlertHistory columns must match Version 17 specification exactly (no Confidence column)",
+      "reason": "Diff shows 13 columns mentioned in description, but Version 17 spec lists 13 specific columns. Truncation prevents verification that 'Confidence' column is absent and all required columns are present.",
+      "evidence": [
+        "frontend/src/components/AlertHistory.tsx"
+      ]
+    },
+    {
+      "id": "REQ-141",
+      "requirement": "Verify backend predictOutbreakRisk function signature and implementation matches Version 17",
+      "reason": "backend/main.mo is heavily truncated. Cannot verify function signature, parameter list, or calculation logic.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
   "hallucinated_features": [],
-  "confidence": 0.92,
+  "confidence": 0.45,
   "changed_files": [
+    "backend/main.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/components/AlertHistory.tsx",
+    "frontend/src/components/DiagnosticReasoning.tsx",
     "frontend/src/components/DiseaseClassification.tsx",
+    "frontend/src/components/FeatureImportance.tsx",
     "frontend/src/components/GovernmentDataPanel.tsx",
     "frontend/src/components/RiskPredictionPanel.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/services/EmailAlertService.ts",
+    "frontend/src/utils/diseaseClassifier.ts",
+    "frontend/src/utils/wardRiskCalculator.ts",
     "project_state.json"
   ]
 }

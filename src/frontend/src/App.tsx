@@ -5,7 +5,7 @@ import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
 import RoleSelector from './components/RoleSelector';
 
-export type UserRole = 'community' | 'healthcare' | 'admin' | null;
+export type UserRole = 'citizen' | 'healthcare' | 'government' | null;
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -25,11 +25,15 @@ const indexRoute = createRoute({
 function DashboardRouteComponent() {
   const [selectedRole, setSelectedRole] = useState<UserRole>(null);
 
+  const handleLogout = () => {
+    setSelectedRole(null);
+  };
+
   if (!selectedRole) {
     return <RoleSelector onRoleSelect={setSelectedRole} />;
   }
 
-  return <DashboardPage userRole={selectedRole} />;
+  return <DashboardPage userRole={selectedRole} onLogout={handleLogout} />;
 }
 
 const dashboardRoute = createRoute({

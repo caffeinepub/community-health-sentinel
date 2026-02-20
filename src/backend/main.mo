@@ -7,8 +7,20 @@ import Map "mo:core/Map";
 import Nat "mo:core/Nat";
 import Debug "mo:core/Debug";
 
+// Disease classifier component is to be used in the frontend only, as per the implementation strategy, using TypeScript bindings.
 
+/*
+Disease Classifier (Frontend only)
+- Motoko backend does not need to process this logic.
+- All disease classification is handled in frontend.
+- This is merely a documentation reminder for developers.
 
+type DiseaseClassifier = {
+  ; // Backend classifier not needed
+};
+*/
+
+// MOTOKO BACKEND 
 actor {
   public type RiskPrediction = {
     riskPercentage : Float;

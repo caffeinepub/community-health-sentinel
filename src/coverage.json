@@ -1,29 +1,47 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T23:04:19.331Z",
+  "generatedAt": "2026-02-20T23:39:40.755Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 8,
+    "implemented": 7,
     "items": [
       {
-        "id": "REQ-116",
-        "summary": "Update the DiseaseClassification component (frontend/src/components/DiseaseClassification.tsx) to calculate disease probability percentages dynamically based on environmental input data instead of using hardcoded values, implementing a formula that derives Cholera, Typhoid, Dysentery, and Hepatitis A probabilities from rainfall, humidity, turbidity, and bacteria index parameters",
+        "id": "REQ-134",
+        "summary": "Revert the entire codebase to Version 17 state, removing all changes introduced in Version 18 and Version 19, restoring the application to the exact state it was in at Version 17",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DiseaseClassification.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/services/EmailAlertService.ts",
+          "frontend/src/utils/wardRiskCalculator.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/DiseaseClassification.tsx"
+          "frontend/src/services/EmailAlertService.ts",
+          "frontend/src/utils/wardRiskCalculator.ts"
         ]
       },
       {
-        "id": "REQ-117",
-        "summary": "Update the GovernmentDataPanel component to dispatch a 'disease-classification-updated' custom event whenever the 'Update & Recalculate Risk' button successfully completes, passing the current environmental parameters (rainfall, humidity, turbidity, bacteria index) in the event detail so DiseaseClassification can recalculate probabilities",
+        "id": "REQ-135",
+        "summary": "Remove all multi-class disease classification features added in Version 18 and Version 19, including the diseaseClassifier.ts utility, FeatureImportance component, DiagnosticReasoning component, and extended environmental/symptom input fields (Fecal Coliform, WQI, Primary Season, Water Source, Treatment Status, Diarrhea, Fever, Jaundice, Bloody Stool, Skin Rash)",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/diseaseClassifier.ts",
+          "frontend/src/components/FeatureImportance.tsx",
+          "frontend/src/components/DiagnosticReasoning.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/diseaseClassifier.ts",
+          "frontend/src/components/FeatureImportance.tsx",
+          "frontend/src/components/DiagnosticReasoning.tsx"
+        ]
+      },
+      {
+        "id": "REQ-136",
+        "summary": "Restore the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) to Version 17 state with the original 15 input fields only: Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/GovernmentDataPanel.tsx"
@@ -33,8 +51,8 @@
         ]
       },
       {
-        "id": "REQ-118",
-        "summary": "Update the RiskPredictionPanel component (Hospital/PHC view) to dispatch the same 'disease-classification-updated' custom event after successful risk prediction, ensuring disease probabilities update in both Government and Hospital views",
+        "id": "REQ-137",
+        "summary": "Restore the RiskPredictionPanel component (frontend/src/components/RiskPredictionPanel.tsx) to Version 17 state for Hospital/PHC view, containing only the core environmental inputs (Rainfall, Humidity, Turbidity, Bacteria Index) and hospital-specific fields (Reported Cases, Sanitation Coverage, Water Treatment Coverage, Population Density)",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/RiskPredictionPanel.tsx"
@@ -44,8 +62,8 @@
         ]
       },
       {
-        "id": "REQ-119",
-        "summary": "Add a listener in the DiseaseClassification component to handle 'disease-classification-updated' events, extract the environmental parameters from the event detail, recalculate the four disease probabilities using the weighted formulas, normalize them to sum to 100%, and update the component state to trigger re-rendering of both charts",
+        "id": "REQ-138",
+        "summary": "Restore the DiseaseClassification component (frontend/src/components/DiseaseClassification.tsx) to Version 17 state, showing probability distribution for only 4 diseases (Cholera, Typhoid, Dysentery, Hepatitis A) with simple calculation logic based on rainfall, humidity, turbidity, and bacteria index parameters",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/DiseaseClassification.tsx"
@@ -53,17 +71,54 @@
         "matchedFiles": [
           "frontend/src/components/DiseaseClassification.tsx"
         ]
+      },
+      {
+        "id": "REQ-139",
+        "summary": "Restore DashboardPage.tsx to Version 17 state, removing any rendering of FeatureImportance and DiagnosticReasoning components, and ensuring all role-based component rendering matches Version 17 logic",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DashboardPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-140",
+        "summary": "Restore the AlertHistory component (frontend/src/components/AlertHistory.tsx) to Version 17 state with columns: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level, Risk %, Disease Most Likely (showing one of the 4 original diseases), Priority Score, Email Sent, Recommended Action",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AlertHistory.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AlertHistory.tsx"
+        ]
+      },
+      {
+        "id": "REQ-141",
+        "summary": "Verify that the backend predictOutbreakRisk function in backend/main.mo matches Version 17 implementation, accepting only the original environmental parameters (rainfall, humidity, turbidity, bacteria) and infrastructure data, without any Version 18/19 additions for symptom tracking or extended water quality metrics",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/components/AlertHistory.tsx",
+    "frontend/src/components/DiagnosticReasoning.tsx",
     "frontend/src/components/DiseaseClassification.tsx",
+    "frontend/src/components/FeatureImportance.tsx",
     "frontend/src/components/GovernmentDataPanel.tsx",
     "frontend/src/components/RiskPredictionPanel.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/services/EmailAlertService.ts",
+    "frontend/src/utils/diseaseClassifier.ts",
+    "frontend/src/utils/wardRiskCalculator.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

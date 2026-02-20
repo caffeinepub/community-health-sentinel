@@ -1,76 +1,144 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Calculate Disease Risk Distribution dynamically from environmental input data",
+  "title": "Revert to Version 17 codebase",
   "requirements": [
     {
-      "id": "REQ-116",
-      "summary": "Update DiseaseClassification component to calculate disease probabilities dynamically based on environmental input data using weighted formulas instead of hardcoded values",
+      "id": "REQ-135",
+      "summary": "Remove all multi-class disease classification features added in Version 18 and Version 19",
       "acceptanceCriteria": [
-        "Disease probabilities update dynamically when risk-data-updated or ward-data-updated events are dispatched",
-        "Cholera probability calculation weighs bacteria index and turbidity heavily (e.g., 40% bacteria, 30% turbidity, 20% rainfall, 10% humidity)",
-        "Typhoid probability calculation weighs contamination and sanitation factors (e.g., 35% bacteria, 25% turbidity, 25% humidity, 15% rainfall)",
-        "Dysentery probability calculation emphasizes water quality and bacteria (e.g., 45% bacteria, 30% turbidity, 15% rainfall, 10% humidity)",
-        "Hepatitis A probability calculation weighs sanitation and contamination (e.g., 30% bacteria, 30% turbidity, 25% humidity, 15% rainfall)",
-        "All four disease probabilities sum to 100% by normalizing the calculated values",
-        "The highest probability disease is highlighted in red as before",
-        "Both bar chart and pie chart visualizations update to reflect the calculated probabilities"
+        "frontend/src/utils/diseaseClassifier.ts is removed",
+        "frontend/src/components/FeatureImportance.tsx is removed",
+        "frontend/src/components/DiagnosticReasoning.tsx is removed",
+        "All extended input fields added in Version 18/19 are removed from RiskPredictionPanel and GovernmentDataPanel",
+        "DiseaseClassification component reverted to Version 17 logic showing only 4 diseases (Cholera, Typhoid, Dysentery, Hepatitis A)"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/DiseaseClassification.tsx",
-          "operation": "modify",
-          "description": "Replace hardcoded disease probabilities with dynamic calculation logic. Add a calculateDiseaseProbabilities function that takes environmental parameters (rainfall, humidity, turbidity, bacteriaIndex) and returns normalized probabilities for Cholera (40% bacteria, 30% turbidity, 20% rainfall, 10% humidity), Typhoid (35% bacteria, 25% turbidity, 25% humidity, 15% rainfall), Dysentery (45% bacteria, 30% turbidity, 15% rainfall, 10% humidity), and Hepatitis A (30% bacteria, 30% turbidity, 25% humidity, 15% rainfall). Normalize all four values to sum to exactly 100%. Update the component state to use these calculated values and maintain the existing red highlighting for the highest probability disease. Preserve the existing bar chart and pie chart visualizations."
+          "path": "frontend/src/utils/diseaseClassifier.ts",
+          "operation": "delete",
+          "description": "Remove the multi-class disease classification utility that was added in Version 18, which calculates probabilities for 7 diseases using XGBoost-inspired scoring logic with environmental parameters, water quality metrics, and symptom data"
+        },
+        {
+          "path": "frontend/src/components/FeatureImportance.tsx",
+          "operation": "delete",
+          "description": "Remove the feature importance visualization component that displays horizontal bar charts showing the relative importance of input features in disease prediction, which was added in Version 18"
+        },
+        {
+          "path": "frontend/src/components/DiagnosticReasoning.tsx",
+          "operation": "delete",
+          "description": "Remove the diagnostic reasoning component that displays contributing factors, predicted disease, and confidence scores for disease predictions, which was added in Version 18"
         }
       ]
     },
     {
-      "id": "REQ-117",
-      "summary": "Update GovernmentDataPanel to dispatch disease-classification-updated event after successful risk calculation with environmental parameters",
+      "id": "REQ-136",
+      "summary": "Restore GovernmentDataPanel to Version 17 state with original 15 input fields only",
       "acceptanceCriteria": [
-        "Custom event is dispatched after successful backend risk calculation",
-        "Event detail includes all four environmental parameters with their current values",
-        "Event is dispatched from the handleUpdateRisk function after localStorage update"
+        "GovernmentDataPanel contains exactly 15 input fields as specified",
+        "No symptom-based fields (diarrhea, fever, jaundice, bloody stool, skin rash) are present",
+        "No extended water quality fields (fecal coliform, WQI) are present",
+        "Update & Recalculate Risk button functions as in Version 17"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/GovernmentDataPanel.tsx",
           "operation": "modify",
-          "description": "Add a new custom event dispatch in the handleUpdateRisk function after the successful backend call and localStorage update. Dispatch a 'disease-classification-updated' event with detail containing the four environmental parameters: { rainfall, humidity, turbidity, bacteriaIndex }. Ensure the event is dispatched to window so DiseaseClassification can listen for it."
+          "description": "Revert to Version 17 state with only 15 input fields: Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status. Remove all symptom-based fields (diarrhea, fever, jaundice, bloody stool, skin rash) and extended water quality fields (fecal coliform, WQI, primary season, water source, treatment status) that were added in Version 18/19. Remove any calls to diseaseClassifier utility. Ensure the component uses only the original 7-day moving average calculation and risk prediction logic without multi-class disease classification"
         }
       ]
     },
     {
-      "id": "REQ-118",
-      "summary": "Update RiskPredictionPanel to dispatch disease-classification-updated event after successful prediction for Hospital/PHC users",
+      "id": "REQ-137",
+      "summary": "Restore RiskPredictionPanel to Version 17 state for Hospital/PHC view",
       "acceptanceCriteria": [
-        "Event is dispatched after successful backend prediction call",
-        "Event includes the environmental parameters used for prediction",
-        "Disease classification updates correctly for Hospital/PHC users"
+        "RiskPredictionPanel contains only 8 input fields as specified",
+        "No symptom-based input fields are present",
+        "No extended water quality fields are present",
+        "Component functions as in Version 17"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/RiskPredictionPanel.tsx",
           "operation": "modify",
-          "description": "Add a new custom event dispatch in the handlePredict function after the successful backend prediction call. Dispatch a 'disease-classification-updated' event with detail containing the four environmental parameters: { rainfall, humidity, turbidity, bacteriaIndex }. Ensure the event is dispatched to window so DiseaseClassification can listen for it across different user roles."
+          "description": "Revert to Version 17 state with only 8 input fields: Rainfall, Humidity, Turbidity, Bacteria Index, Reported Cases, Sanitation Coverage, Water Treatment Coverage, Population Density. Remove all symptom-based input fields (diarrhea, fever, jaundice, bloody stool, skin rash) and extended water quality fields (fecal coliform, WQI, primary season, water source, treatment status) that were added in Version 18/19. Remove any calls to diseaseClassifier utility and restore the original simple prediction logic that only uses the 4 core environmental parameters"
         }
       ]
     },
     {
-      "id": "REQ-119",
-      "summary": "Add event listener in DiseaseClassification to handle disease-classification-updated events and recalculate probabilities using weighted formulas",
+      "id": "REQ-138",
+      "summary": "Restore DiseaseClassification component to Version 17 state showing only 4 diseases",
       "acceptanceCriteria": [
-        "Event listener is registered on component mount and cleaned up on unmount",
-        "Disease probabilities are recalculated using scientifically plausible weighting formulas",
-        "All probabilities are normalized to ensure they sum to exactly 100%",
-        "Bar chart and pie chart both reflect the updated calculated values",
-        "The highest probability disease is correctly highlighted in red"
+        "Component displays exactly 4 disease probabilities",
+        "No Giardiasis, Leptospirosis, or No Disease categories are shown",
+        "Uses Version 17 calculation formula without XGBoost-inspired scoring",
+        "Bar chart and pie chart visualizations work correctly"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/DiseaseClassification.tsx",
           "operation": "modify",
-          "description": "Add a useEffect hook that registers an event listener for 'disease-classification-updated' events on window. Extract the environmental parameters (rainfall, humidity, turbidity, bacteriaIndex) from event.detail. Call the calculateDiseaseProbabilities function (created in REQ-116) with these parameters to compute the four disease probabilities. Update the component state with the new calculated probabilities, triggering re-render of both bar chart and pie chart. Clean up the event listener on component unmount. Ensure the red highlighting logic for the highest probability disease continues to work with the dynamically calculated values."
+          "description": "Revert to Version 17 state showing probability distribution for only 4 diseases: Cholera, Typhoid, Dysentery, Hepatitis A. Remove Giardiasis, Leptospirosis, and No Disease categories that were added in Version 18. Replace the Version 18/19 XGBoost-inspired scoring logic with the simple Version 17 calculation formula based only on rainfall, humidity, turbidity, and bacteria index parameters. Remove event listener for 'disease-classification-updated' events and confidence score display. Ensure bar chart and pie chart visualizations display only the 4 original diseases"
+        }
+      ]
+    },
+    {
+      "id": "REQ-139",
+      "summary": "Restore DashboardPage to Version 17 state removing FeatureImportance and DiagnosticReasoning components",
+      "acceptanceCriteria": [
+        "FeatureImportance component is not rendered anywhere",
+        "DiagnosticReasoning component is not rendered anywhere",
+        "All three role views (Common Citizen, Hospital/PHC, Government) function exactly as in Version 17",
+        "Component layout and ordering matches Version 17"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Revert to Version 17 state by removing all imports and rendering of FeatureImportance and DiagnosticReasoning components. Ensure all three role-based views (Common Citizen, Hospital/PHC, Government Health Authority) render only the components that existed in Version 17. Verify component layout and ordering matches Version 17 structure without any Version 18/19 additions"
+        }
+      ]
+    },
+    {
+      "id": "REQ-140",
+      "summary": "Restore AlertHistory component to Version 17 state with original columns",
+      "acceptanceCriteria": [
+        "No Confidence column is present (added in Version 18)",
+        "Disease Prediction shows only Cholera, Typhoid, Dysentery, or Hepatitis A",
+        "Filtering and sorting work as in Version 17"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AlertHistory.tsx",
+          "operation": "modify",
+          "description": "Revert to Version 17 state with columns: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level, Risk %, Disease Most Likely, Priority Score, Email Sent, Recommended Action. Remove the Confidence column that was added in Version 18. Ensure Disease Prediction column displays only one of the 4 original diseases (Cholera, Typhoid, Dysentery, Hepatitis A) without any Version 18/19 diseases. Verify filtering and sorting functionality matches Version 17 behavior"
+        }
+      ]
+    },
+    {
+      "id": "REQ-134",
+      "summary": "Verify and document that frontend codebase matches Version 17 state exactly",
+      "acceptanceCriteria": [
+        "All frontend components match Version 17 state exactly",
+        "All backend functions match Version 17 state exactly",
+        "No Version 18 or Version 19 features remain in the codebase",
+        "Application functions identically to Version 17"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Review and ensure the App component matches Version 17 state, verifying that route configuration, role selection logic, and logout functionality are identical to Version 17 without any Version 18/19 modifications"
+        },
+        {
+          "path": "frontend/src/services/EmailAlertService.ts",
+          "operation": "modify",
+          "description": "Verify the EmailAlertService matches Version 17 implementation, ensuring it uses only the original environmental parameters and disease categories without any Version 18/19 symptom data or extended water quality metrics in email templates. Maintain the existing EmailJS configuration credentials (service_hf3e6oq, template_3dldpfg, KHu3JNagtUgZCsDcG) as specified in constraints"
+        },
+        {
+          "path": "frontend/src/utils/wardRiskCalculator.ts",
+          "operation": "modify",
+          "description": "Verify the ward risk calculator matches Version 17 implementation, ensuring vulnerability multipliers and risk calculation formulas use only the original parameters without any Version 18/19 additions for symptom tracking or extended water quality metrics"
         }
       ]
     }

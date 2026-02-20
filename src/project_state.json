@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 35,
+  "projectStateVersion": 41,
   "summary": "Community Health Sentinel - A production-grade AI-powered early warning system for water-borne diseases in Coimbatore District. Features full-screen role selection with strict role-based data control and workflow separation: Common Citizen (view-only Public Transparency Dashboard showing Last Government Inspection Report with ward data, water quality metrics, disease risk distribution, safety guidelines, village heatmap, and read-only alert history), Hospital/PHC (ward-specific data entry with case reporting and 7-14 day forecast), and Government Health Authority (full control panel with 12-15 field Government Data Update Panel for environmental and infrastructure data, Update & Recalculate Risk functionality, comprehensive analytics including disease classification system with Cholera/Typhoid/Dysentery/Hepatitis A probabilities, 3x3 grid-style village risk heatmap for 9 wards, ward priority scoring with vulnerability weighting formula, full audit log alert history with all environmental metrics and email status, EmailJS integration with automatic triggering at >70% risk and manual send capability, 14-day predictive forecast, disease distribution visualizations, patient case trend graphs, resource deployment recommendations, comparative ward analytics, CSV export capability, and advanced visualizations). Built with modular architecture for government deployment readiness.",
   "architectural_notes": [
     "Color-coded risk system: Green <40%, Orange 40-70%, Red >70%",
@@ -20,7 +20,7 @@
     "Backend service unavailability error preventing proper backend calls",
     "Heatmap data persistence not working as expected - changes not saving and reflecting correctly"
   ],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-create-a-landing-page-with-a-hero-section-containing-the-title-ai-powered-early-warning-system-for-water-borne-diseases-subtitle-predict-outbreaks-7-14-days-in-advance-using-environmental-and-water-quality-data-and-a-launch-dashboard-call-to-action-button-that-navigates-to-the-dashboard-page",
@@ -909,6 +909,166 @@
         "REQ-119"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-new-environmental-and-water-quality-input-fields-to-the-hospital-phc-riskpredictionpanel-component-frontend-src-components-riskpredictionpanel-tsx-fecal-coliform-numeric-input-for-cfu-count-water-quality-index-wqi-numeric-0-100-primary-season-dropdown-with-options-monsoon-summer-winter-even-water-source-dropdown-with-options-river-pond-open-well-borewell-piped-supply-treatment-status-dropdown-with-options-treated-untreated-with-proper-validation-and-input-styling-matching-existing-form-fields",
+      "title": "Add new environmental and water quality input fields to the Hospital/PHC RiskPredictionPanel component (frontend/src/components/RiskPredictionPanel.tsx): Fecal Coliform (numeric input for CFU count), Water Quality Index (WQI, numeric 0-100), Primary Season (dropdown with options: Monsoon, Summer, Winter, Even), Water Source (dropdown with options: River, Pond, Open Well, Borewell, Piped Supply), Treatment Status (dropdown with options: Treated, Untreated), with proper validation and input styling matching existing form fields",
+      "reqIds": [
+        "REQ-120"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-symptom-based-input-fields-to-the-hospital-phc-riskpredictionpanel-component-diarrhea-toggle-for-yes-no-or-numeric-percentage-input-0-100-fever-toggle-for-yes-no-or-numeric-percentage-input-0-100-jaundice-toggle-for-yes-no-or-numeric-percentage-input-0-100-bloody-stool-yes-no-toggle-skin-rash-yes-no-toggle-with-clear-labels-and-appropriate-input-controls",
+      "title": "Add symptom-based input fields to the Hospital/PHC RiskPredictionPanel component: Diarrhea (toggle for Yes/No or numeric percentage input 0-100), Fever (toggle for Yes/No or numeric percentage input 0-100), Jaundice (toggle for Yes/No or numeric percentage input 0-100), Bloody Stool (Yes/No toggle), Skin Rash (Yes/No toggle), with clear labels and appropriate input controls",
+      "reqIds": [
+        "REQ-121"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-same-environmental-water-quality-and-symptom-based-input-fields-fecal-coliform-wqi-primary-season-water-source-treatment-status-diarrhea-fever-jaundice-bloody-stool-skin-rash-to-the-government-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-in-addition-to-existing-fields-ensuring-consistent-validation-and-styling",
+      "title": "Add the same environmental/water quality and symptom-based input fields (Fecal Coliform, WQI, Primary Season, Water Source, Treatment Status, Diarrhea, Fever, Jaundice, Bloody Stool, Skin Rash) to the Government GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) in addition to existing fields, ensuring consistent validation and styling",
+      "reqIds": [
+        "REQ-122"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-multi-class-disease-classification-algorithm-utility-frontend-src-utils-diseaseclassifier-ts-that-implements-threshold-based-logic-for-seven-disease-classes-cholera-very-high-fecal-coliform-1000-5000-very-low-wqi-10-35-high-diarrhea-80-monsoon-season-untreated-river-pond-source-typhoid-high-fecal-coliform-500-3000-low-wqi-15-40-high-fever-85-moderate-diarrhea-river-open-well-source-untreated-water-hepatitis-a-e-medium-fecal-coliform-400-3500-low-wqi-high-jaundice-75-fever-present-monsoon-season-untreated-source-dysentery-high-fecal-coliform-800-4000-bloody-stool-80-high-diarrhea-river-open-well-source-giardiasis-low-medium-fecal-coliform-300-2000-moderate-diarrhea-open-well-pond-summer-season-leptospirosis-medium-fecal-coliform-high-fever-85-skin-rash-60-monsoon-river-pond-source-no-disease-low-fecal-coliform-0-100-high-wqi-60-100-minimal-symptoms-treated-piped-borewell-water",
+      "title": "Create a multi-class disease classification algorithm utility (frontend/src/utils/diseaseClassifier.ts) that implements threshold-based logic for seven disease classes: Cholera (Very high Fecal Coliform 1000-5000, Very low WQI 10-35, High Diarrhea >80%, Monsoon season, Untreated river/pond source), Typhoid (High Fecal Coliform 500-3000, Low WQI 15-40, High Fever >85%, Moderate Diarrhea, River/Open well source, Untreated water), Hepatitis A/E (Medium Fecal Coliform 400-3500, Low WQI, High Jaundice >75%, Fever present, Monsoon season, Untreated source), Dysentery (High Fecal Coliform 800-4000, Bloody stool >80%, High Diarrhea, River/Open well source), Giardiasis (Low-Medium Fecal Coliform 300-2000, Moderate Diarrhea, Open well/pond, Summer season), Leptospirosis (Medium Fecal Coliform, High Fever >85%, Skin rash >60%, Monsoon, River/Pond source), No Disease (Low Fecal Coliform 0-100, High WQI 60-100, Minimal symptoms, Treated piped/borewell water)",
+      "reqIds": [
+        "REQ-123"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-xgboost-inspired-multi-class-probability-scoring-in-the-disease-classifier-utility-that-uses-weighted-feature-importance-to-calculate-disease-probabilities-handles-non-linear-interactions-between-features-fecal-coliform-season-wqi-water-source-symptoms-water-treatment-and-outputs-normalized-probability-distribution-across-all-7-disease-classes-summing-to-100",
+      "title": "Implement XGBoost-inspired multi-class probability scoring in the disease classifier utility that uses weighted feature importance to calculate disease probabilities, handles non-linear interactions between features (fecal coliform × season, WQI × water source, symptoms × water treatment), and outputs normalized probability distribution across all 7 disease classes summing to 100%",
+      "reqIds": [
+        "REQ-124"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-diseaseclassification-component-frontend-src-components-diseaseclassification-tsx-to-display-results-from-the-multi-class-disease-classifier-showing-probability-percentages-for-all-7-disease-classes-cholera-typhoid-hepatitis-a-e-dysentery-giardiasis-leptospirosis-no-disease-in-both-bar-chart-and-pie-chart-visualizations-highlighting-the-highest-probability-disease-in-red-and-showing-confidence-score-label",
+      "title": "Update the DiseaseClassification component (frontend/src/components/DiseaseClassification.tsx) to display results from the multi-class disease classifier, showing probability percentages for all 7 disease classes (Cholera, Typhoid, Hepatitis A/E, Dysentery, Giardiasis, Leptospirosis, No Disease) in both bar chart and pie chart visualizations, highlighting the highest probability disease in red, and showing confidence score label",
+      "reqIds": [
+        "REQ-125"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-featureimportance-component-frontend-src-components-featureimportance-tsx-that-displays-a-horizontal-bar-chart-showing-the-relative-importance-contribution-of-each-input-feature-to-the-disease-prediction-with-features-sorted-by-importance-score-using-professional-medical-styling-with-white-background-and-blue-bars",
+      "title": "Create a new FeatureImportance component (frontend/src/components/FeatureImportance.tsx) that displays a horizontal bar chart showing the relative importance/contribution of each input feature to the disease prediction, with features sorted by importance score, using professional medical styling with white background and blue bars",
+      "reqIds": [
+        "REQ-126"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-diagnosticreasoning-component-frontend-src-components-diagnosticreasoning-tsx-that-displays-a-reasoning-summary-explaining-the-prediction-showing-key-factors-that-contributed-to-the-highest-probability-disease-in-clear-language-example-high-fecal-coliform-severe-diarrhea-monsoon-high-cholera-probability-using-clean-card-styling-with-professional-blue-accents",
+      "title": "Create a new DiagnosticReasoning component (frontend/src/components/DiagnosticReasoning.tsx) that displays a reasoning summary explaining the prediction, showing key factors that contributed to the highest probability disease in clear language (example: 'High fecal coliform + severe diarrhea + monsoon → High Cholera probability'), using clean card styling with professional blue accents",
+      "reqIds": [
+        "REQ-127"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-riskpredictionpanel-component-hospital-phc-view-to-integrate-the-new-multi-class-disease-classifier-passing-all-environmental-water-quality-and-symptom-inputs-to-the-classification-algorithm-and-triggering-updates-to-diseaseclassification-featureimportance-and-diagnosticreasoning-components-after-prediction",
+      "title": "Update the RiskPredictionPanel component (Hospital/PHC view) to integrate the new multi-class disease classifier, passing all environmental, water quality, and symptom inputs to the classification algorithm, and triggering updates to DiseaseClassification, FeatureImportance, and DiagnosticReasoning components after prediction",
+      "reqIds": [
+        "REQ-128"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-to-integrate-the-multi-class-disease-classifier-incorporating-all-new-environmental-water-quality-and-symptom-inputs-into-the-risk-calculation-workflow-and-updating-all-dashboard-visualizations-including-the-new-featureimportance-and-diagnosticreasoning-components-when-update-recalculate-risk-is-clicked",
+      "title": "Update the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) to integrate the multi-class disease classifier, incorporating all new environmental, water quality, and symptom inputs into the risk calculation workflow, and updating all dashboard visualizations including the new FeatureImportance and DiagnosticReasoning components when 'Update & Recalculate Risk' is clicked",
+      "reqIds": [
+        "REQ-129"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-dashboardpage-tsx-to-render-the-new-featureimportance-component-in-hospital-phc-and-government-views-positioned-below-the-diseaseclassification-component-and-render-the-diagnosticreasoning-component-immediately-below-featureimportance-ensuring-both-are-hidden-in-common-citizen-view",
+      "title": "Update DashboardPage.tsx to render the new FeatureImportance component in Hospital/PHC and Government views, positioned below the DiseaseClassification component, and render the DiagnosticReasoning component immediately below FeatureImportance, ensuring both are hidden in Common Citizen view",
+      "reqIds": [
+        "REQ-130"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-alerthistory-component-frontend-src-components-alerthistory-tsx-to-include-two-new-columns-disease-prediction-showing-the-highest-probability-disease-name-and-confidence-showing-the-prediction-confidence-score-as-a-percentage-maintaining-existing-filtering-and-sorting-functionality",
+      "title": "Update the AlertHistory component (frontend/src/components/AlertHistory.tsx) to include two new columns: 'Disease Prediction' showing the highest probability disease name, and 'Confidence' showing the prediction confidence score as a percentage, maintaining existing filtering and sorting functionality",
+      "reqIds": [
+        "REQ-132"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-organize-the-hospital-phc-and-government-data-entry-forms-to-group-related-fields-logically-with-clear-section-headings-environmental-parameters-existing-rainfall-humidity-turbidity-bacteria-water-quality-source-fecal-coliform-wqi-season-water-source-treatment-status-clinical-symptoms-diarrhea-fever-jaundice-bloody-stool-skin-rash-infrastructure-data-existing-sanitation-water-treatment-population-reported-cases-using-subtle-visual-separators-and-consistent-spacing-for-clean-organized-ui",
+      "title": "Organize the Hospital/PHC and Government data entry forms to group related fields logically with clear section headings: 'Environmental Parameters' (existing rainfall, humidity, turbidity, bacteria), 'Water Quality & Source' (fecal coliform, WQI, season, water source, treatment status), 'Clinical Symptoms' (diarrhea, fever, jaundice, bloody stool, skin rash), 'Infrastructure Data' (existing sanitation, water treatment, population, reported cases), using subtle visual separators and consistent spacing for clean, organized UI",
+      "reqIds": [
+        "REQ-133"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-revert-the-entire-codebase-to-version-17-state-removing-all-changes-introduced-in-version-18-and-version-19-restoring-the-application-to-the-exact-state-it-was-in-at-version-17",
+      "title": "Revert the entire codebase to Version 17 state, removing all changes introduced in Version 18 and Version 19, restoring the application to the exact state it was in at Version 17",
+      "reqIds": [
+        "REQ-134"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-all-multi-class-disease-classification-features-added-in-version-18-and-version-19-including-the-diseaseclassifier-ts-utility-featureimportance-component-diagnosticreasoning-component-and-extended-environmental-symptom-input-fields-fecal-coliform-wqi-primary-season-water-source-treatment-status-diarrhea-fever-jaundice-bloody-stool-skin-rash",
+      "title": "Remove all multi-class disease classification features added in Version 18 and Version 19, including the diseaseClassifier.ts utility, FeatureImportance component, DiagnosticReasoning component, and extended environmental/symptom input fields (Fecal Coliform, WQI, Primary Season, Water Source, Treatment Status, Diarrhea, Fever, Jaundice, Bloody Stool, Skin Rash)",
+      "reqIds": [
+        "REQ-135"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restore-the-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-to-version-17-state-with-the-original-15-input-fields-only-ward-rainfall-7-day-avg-rainfall-humidity-7-day-avg-humidity-turbidity-bacteria-index-sanitation-coverage-water-treatment-coverage-population-density-reported-cases-water-source-type-chlorination-status-phc-capacity-emergency-response-status",
+      "title": "Restore the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) to Version 17 state with the original 15 input fields only: Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status",
+      "reqIds": [
+        "REQ-136"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restore-the-riskpredictionpanel-component-frontend-src-components-riskpredictionpanel-tsx-to-version-17-state-for-hospital-phc-view-containing-only-the-core-environmental-inputs-rainfall-humidity-turbidity-bacteria-index-and-hospital-specific-fields-reported-cases-sanitation-coverage-water-treatment-coverage-population-density",
+      "title": "Restore the RiskPredictionPanel component (frontend/src/components/RiskPredictionPanel.tsx) to Version 17 state for Hospital/PHC view, containing only the core environmental inputs (Rainfall, Humidity, Turbidity, Bacteria Index) and hospital-specific fields (Reported Cases, Sanitation Coverage, Water Treatment Coverage, Population Density)",
+      "reqIds": [
+        "REQ-137"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restore-the-diseaseclassification-component-frontend-src-components-diseaseclassification-tsx-to-version-17-state-showing-probability-distribution-for-only-4-diseases-cholera-typhoid-dysentery-hepatitis-a-with-simple-calculation-logic-based-on-rainfall-humidity-turbidity-and-bacteria-index-parameters",
+      "title": "Restore the DiseaseClassification component (frontend/src/components/DiseaseClassification.tsx) to Version 17 state, showing probability distribution for only 4 diseases (Cholera, Typhoid, Dysentery, Hepatitis A) with simple calculation logic based on rainfall, humidity, turbidity, and bacteria index parameters",
+      "reqIds": [
+        "REQ-138"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restore-dashboardpage-tsx-to-version-17-state-removing-any-rendering-of-featureimportance-and-diagnosticreasoning-components-and-ensuring-all-role-based-component-rendering-matches-version-17-logic",
+      "title": "Restore DashboardPage.tsx to Version 17 state, removing any rendering of FeatureImportance and DiagnosticReasoning components, and ensuring all role-based component rendering matches Version 17 logic",
+      "reqIds": [
+        "REQ-139"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restore-the-alerthistory-component-frontend-src-components-alerthistory-tsx-to-version-17-state-with-columns-date-time-ward-rainfall-humidity-turbidity-bacteria-sanitation-water-treatment-risk-level-risk-disease-most-likely-showing-one-of-the-4-original-diseases-priority-score-email-sent-recommended-action",
+      "title": "Restore the AlertHistory component (frontend/src/components/AlertHistory.tsx) to Version 17 state with columns: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level, Risk %, Disease Most Likely (showing one of the 4 original diseases), Priority Score, Email Sent, Recommended Action",
+      "reqIds": [
+        "REQ-140"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -1232,6 +1392,46 @@
       "id": "AR-80",
       "summary": "Replace hardcoded Disease Risk Distribution values in DiseaseClassification component with dynamic calculations based on actual environmental input data (rainfall, humidity, turbidity, bacteria) to predict realistic probabilities for Cholera, Typhoid, Dysentery, and Hepatitis A",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-81",
+      "summary": "Enhance Hospital/PHC data entry form with new environmental/water quality input fields: Fecal Coliform (CFU count), Water Quality Index (WQI), Primary Season (dropdown: Monsoon/Summer/Winter/Even), Water Source (dropdown: River/Pond/Open Well/Borewell/Piped Supply), Treatment Status (dropdown: Treated/Untreated)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-82",
+      "summary": "Add symptom-based input features to Hospital/PHC form: Diarrhea (Yes/No or percentage), Fever (Yes/No or percentage), Jaundice (Yes/No or percentage), Bloody Stool (Yes/No), Skin Rash (Yes/No)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-83",
+      "summary": "Implement multi-class disease classification system with threshold-based logic and ML probability scoring for 7 disease classes: Cholera, Typhoid, Hepatitis A/E, Dysentery, Giardiasis, Leptospirosis, No Disease, using specified clinical patterns based on fecal coliform ranges, WQI thresholds, symptom probabilities, seasonal factors, and water source/treatment characteristics",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-84",
+      "summary": "Integrate XGBoost multi-class classification model that outputs probability for each disease class, displays highest probability disease, shows confidence score, highlights high-risk if probability > 70%, displays feature importance for transparency, and shows reasoning summary explaining key factors driving the prediction",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-96",
+      "summary": "Update the backend predictOutbreakRisk function (backend/main.mo) to accept the new input parameters (fecalColiform, wqi, season, waterSource, treatmentStatus, diarrhea, fever, jaundice, bloodyStool, skinRash) if backend processing is required, or ensure the frontend-only classifier handles all disease classification logic without backend changes, documenting the decision in code comments",
+      "reqIds": [
+        "REQ-131"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-104",
+      "summary": "Verify that the backend predictOutbreakRisk function in backend/main.mo matches Version 17 implementation, accepting only the original environmental parameters (rainfall, humidity, turbidity, bacteria) and infrastructure data, without any Version 18/19 additions for symptom tracking or extended water quality metrics",
+      "reqIds": [
+        "REQ-141"
+      ],
       "status": "pending"
     }
   ],

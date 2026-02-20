@@ -1,14 +1,15 @@
 # Specification
 
 ## Summary
-**Goal:** Make the Disease Risk Distribution calculate disease probabilities dynamically based on environmental input data instead of using hardcoded values.
+**Goal:** Revert the entire codebase to Version 17 state, removing all changes introduced in Version 18 and Version 19.
 
 **Planned changes:**
-- Update DiseaseClassification component to calculate Cholera, Typhoid, Dysentery, and Hepatitis A probabilities using weighted formulas based on rainfall, humidity, turbidity, and bacteria index
-- Add custom event dispatching in GovernmentDataPanel after successful risk calculation to trigger disease probability recalculation
-- Add custom event dispatching in RiskPredictionPanel after successful prediction to trigger disease probability recalculation
-- Add event listener in DiseaseClassification to handle disease-classification-updated events and recalculate probabilities
-- Normalize all calculated probabilities to sum to 100%
-- Maintain existing UI with bar chart, pie chart, and red highlighting for highest probability disease
+- Remove multi-class disease classification features (diseaseClassifier.ts, FeatureImportance, DiagnosticReasoning components)
+- Restore GovernmentDataPanel to original 15 input fields (remove symptom fields: diarrhea, fever, jaundice, bloody stool, skin rash; remove extended water quality fields: fecal coliform, WQI, primary season, water source, treatment status)
+- Restore RiskPredictionPanel to 8 core input fields (environmental + hospital-specific only)
+- Restore DiseaseClassification to show only 4 diseases (Cholera, Typhoid, Dysentery, Hepatitis A) with Version 17 calculation logic
+- Remove FeatureImportance and DiagnosticReasoning from DashboardPage rendering
+- Restore AlertHistory to Version 17 columns (remove Confidence column, show only original 4 diseases)
+- Verify backend predictOutbreakRisk matches Version 17 implementation (no symptom or extended water quality parameters)
 
-**User-visible outcome:** Disease risk percentages in the Disease Classification panel will automatically update based on the environmental data entered (rainfall, humidity, turbidity, bacteria index) rather than showing static hardcoded values.
+**User-visible outcome:** Application functions identically to Version 17, with the original 4-disease classification system, 15 government input fields, and simple environmental risk calculation without any Version 18/19 enhancements.

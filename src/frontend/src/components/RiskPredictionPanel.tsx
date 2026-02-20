@@ -19,24 +19,17 @@ interface RiskPredictionPanelProps {
 }
 
 interface ValidationErrors {
-  rainfall?: string;
-  humidity?: string;
-  turbidity?: string;
-  bacteriaIndex?: string;
-  reportedCases?: string;
-  sanitationCoverage?: string;
-  waterTreatmentCoverage?: string;
-  populationDensity?: string;
+  [key: string]: string;
 }
 
 export default function RiskPredictionPanel({ onPredictionComplete, userRole, selectedWard }: RiskPredictionPanelProps) {
   const { actor, isFetching } = useActor();
+  
+  // 8 input fields as per Version 17
   const [rainfall, setRainfall] = useState('');
   const [humidity, setHumidity] = useState('');
   const [turbidity, setTurbidity] = useState('');
   const [bacteriaIndex, setBacteriaIndex] = useState('');
-  
-  // Hospital/PHC specific fields
   const [reportedCases, setReportedCases] = useState('');
   const [sanitationCoverage, setSanitationCoverage] = useState('');
   const [waterTreatmentCoverage, setWaterTreatmentCoverage] = useState('');
@@ -86,7 +79,6 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
       isValid = false;
     }
 
-    // Validate Hospital/PHC specific fields
     if (userRole === 'healthcare') {
       const casesNum = parseFloat(reportedCases);
       if (reportedCases === '' || isNaN(casesNum)) {
@@ -156,8 +148,6 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
     setIsLoading(true);
 
     try {
-      // Extract ward number from selectedWard (e.g., "Ward 5" -> 5)
-      // Default to ward 1 if not available (for citizen view)
       let wardNumber = 1;
       if (selectedWard && selectedWard.startsWith('Ward ')) {
         const wardNum = parseInt(selectedWard.replace('Ward ', ''));
@@ -166,9 +156,6 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
         }
       }
 
-      // Call backend calculateAndPersistRisk
-      // Note: This will calculate risk but won't overwrite government data
-      // since Hospital/PHC users typically assess without persisting official records
       const result = await actor.calculateAndPersistRisk(
         BigInt(wardNumber),
         rainfallNum,
@@ -193,10 +180,38 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
       });
       setError(null);
 
-      // Dispatch disease-classification-updated event with environmental parameters
-      console.log('[RiskPredictionPanel] Dispatching disease-classification-updated event');
+      // Calculate disease probability using Version 17 formula
+      const normalizedRainfall = rainfallNum / 200;
+      const normalizedHumidity = humidityNum / 100;
+      const normalizedTurbidity = turbidityNum / 50;
+      const normalizedBacteria = bacteriaNum / 1000;
+
+      const choleraProb = (normalizedRainfall * 0.3 + normalizedTurbidity * 0.3 + normalizedBacteria * 0.4) * 100;
+      const typhoidProb = (normalizedBacteria * 0.4 + normalizedTurbidity * 0.3 + normalizedHumidity * 0.3) * 100;
+      const dysenteryProb = (normalizedBacteria * 0.5 + normalizedTurbidity * 0.3 + normalizedRainfall * 0.2) * 100;
+      const hepatitisProb = (normalizedTurbidity * 0.4 + normalizedBacteria * 0.3 + normalizedRainfall * 0.3) * 100;
+
+      const diseases = [
+        { name: 'Cholera', prob: choleraProb },
+        { name: 'Typhoid', prob: typhoidProb },
+        { name: 'Dysentery', prob: dysenteryProb },
+        { name: 'Hepatitis A', prob: hepatitisProb }
+      ];
+
+      const highestDisease = diseases.reduce((max, disease) => 
+        disease.prob > max.prob ? disease : max
+      );
+
+      // Dispatch event for disease classification update
       window.dispatchEvent(new CustomEvent('disease-classification-updated', {
         detail: {
+          probabilities: {
+            Cholera: choleraProb,
+            Typhoid: typhoidProb,
+            Dysentery: dysenteryProb,
+            'Hepatitis A': hepatitisProb
+          },
+          highestProbabilityDisease: highestDisease.name,
           rainfall: rainfallNum,
           humidity: humidityNum,
           turbidity: turbidityNum,
@@ -204,7 +219,6 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
         }
       }));
 
-      // Store alert in history if MEDIUM or HIGH (for Hospital/PHC)
       if (result.riskPercentage >= 30 && userRole === 'healthcare') {
         const alert = {
           timestamp: new Date().toISOString(),
@@ -217,7 +231,7 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
           waterTreatmentCoverage: parseFloat(waterTreatmentCoverage) || 0,
           riskLevel: category,
           riskPercentage: result.riskPercentage,
-          diseaseMostLikely: result.riskPercentage >= 70 ? 'Cholera' : result.riskPercentage >= 30 ? 'Typhoid' : 'Dysentery',
+          diseaseMostLikely: highestDisease.name,
           priorityScore: 0,
           emailSent: 'No',
           recommendedAction: result.riskPercentage >= 70 
@@ -233,7 +247,7 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
       }
 
       toast.success('Risk Calculated Successfully', {
-        description: `${category}: ${result.riskPercentage.toFixed(1)}%`
+        description: `${category}: ${result.riskPercentage.toFixed(1)}% | Disease: ${highestDisease.name}`
       });
 
     } catch (err) {
@@ -255,11 +269,12 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
         </CardTitle>
         <CardDescription className="text-gray-600">
           {userRole === 'healthcare' 
-            ? `Enter environmental and health data for ${selectedWard || 'selected ward'}`
+            ? `Enter environmental and infrastructure data for ${selectedWard || 'selected ward'} (8 fields)`
             : 'Enter environmental parameters to calculate outbreak risk'}
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6 pt-0 space-y-6">
+        {/* Environmental Parameters */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="rainfall" className="text-sm font-semibold text-gray-700">
@@ -332,102 +347,104 @@ export default function RiskPredictionPanel({ onPredictionComplete, userRole, se
               <p className="text-xs text-red-600">{validationErrors.bacteriaIndex}</p>
             )}
           </div>
-
-          {/* Hospital/PHC specific fields */}
-          {userRole === 'healthcare' && (
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="reportedCases" className="text-sm font-semibold text-gray-700">
-                  Reported Cases (7-day) <span className="text-red-600">*</span>
-                </Label>
-                <Input
-                  id="reportedCases"
-                  type="number"
-                  value={reportedCases}
-                  onChange={(e) => setReportedCases(e.target.value)}
-                  placeholder="0"
-                  className={validationErrors.reportedCases ? 'border-red-500' : 'border-gray-300'}
-                />
-                {validationErrors.reportedCases && (
-                  <p className="text-xs text-red-600">{validationErrors.reportedCases}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="sanitationCoverage" className="text-sm font-semibold text-gray-700">
-                  Sanitation Coverage (%) <span className="text-red-600">*</span>
-                </Label>
-                <Input
-                  id="sanitationCoverage"
-                  type="number"
-                  step="0.1"
-                  value={sanitationCoverage}
-                  onChange={(e) => setSanitationCoverage(e.target.value)}
-                  placeholder="0-100"
-                  className={validationErrors.sanitationCoverage ? 'border-red-500' : 'border-gray-300'}
-                />
-                {validationErrors.sanitationCoverage && (
-                  <p className="text-xs text-red-600">{validationErrors.sanitationCoverage}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="waterTreatmentCoverage" className="text-sm font-semibold text-gray-700">
-                  Water Treatment Coverage (%) <span className="text-red-600">*</span>
-                </Label>
-                <Input
-                  id="waterTreatmentCoverage"
-                  type="number"
-                  step="0.1"
-                  value={waterTreatmentCoverage}
-                  onChange={(e) => setWaterTreatmentCoverage(e.target.value)}
-                  placeholder="0-100"
-                  className={validationErrors.waterTreatmentCoverage ? 'border-red-500' : 'border-gray-300'}
-                />
-                {validationErrors.waterTreatmentCoverage && (
-                  <p className="text-xs text-red-600">{validationErrors.waterTreatmentCoverage}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="populationDensity" className="text-sm font-semibold text-gray-700">
-                  Population Density <span className="text-red-600">*</span>
-                </Label>
-                <Input
-                  id="populationDensity"
-                  type="number"
-                  value={populationDensity}
-                  onChange={(e) => setPopulationDensity(e.target.value)}
-                  placeholder="per sq km"
-                  className={validationErrors.populationDensity ? 'border-red-500' : 'border-gray-300'}
-                />
-                {validationErrors.populationDensity && (
-                  <p className="text-xs text-red-600">{validationErrors.populationDensity}</p>
-                )}
-              </div>
-            </>
-          )}
         </div>
 
+        {/* Infrastructure Data (Hospital/PHC only) */}
+        {userRole === 'healthcare' && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="reportedCases" className="text-sm font-semibold text-gray-700">
+                Reported Cases <span className="text-red-600">*</span>
+              </Label>
+              <Input
+                id="reportedCases"
+                type="number"
+                step="1"
+                value={reportedCases}
+                onChange={(e) => setReportedCases(e.target.value)}
+                placeholder="0"
+                className={validationErrors.reportedCases ? 'border-red-500' : 'border-gray-300'}
+              />
+              {validationErrors.reportedCases && (
+                <p className="text-xs text-red-600">{validationErrors.reportedCases}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="sanitationCoverage" className="text-sm font-semibold text-gray-700">
+                Sanitation Coverage (%) <span className="text-red-600">*</span>
+              </Label>
+              <Input
+                id="sanitationCoverage"
+                type="number"
+                step="0.1"
+                value={sanitationCoverage}
+                onChange={(e) => setSanitationCoverage(e.target.value)}
+                placeholder="0-100"
+                className={validationErrors.sanitationCoverage ? 'border-red-500' : 'border-gray-300'}
+              />
+              {validationErrors.sanitationCoverage && (
+                <p className="text-xs text-red-600">{validationErrors.sanitationCoverage}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="waterTreatmentCoverage" className="text-sm font-semibold text-gray-700">
+                Water Treatment Coverage (%) <span className="text-red-600">*</span>
+              </Label>
+              <Input
+                id="waterTreatmentCoverage"
+                type="number"
+                step="0.1"
+                value={waterTreatmentCoverage}
+                onChange={(e) => setWaterTreatmentCoverage(e.target.value)}
+                placeholder="0-100"
+                className={validationErrors.waterTreatmentCoverage ? 'border-red-500' : 'border-gray-300'}
+              />
+              {validationErrors.waterTreatmentCoverage && (
+                <p className="text-xs text-red-600">{validationErrors.waterTreatmentCoverage}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="populationDensity" className="text-sm font-semibold text-gray-700">
+                Population Density (per sq km) <span className="text-red-600">*</span>
+              </Label>
+              <Input
+                id="populationDensity"
+                type="number"
+                step="1"
+                value={populationDensity}
+                onChange={(e) => setPopulationDensity(e.target.value)}
+                placeholder="0"
+                className={validationErrors.populationDensity ? 'border-red-500' : 'border-gray-300'}
+              />
+              {validationErrors.populationDensity && (
+                <p className="text-xs text-red-600">{validationErrors.populationDensity}</p>
+              )}
+            </div>
+          </div>
+        )}
+
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+          <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-md">
             <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-            <p className="text-sm text-red-800">{error}</p>
+            <p className="text-sm text-red-700">{error}</p>
           </div>
         )}
 
         <Button
           onClick={handlePredict}
           disabled={isLoading || isFetching}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Calculating Risk...
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Calculating...
             </>
           ) : (
-            'Predict Risk'
+            'Calculate Risk'
           )}
         </Button>
       </CardContent>

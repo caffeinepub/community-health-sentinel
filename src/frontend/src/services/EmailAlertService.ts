@@ -10,14 +10,9 @@ interface EmailAlertParams {
   priority_score: number;
 }
 
-/**
- * Validate template parameters before sending
- * Ensures all critical fields are present and properly formatted
- */
 function validateTemplateParams(params: EmailAlertParams): { isValid: boolean; missingFields: string[] } {
   const missingFields: string[] = [];
   
-  // Check critical fields
   if (!params.risk_level || params.risk_level.trim() === '') {
     missingFields.push('risk_level');
   }
@@ -28,7 +23,6 @@ function validateTemplateParams(params: EmailAlertParams): { isValid: boolean; m
     missingFields.push('ward');
   }
   
-  // Check optional but important fields
   if (params.rainfall === undefined || params.rainfall === null) {
     missingFields.push('rainfall');
   }
@@ -56,14 +50,12 @@ export async function sendAlertEmail(params: EmailAlertParams): Promise<void> {
   console.log('Attempting to send alert email');
   console.log('Timestamp:', new Date().toISOString());
   
-  // Validate parameters
   const validation = validateTemplateParams(params);
   console.log('Parameter validation:', validation);
   
   if (!validation.isValid) {
     console.error('❌ Missing required parameters:', validation.missingFields);
     
-    // Check if critical fields are missing
     const criticalFields = ['risk_level', 'risk_percentage', 'ward'];
     const missingCritical = validation.missingFields.filter(f => criticalFields.includes(f));
     
@@ -73,14 +65,12 @@ export async function sendAlertEmail(params: EmailAlertParams): Promise<void> {
     }
   }
   
-  // Format time parameter as human-readable IST string
   const formattedTime = params.time || new Date().toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
     dateStyle: 'medium',
     timeStyle: 'medium'
   });
   
-  // Prepare template parameters
   const templateParams = {
     risk_level: params.risk_level,
     risk_percentage: params.risk_percentage.toFixed(1),
@@ -95,7 +85,6 @@ export async function sendAlertEmail(params: EmailAlertParams): Promise<void> {
   
   console.log('Template parameters (formatted):', JSON.stringify(templateParams, null, 2));
   
-  // Check if emailjs is available
   if (typeof window === 'undefined' || !(window as any).emailjs) {
     console.error('❌ EmailJS library not loaded');
     console.error('Please ensure EmailJS SDK is included in index.html');
@@ -133,7 +122,6 @@ export async function sendAlertEmail(params: EmailAlertParams): Promise<void> {
     console.error('Error status:', error?.status);
     console.error('Full error object:', error);
     
-    // Categorize error for user-friendly message
     let errorMessage = 'Failed to send email';
     
     if (error?.message?.toLowerCase().includes('configuration') || 
