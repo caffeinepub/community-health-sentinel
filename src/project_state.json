@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 27,
+  "projectStateVersion": 29,
   "summary": "Community Health Sentinel - A production-grade AI-powered early warning system for water-borne diseases in Coimbatore District. Features full-screen role selection with strict role-based data control and workflow separation: Common Citizen (view-only Public Transparency Dashboard showing Last Government Inspection Report with ward data, water quality metrics, disease risk distribution, safety guidelines, village heatmap, and read-only alert history), Hospital/PHC (ward-specific data entry with case reporting and 7-14 day forecast), and Government Health Authority (full control panel with 12-15 field Government Data Update Panel for environmental and infrastructure data, Update & Recalculate Risk functionality, comprehensive analytics including disease classification system with Cholera/Typhoid/Dysentery/Hepatitis A probabilities, 3x3 grid-style village risk heatmap for 9 wards, ward priority scoring with vulnerability weighting formula, full audit log alert history with all environmental metrics and email status, EmailJS integration with automatic triggering at >70% risk and manual send capability, 14-day predictive forecast, disease distribution visualizations, patient case trend graphs, resource deployment recommendations, comparative ward analytics, CSV export capability, and advanced visualizations). Built with modular architecture for government deployment readiness.",
   "architectural_notes": [
     "Color-coded risk system: Green <40%, Orange 40-70%, Red >70%",
@@ -770,6 +770,22 @@
         "REQ-100"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-debug-and-fix-the-ic0508-canister-rejection-error-occurring-when-the-governmentdatapanel-component-calls-the-backend-predictoutbreakrisk-function-ensuring-the-http-call-completes-successfully-without-canister-id-4ctyt-niaaa-aaaal-auroq-cai-non-replicated-rejection-or-reject-code-5-errors",
+      "title": "Debug and fix the IC0508 canister rejection error occurring when the GovernmentDataPanel component calls the backend predictOutbreakRisk function, ensuring the HTTP call completes successfully without 'canister_id', '4ctyt-niaaa-aaaal-auroq-cai', 'non_replicated_rejection', or 'reject_code 5' errors",
+      "reqIds": [
+        "REQ-101"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-handling-and-logging-to-the-governmentdatapanel-component-s-handleupdaterisk-function-to-catch-and-display-specific-backend-call-failures-canister-errors-or-network-issues-with-user-friendly-error-messages-in-toast-notifications",
+      "title": "Add comprehensive error handling and logging to the GovernmentDataPanel component's handleUpdateRisk function to catch and display specific backend call failures, canister errors, or network issues with user-friendly error messages in toast notifications",
+      "reqIds": [
+        "REQ-103"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -1059,6 +1075,20 @@
       "id": "AR-74",
       "summary": "Verify and test the 'Update & Recalculate Risk' button functionality in GovernmentDataPanel to ensure it properly triggers risk calculations, updates visualizations, stores alerts, and handles errors",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-75",
+      "summary": "Fix the one remaining error in the application without modifying any other functionality",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-77",
+      "summary": "Verify the backend predictOutbreakRisk function in backend/main.mo handles all input parameters correctly, validates numeric ranges, implements the 7-day moving average calculation properly, and returns a valid response structure without throwing runtime errors",
+      "reqIds": [
+        "REQ-102"
+      ],
       "status": "pending"
     }
   ],

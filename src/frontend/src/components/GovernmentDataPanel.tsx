@@ -186,11 +186,85 @@ export default function GovernmentDataPanel() {
     }
   };
   
+  const parseCanisterError = (error: any): { title: string; description: string } => {
+    const errorString = error?.toString() || '';
+    const errorMessage = error?.message || errorString;
+    
+    console.error('Full error object:', error);
+    console.error('Error string:', errorString);
+    console.error('Error message:', errorMessage);
+    
+    // Check for IC0508 canister stopped error
+    if (errorString.includes('IC0508') || errorMessage.includes('IC0508')) {
+      return {
+        title: 'Backend Service Unavailable',
+        description: 'The backend canister is currently stopped. Please contact the system administrator to restart the canister using "dfx canister start backend".'
+      };
+    }
+    
+    // Check for canister stopped in body
+    if (errorString.includes('is stopped') || errorMessage.includes('is stopped')) {
+      return {
+        title: 'Backend Service Stopped',
+        description: 'The backend service is not running. Please restart the canister to continue.'
+      };
+    }
+    
+    // Check for reject_code 5 (canister error)
+    if (errorString.includes('reject_code 5') || errorString.includes('reject code 5')) {
+      return {
+        title: 'Canister Execution Error',
+        description: 'The backend canister encountered an error during execution. Please check the canister logs.'
+      };
+    }
+    
+    // Check for network/connection errors
+    if (errorString.includes('fetch') || errorString.includes('network') || errorMessage.includes('Failed to fetch')) {
+      return {
+        title: 'Network Connection Error',
+        description: 'Unable to connect to the backend service. Please check your internet connection and try again.'
+      };
+    }
+    
+    // Check for authentication errors
+    if (errorString.includes('Unauthorized') || errorString.includes('authentication')) {
+      return {
+        title: 'Authentication Error',
+        description: 'You are not authorized to perform this action. Please log in again.'
+      };
+    }
+    
+    // Check for validation errors
+    if (errorString.includes('Invalid') || errorString.includes('validation')) {
+      return {
+        title: 'Invalid Input Parameters',
+        description: 'One or more input parameters are invalid. Please check your values and try again.'
+      };
+    }
+    
+    // Generic error
+    return {
+      title: 'Risk Calculation Failed',
+      description: errorMessage || 'An unexpected error occurred. Please try again or contact support.'
+    };
+  };
+  
   const handleUpdateAndRecalculate = async () => {
     if (!validateForm()) return;
     
     if (!actor) {
-      toast.error('Backend connection not available');
+      toast.error('Backend Connection Not Available', {
+        description: 'The backend actor is not initialized. Please refresh the page and try again.',
+        duration: 5000
+      });
+      return;
+    }
+    
+    if (isFetching) {
+      toast.error('Backend Initializing', {
+        description: 'Please wait for the backend connection to complete initialization.',
+        duration: 5000
+      });
       return;
     }
     
@@ -207,9 +281,16 @@ export default function GovernmentDataPanel() {
       const casesNum = parseFloat(reportedCases);
       
       // Call backend to calculate risk
-      console.log('Calling backend with:', { rainfallNum, humidityNum, turbidityNum, bacteriaNum });
+      console.log('🔄 Calling backend predictOutbreakRisk with:', { 
+        rainfall: rainfallNum, 
+        humidity: humidityNum, 
+        turbidity: turbidityNum, 
+        bacteriaIndex: bacteriaNum 
+      });
+      
       const result = await actor.predictOutbreakRisk(rainfallNum, humidityNum, turbidityNum, bacteriaNum);
-      console.log('Backend response:', result);
+      
+      console.log('✅ Backend response received:', result);
       
       const riskPercentage = result.riskPercentage;
       const riskCategory = result.riskCategory;
@@ -258,7 +339,7 @@ export default function GovernmentDataPanel() {
       // Determine if email should be sent automatically for high risk
       let emailSent = 'No';
       if (riskPercentage > 70) {
-        console.log('High risk detected (>70%), sending automatic alert email...');
+        console.log('⚠️ High risk detected (>70%), sending automatic alert email...');
         try {
           await sendAlertEmail({
             risk_level: riskCategory,
@@ -277,10 +358,10 @@ export default function GovernmentDataPanel() {
             description: `High risk alert email sent for Ward ${ward}`,
             duration: 5000
           });
-        } catch (error) {
-          console.error('❌ Automatic email send failed:', error);
+        } catch (emailError) {
+          console.error('❌ Automatic email send failed:', emailError);
           toast.error('Email Alert Failed', {
-            description: error instanceof Error ? error.message : 'Failed to send email',
+            description: emailError instanceof Error ? emailError.message : 'Failed to send email',
             duration: 5000
           });
         }
@@ -334,9 +415,13 @@ export default function GovernmentDataPanel() {
       });
       
     } catch (error) {
-      console.error('Risk calculation error:', error);
-      toast.error('Risk Calculation Failed', {
-        description: error instanceof Error ? error.message : 'Unknown error occurred',
+      console.error('❌ Risk calculation error:', error);
+      
+      // Parse and display specific error
+      const { title, description } = parseCanisterError(error);
+      
+      toast.error(title, {
+        description: description,
         duration: 5000
       });
     } finally {
@@ -374,7 +459,7 @@ export default function GovernmentDataPanel() {
         priorityScore = calculatePriorityScore(riskPercentage, sanitationNum, waterNum, densityNum);
       }
       
-      console.log('Sending manual alert email...');
+      console.log('📧 Sending manual alert email...');
       await sendAlertEmail({
         risk_level: riskCategory,
         risk_percentage: riskPercentage,
@@ -526,7 +611,7 @@ export default function GovernmentDataPanel() {
           
           {/* Population Density */}
           <div className="space-y-2">
-            <Label htmlFor="populationDensity" className="text-sm font-semibold text-gray-700">Population Density (per km²) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="populationDensity" className="text-sm font-semibold text-gray-700">Population Density (per sq km) <span className="text-red-600">*</span></Label>
             <Input
               id="populationDensity"
               type="number"
@@ -541,7 +626,7 @@ export default function GovernmentDataPanel() {
           
           {/* Reported Cases */}
           <div className="space-y-2">
-            <Label htmlFor="reportedCases" className="text-sm font-semibold text-gray-700">Reported Cases <span className="text-red-600">*</span></Label>
+            <Label htmlFor="reportedCases" className="text-sm font-semibold text-gray-700">Reported Cases (Last 7 Days) <span className="text-red-600">*</span></Label>
             <Input
               id="reportedCases"
               type="number"
@@ -549,7 +634,7 @@ export default function GovernmentDataPanel() {
               step="1"
               value={reportedCases}
               onChange={(e) => setReportedCases(e.target.value)}
-              placeholder="e.g., 5"
+              placeholder="e.g., 15"
               className="border-gray-300"
             />
           </div>
@@ -559,29 +644,15 @@ export default function GovernmentDataPanel() {
             <Label htmlFor="waterSourceType" className="text-sm font-semibold text-gray-700">Water Source Type <span className="text-red-600">*</span></Label>
             <Select value={waterSourceType} onValueChange={setWaterSourceType}>
               <SelectTrigger id="waterSourceType" className="border-gray-300">
-                <SelectValue placeholder="Select Water Source" />
+                <SelectValue placeholder="Select Source" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Municipal">Municipal</SelectItem>
+                <SelectItem value="Municipal Supply">Municipal Supply</SelectItem>
                 <SelectItem value="Borewell">Borewell</SelectItem>
-                <SelectItem value="River">River</SelectItem>
-                <SelectItem value="Lake">Lake</SelectItem>
-                <SelectItem value="Mixed">Mixed</SelectItem>
+                <SelectItem value="River/Lake">River/Lake</SelectItem>
+                <SelectItem value="Well">Well</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          
-          {/* Chlorination Status */}
-          <div className="space-y-2">
-            <Label htmlFor="chlorinationStatus" className="text-sm font-semibold text-gray-700">Chlorination Status</Label>
-            <div className="flex items-center space-x-3 pt-2">
-              <Switch
-                id="chlorinationStatus"
-                checked={chlorinationStatus}
-                onCheckedChange={setChlorinationStatus}
-              />
-              <span className="text-sm text-gray-600">{chlorinationStatus ? 'Active' : 'Inactive'}</span>
-            </div>
           </div>
           
           {/* PHC Capacity */}
@@ -589,12 +660,12 @@ export default function GovernmentDataPanel() {
             <Label htmlFor="phcCapacity" className="text-sm font-semibold text-gray-700">PHC Capacity <span className="text-red-600">*</span></Label>
             <Select value={phcCapacity} onValueChange={setPhcCapacity}>
               <SelectTrigger id="phcCapacity" className="border-gray-300">
-                <SelectValue placeholder="Select PHC Capacity" />
+                <SelectValue placeholder="Select Capacity" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Low">Low (0-30%)</SelectItem>
-                <SelectItem value="Medium">Medium (31-70%)</SelectItem>
-                <SelectItem value="High">High (71-100%)</SelectItem>
+                <SelectItem value="Adequate">Adequate</SelectItem>
+                <SelectItem value="Moderate">Moderate</SelectItem>
+                <SelectItem value="Insufficient">Insufficient</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -607,12 +678,25 @@ export default function GovernmentDataPanel() {
                 <SelectValue placeholder="Select Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Ready">Ready</SelectItem>
-                <SelectItem value="Standby">Standby</SelectItem>
                 <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Overwhelmed">Overwhelmed</SelectItem>
+                <SelectItem value="Standby">Standby</SelectItem>
+                <SelectItem value="Not Deployed">Not Deployed</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          
+          {/* Chlorination Status */}
+          <div className="space-y-2 col-span-2">
+            <div className="flex items-center space-x-3">
+              <Switch
+                id="chlorinationStatus"
+                checked={chlorinationStatus}
+                onCheckedChange={setChlorinationStatus}
+              />
+              <Label htmlFor="chlorinationStatus" className="text-sm font-semibold text-gray-700 cursor-pointer">
+                Chlorination Active
+              </Label>
+            </div>
           </div>
         </div>
         
@@ -625,12 +709,12 @@ export default function GovernmentDataPanel() {
           >
             {isCalculating ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Calculating...
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Calculating Risk...
               </>
             ) : (
               <>
-                <Calculator className="w-5 h-5 mr-2" />
+                <Calculator className="mr-2 h-5 w-5" />
                 Update & Recalculate Risk
               </>
             )}
@@ -644,26 +728,31 @@ export default function GovernmentDataPanel() {
           >
             {isSendingEmail ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Sending...
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Sending Email...
               </>
             ) : (
               <>
-                <Mail className="w-5 h-5 mr-2" />
+                <Mail className="mr-2 h-5 w-5" />
                 Send Alert Email
               </>
             )}
           </Button>
         </div>
         
-        {/* Info Note */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-          <p className="font-semibold mb-1">📧 Email Alert Policy:</p>
-          <ul className="list-disc list-inside space-y-1 text-xs">
-            <li>Automatic email alerts are sent when risk exceeds 70% (High Risk)</li>
-            <li>Use "Send Alert Email" button to manually send alerts for any risk level</li>
-            <li>All alerts are logged in the Alert History with email status</li>
-          </ul>
+        {/* Email Alert Policy Info */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
+          <div className="flex items-start space-x-2">
+            <Mail className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
+            <div className="space-y-1">
+              <p className="text-sm font-semibold text-blue-900">Email Alert Policy:</p>
+              <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                <li>Automatic email alerts are sent when risk exceeds 70% (High Risk)</li>
+                <li>Use "Send Alert Email" button to manually send alerts for any risk level</li>
+                <li>All alerts are logged in the Alert History with email status</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>

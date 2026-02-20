@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-the-test-email-configuration-button-from-the-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-including-the-button-ui-element-click-handler-function-and-all-associated-test-email-logic",
-      "featureTitle": "Remove the 'Test Email Configuration' button from the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx), including the button UI element, click handler function, and all associated test email logic",
+      "featureId": "feature-debug-and-fix-the-ic0508-canister-rejection-error-occurring-when-the-governmentdatapanel-component-calls-the-backend-predictoutbreakrisk-function-ensuring-the-http-call-completes-successfully-without-canister-id-4ctyt-niaaa-aaaal-auroq-cai-non-replicated-rejection-or-reject-code-5-errors",
+      "featureTitle": "Debug and fix the IC0508 canister rejection error occurring when the GovernmentDataPanel component calls the backend predictOutbreakRisk function, ensuring the HTTP call completes successfully without 'canister_id', '4ctyt-niaaa-aaaal-auroq-cai', 'non_replicated_rejection', or 'reject_code 5' errors",
       "files": [
         "frontend/src/components/GovernmentDataPanel.tsx"
       ],
@@ -16,19 +16,15 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-99"
+        "REQ-101"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-verify-and-test-the-update-recalculate-risk-button-functionality-in-the-governmentdatapanel-component-to-ensure-it-1-validates-all-15-input-fields-ward-rainfall-7-day-avg-rainfall-humidity-7-day-avg-humidity-turbidity-bacteria-index-sanitation-coverage-water-treatment-coverage-population-density-reported-cases-water-source-type-chlorination-status-phc-capacity-emergency-response-status-2-calls-the-backend-predictoutbreakrisk-function-with-the-environmental-data-3-successfully-updates-all-dashboard-visualizations-riskgauge-diseaseclassification-wardheatmap-interventionpriority-4-creates-a-new-entry-in-alerthistory-with-all-input-data-plus-calculated-risk-outputs-5-triggers-automatic-email-alerts-when-risk-exceeds-70-6-shows-proper-loading-states-during-calculation-7-displays-success-confirmation-or-validation-error-messages",
-      "featureTitle": "Verify and test the 'Update & Recalculate Risk' button functionality in the GovernmentDataPanel component to ensure it: (1) validates all 15 input fields (Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status), (2) calls the backend predictOutbreakRisk function with the environmental data, (3) successfully updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates a new entry in AlertHistory with all input data plus calculated risk outputs, (5) triggers automatic email alerts when risk exceeds 70%, (6) shows proper loading states during calculation, (7) displays success confirmation or validation error messages",
+      "featureId": "feature-add-comprehensive-error-handling-and-logging-to-the-governmentdatapanel-component-s-handleupdaterisk-function-to-catch-and-display-specific-backend-call-failures-canister-errors-or-network-issues-with-user-friendly-error-messages-in-toast-notifications",
+      "featureTitle": "Add comprehensive error handling and logging to the GovernmentDataPanel component's handleUpdateRisk function to catch and display specific backend call failures, canister errors, or network issues with user-friendly error messages in toast notifications",
       "files": [
-        "frontend/src/components/DiseaseClassification.tsx",
-        "frontend/src/components/GovernmentDataPanel.tsx",
-        "frontend/src/components/InterventionPriority.tsx",
-        "frontend/src/components/RiskGauge.tsx",
-        "frontend/src/components/WardHeatmap.tsx"
+        "frontend/src/components/GovernmentDataPanel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -39,7 +35,7 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-100"
+        "REQ-103"
       ],
       "confidence": "high"
     }

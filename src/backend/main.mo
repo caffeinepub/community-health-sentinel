@@ -18,13 +18,29 @@ actor {
   var turbidityHistory : [Float] = Array.repeat<Float>(0.0, 7);
   var bacteriaHistory : [Float] = Array.repeat<Float>(0.0, 7);
 
+  func calculateSum(slice : [Float]) : Float {
+    slice.foldLeft(0.0, func(acc, value) { acc + value });
+  };
+
   func calculateMovingAverage(data : [Float]) : Float {
-    let sum = data.foldLeft(0.0, func(acc, value) { acc + value });
-    if (data.size() == 0) {
-      0.0;
+    var sum = 0.0;
+    let nonZeroData = data.filter(func(value) { value != 0.0 });
+    let size = nonZeroData.size();
+    if (size > 0) {
+      sum := calculateSum(nonZeroData);
+      sum / size.toFloat();
     } else {
+      sum := calculateSum(data);
       sum / data.size().toFloat();
     };
+  };
+
+  public shared ({ caller }) func resetHistoricalData() : async () {
+    rainfallHistory := Array.repeat<Float>(0.0, 7);
+    humidityHistory := Array.repeat<Float>(0.0, 7);
+    turbidityHistory := Array.repeat<Float>(0.0, 7);
+    bacteriaHistory := Array.repeat<Float>(0.0, 7);
+    Debug.print("Historical data arrays have been reset to all zeros.");
   };
 
   func updateHistory(newValue : Float, history : [Float]) : [Float] {

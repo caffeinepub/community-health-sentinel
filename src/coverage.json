@@ -1,38 +1,36 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T20:16:42.702Z",
+  "generatedAt": "2026-02-20T20:24:38.580Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
+    "total": 3,
     "implemented": 2,
     "items": [
       {
-        "id": "REQ-100",
-        "summary": "Verify and test the 'Update & Recalculate Risk' button functionality in the GovernmentDataPanel component to ensure it: (1) validates all 15 input fields (Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status), (2) calls the backend predictOutbreakRisk function with the environmental data, (3) successfully updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates a new entry in AlertHistory with all input data plus calculated risk outputs, (5) triggers automatic email alerts when risk exceeds 70%, (6) shows proper loading states during calculation, (7) displays success confirmation or validation error messages",
+        "id": "REQ-101",
+        "summary": "Debug and fix the IC0508 canister rejection error occurring when the GovernmentDataPanel component calls the backend predictOutbreakRisk function, ensuring the HTTP call completes successfully without 'canister_id', '4ctyt-niaaa-aaaal-auroq-cai', 'non_replicated_rejection', or 'reject_code 5' errors",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx",
-          "frontend/src/components/RiskGauge.tsx",
-          "frontend/src/components/DiseaseClassification.tsx",
-          "frontend/src/components/WardHeatmap.tsx",
-          "frontend/src/components/InterventionPriority.tsx",
-          "frontend/src/services/EmailAlertService.ts"
+          "frontend/src/components/GovernmentDataPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx",
-          "frontend/src/components/RiskGauge.tsx",
-          "frontend/src/components/DiseaseClassification.tsx",
-          "frontend/src/components/WardHeatmap.tsx",
-          "frontend/src/components/InterventionPriority.tsx"
+          "frontend/src/components/GovernmentDataPanel.tsx"
         ]
       },
       {
-        "id": "REQ-99",
-        "summary": "Remove the 'Test Email Configuration' button from the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx), including the button UI element, click handler function, and all associated test email logic",
+        "id": "REQ-102",
+        "summary": "Verify the backend predictOutbreakRisk function in backend/main.mo handles all input parameters correctly, validates numeric ranges, implements the 7-day moving average calculation properly, and returns a valid response structure without throwing runtime errors",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-103",
+        "summary": "Add comprehensive error handling and logging to the GovernmentDataPanel component's handleUpdateRisk function to catch and display specific backend call failures, canister errors, or network issues with user-friendly error messages in toast notifications",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/GovernmentDataPanel.tsx"
@@ -44,15 +42,16 @@
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/DiseaseClassification.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
     "frontend/src/components/GovernmentDataPanel.tsx",
-    "frontend/src/components/InterventionPriority.tsx",
-    "frontend/src/components/RiskGauge.tsx",
-    "frontend/src/components/WardHeatmap.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

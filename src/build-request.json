@@ -1,65 +1,78 @@
 {
   "kind": "build_request",
-  "title": "Test Update & Recalculate Risk button and remove Test Email Configuration button",
+  "title": "Fix IC0508 canister rejection error in predictOutbreakRisk backend call",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-99",
-      "text": "Remove the 'Test Email Configuration' button from the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx), including the button UI element, click handler function, and all associated test email logic",
-      "target": "frontend",
+      "id": "REQ-101",
+      "text": "Debug and fix the IC0508 canister rejection error occurring when the GovernmentDataPanel component calls the backend predictOutbreakRisk function, ensuring the HTTP call completes successfully without 'canister_id', '4ctyt-niaaa-aaaal-auroq-cai', 'non_replicated_rejection', or 'reject_code 5' errors",
+      "target": "both",
       "source": {
         "messageIds": [
           "msg-latest"
         ],
         "quotes": [
-          "REMOVE THE TEST EMAIL BUTOON PLS"
+          "Risk Calculation Failed",
+          "The replica returned a rejection error: Request ID: 6632e119afcbb738d570b59585001690402be9fc886dcee62f330bae970ff7ef Reject code: 5 Reject text: Canister 4ctyt-niaaa-aaaal-auroq-cai is stopped Error code: IC0508 Call context: Canister ID: 4ctyt-niaaa-aaaal-auroq-cai Method name: predictOutbreakRisk"
         ]
       },
       "acceptanceCriteria": [
-        "The 'Test Email Configuration' button is no longer visible in the Government Data Update Panel",
-        "All test email functionality code is removed from GovernmentDataPanel.tsx",
-        "The component renders correctly without the test button"
+        "The 'Update & Recalculate Risk' button in GovernmentDataPanel successfully calls backend predictOutbreakRisk without IC0508 errors",
+        "Risk calculation completes and returns valid outbreak probability percentage",
+        "All dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority) update correctly after risk calculation",
+        "No canister rejection errors appear in the UI or browser console",
+        "Alert history entry is created successfully with calculated risk outputs"
       ]
     },
     {
-      "id": "REQ-100",
-      "text": "Verify and test the 'Update & Recalculate Risk' button functionality in the GovernmentDataPanel component to ensure it: (1) validates all 15 input fields (Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status), (2) calls the backend predictOutbreakRisk function with the environmental data, (3) successfully updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates a new entry in AlertHistory with all input data plus calculated risk outputs, (5) triggers automatic email alerts when risk exceeds 70%, (6) shows proper loading states during calculation, (7) displays success confirmation or validation error messages",
+      "id": "REQ-102",
+      "text": "Verify the backend predictOutbreakRisk function in backend/main.mo handles all input parameters correctly, validates numeric ranges, implements the 7-day moving average calculation properly, and returns a valid response structure without throwing runtime errors",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend function accepts rainfall, humidity, turbidity, and bacteria index parameters",
+        "7-day moving average calculation executes without errors",
+        "Weighted risk formula (30% rainfall, 25% turbidity, 25% bacteria, 20% humidity) calculates correctly",
+        "Function returns normalized risk percentage (0-100%) and risk category (Low/Medium/High)",
+        "No runtime exceptions or canister stopping errors occur during calculation"
+      ]
+    },
+    {
+      "id": "REQ-103",
+      "text": "Add comprehensive error handling and logging to the GovernmentDataPanel component's handleUpdateRisk function to catch and display specific backend call failures, canister errors, or network issues with user-friendly error messages in toast notifications",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-latest"
-        ],
-        "quotes": [
-          "CHECK THE UPDATE AND RECALCULATE RISK PLS"
         ]
       },
       "acceptanceCriteria": [
-        "All 15 input fields are properly validated before submission",
-        "Backend predictOutbreakRisk is called with correct environmental parameters",
-        "RiskGauge component updates with the new risk percentage and color-coded level",
-        "DiseaseClassification component updates with recalculated disease probabilities",
-        "WardHeatmap updates showing the affected ward with new risk level and color",
-        "InterventionPriority component recalculates priority scores with updated ward data",
-        "A complete alert record is stored in localStorage under 'cholera_alerts' key with all environmental inputs, calculated outputs, email status, and timestamp",
-        "Automatic email alert is triggered via EmailAlertService when risk percentage > 70%",
-        "Loading spinner appears during backend calculation and disappears on completion",
-        "Success toast notification displays 'Risk calculation completed successfully' or similar message",
-        "Validation errors are shown for invalid or missing field values",
-        "Error messages are displayed if backend call fails with specific error details"
+        "Try-catch block wraps the backend predictOutbreakRisk call",
+        "Specific error types are identified: canister rejection, network failure, validation errors",
+        "Error messages display the actual failure reason from the backend response",
+        "Console logs include full error details for debugging",
+        "User sees actionable error message in UI (not generic 'Risk Calculation Failed')"
       ]
     }
   ],
   "constraints": [
-    "Maintain existing EmailJS configuration with service_hf3e6oq, template_3dldpfg, KHu3JNagtUgZCsDcG",
-    "Preserve all existing alert storage logic in localStorage under 'cholera_alerts' key",
-    "Do not modify the backend predictOutbreakRisk function signature or core calculation logic",
-    "Keep all existing dashboard visualizations and their update mechanisms intact"
+    "Do not modify any other components, files, or functionality beyond the risk calculation error fix",
+    "Maintain all existing GovernmentDataPanel UI elements and form fields",
+    "Preserve the current EmailJS integration and alert history storage logic",
+    "Keep all role-based access control and dashboard view logic unchanged",
+    "Do not alter the visual styling, color theme, or component layout"
   ],
   "nonGoals": [
-    "Adding new input fields to the Government Data Update Panel",
-    "Changing the risk calculation formula in the backend",
-    "Modifying EmailJS credentials or template structure",
-    "Adding new visualization components to the dashboard"
+    "Adding new dashboard features or visualization components",
+    "Modifying the role selection system or user authentication",
+    "Changing the EmailJS configuration or alert email logic",
+    "Updating the UI theme, colors, or styling",
+    "Refactoring unrelated components or utility functions",
+    "Adding new ward data fields or calculation parameters"
   ],
   "imageRequirements": {
     "required": [],

@@ -22,6 +22,7 @@ export const idlService = IDL.Service({
       [RiskPrediction],
       [],
     ),
+  'resetHistoricalData' : IDL.Func([], [], []),
 });
 
 export const idlInitArgs = [];
@@ -41,6 +42,7 @@ export const idlFactory = ({ IDL }) => {
         [RiskPrediction],
         [],
       ),
+    'resetHistoricalData' : IDL.Func([], [], []),
   });
 };
 

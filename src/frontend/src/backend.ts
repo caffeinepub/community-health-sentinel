@@ -98,6 +98,7 @@ export interface RiskPrediction {
 export type Time = bigint;
 export interface backendInterface {
     predictOutbreakRisk(rainfall: number, humidity: number, turbidity: number, bacteriaIndex: number): Promise<RiskPrediction>;
+    resetHistoricalData(): Promise<void>;
 }
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
@@ -112,6 +113,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.predictOutbreakRisk(arg0, arg1, arg2, arg3);
+            return result;
+        }
+    }
+    async resetHistoricalData(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.resetHistoricalData();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.resetHistoricalData();
             return result;
         }
     }

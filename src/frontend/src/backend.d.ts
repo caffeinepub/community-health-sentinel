@@ -16,4 +16,5 @@ export interface RiskPrediction {
 export type Time = bigint;
 export interface backendInterface {
     predictOutbreakRisk(rainfall: number, humidity: number, turbidity: number, bacteriaIndex: number): Promise<RiskPrediction>;
+    resetHistoricalData(): Promise<void>;
 }
