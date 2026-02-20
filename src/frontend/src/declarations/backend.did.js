@@ -8,9 +8,12 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const Time = IDL.Int;
 export const RiskPrediction = IDL.Record({
   'riskCategory' : IDL.Text,
   'riskPercentage' : IDL.Float64,
+  'message' : IDL.Text,
+  'timestamp' : Time,
 });
 
 export const idlService = IDL.Service({
@@ -24,9 +27,12 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const Time = IDL.Int;
   const RiskPrediction = IDL.Record({
     'riskCategory' : IDL.Text,
     'riskPercentage' : IDL.Float64,
+    'message' : IDL.Text,
+    'timestamp' : Time,
   });
   
   return IDL.Service({

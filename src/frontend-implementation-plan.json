@@ -1,292 +1,71 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Restructure system architecture with strict role-based data control and complete government workflow separation",
+  "title": "Test Update & Recalculate Risk button and remove Test Email Configuration button",
   "requirements": [
     {
-      "id": "REQ-71",
-      "summary": "Remove all environmental input forms and risk calculation controls from Common Citizen dashboard view, ensuring zero data entry capability",
+      "id": "REQ-99",
+      "summary": "Remove the 'Test Email Configuration' button from GovernmentDataPanel component including all associated test email logic",
       "acceptanceCriteria": [
-        "Common Citizen view contains no input fields whatsoever",
-        "RiskPredictionPanel component is not rendered in Common Citizen view",
-        "No 'Predict Risk' or calculation buttons appear in Common Citizen view"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Remove RiskPredictionPanel component from Common Citizen view conditional rendering block. Ensure the component is only rendered for Healthcare and Government roles, never for Community role."
-        }
-      ]
-    },
-    {
-      "id": "REQ-72",
-      "summary": "Create LastGovernmentReport component displaying read-only government inspection data with professional styling",
-      "acceptanceCriteria": [
-        "Component renders as a white card with blue header",
-        "Timestamp is displayed prominently with label 'Last Updated'",
-        "All 9 fields are displayed in read-only format",
-        "Data source is clearly labeled as government inspection"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/LastGovernmentReport.tsx",
-          "operation": "create",
-          "description": "Create new component rendering a white card with blue header titled 'Last Government Inspection Report'. Display 9 read-only fields: Ward, Water Quality Index, Bacteria Level, Turbidity, Rainfall, Humidity, Sanitation Coverage %, Water Treatment Coverage %, Risk Level. Include prominent 'Last Updated' timestamp label at top. Retrieve data from localStorage key 'last_government_report'. Use Tailwind classes: bg-white, text-blue-600 (#2563EB) for header, shadow-md, p-6, rounded-lg, space-y-4. Display fields in grid layout with labels and values clearly separated."
-        }
-      ]
-    },
-    {
-      "id": "REQ-73",
-      "summary": "Add 'Public Transparency Dashboard' title at top of Common Citizen view with professional blue styling",
-      "acceptanceCriteria": [
-        "Title 'Public Transparency Dashboard' appears at top of Common Citizen view",
-        "Title uses large bold font",
-        "Title color matches professional blue theme"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add page title 'Public Transparency Dashboard' at the very top of the Common Citizen view rendering block, before any other components. Use Tailwind classes: text-3xl, font-bold, text-blue-600, mb-6. Place inside an h1 element."
-        }
-      ]
-    },
-    {
-      "id": "REQ-74",
-      "summary": "Update Common Citizen view to render only specified read-only components, removing all analytics sections",
-      "acceptanceCriteria": [
-        "Common Citizen view renders exactly the specified components",
-        "No analytics sections, intervention priority, or resource estimation visible",
-        "All displayed components are in read-only mode"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Restructure Common Citizen view to render only: LastGovernmentReport (new component), RiskGauge (read-only), DiseaseClassification, SafetyAdvisory, PreventiveRecommendations, WardHeatmap (read-only), AlertHistory (read-only with filters). Remove all other dashboard sections including: analytics tabs, InterventionPriority, ResourceEstimation, CaseVolumeProjection, PatientCaseTrend, ResourcePlanning, DistrictRiskOverview, ExplainableAI, ForecastChart, WardComparison, RiskComponentBreakdown. Ensure components are arranged vertically with proper spacing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-75",
-      "summary": "Create GovernmentDataPanel component with 15 input fields for comprehensive environmental and health data entry",
-      "acceptanceCriteria": [
-        "Component contains exactly 15 input fields as specified",
-        "7-day averages are auto-calculated from input history",
-        "Dropdowns provide specified options",
-        "All fields have appropriate validation",
-        "Card uses white background with blue accents"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/GovernmentDataPanel.tsx",
-          "operation": "create",
-          "description": "Create new form component with white card styling (bg-white, shadow-lg, rounded-lg, p-6) and blue header (#2563EB) titled 'Government Data Update Panel'. Include 15 input fields: (1) Ward dropdown (1-9), (2) Rainfall mm input, (3) 7-day avg rainfall (auto-calculated display field using history from localStorage), (4) Humidity % input, (5) 7-day avg humidity (auto-calculated display field), (6) Turbidity NTU input, (7) Bacteria Index input, (8) Sanitation Coverage % input, (9) Water Treatment Coverage % input, (10) Population Density input, (11) Reported Cases 7-day count input, (12) Water Source Type dropdown (Municipal/Well/River/Mixed), (13) Chlorination Status Yes/No toggle, (14) PHC Capacity dropdown (Low/Medium/High), (15) Emergency Response Status dropdown (Standby/Active/Critical). Add validation: numbers in valid ranges, percentages 0-100, required fields marked. Use controlled inputs with React useState. Store input history in localStorage under 'environmental_input_history' for 7-day calculations. Layout fields in 2-column grid with clear labels."
-        }
-      ]
-    },
-    {
-      "id": "REQ-76",
-      "summary": "Add 'Update & Recalculate Risk' button to GovernmentDataPanel that triggers full risk calculation workflow and updates all visualizations",
-      "acceptanceCriteria": [
-        "Button triggers full risk recalculation workflow",
-        "All dashboard components refresh with new data",
-        "Alert history receives new entry with all environmental metrics",
-        "Loading spinner appears during backend call",
-        "Success/error messages display appropriately"
+        "The 'Test Email Configuration' button is no longer visible in the Government Data Update Panel",
+        "All test email functionality code is removed from GovernmentDataPanel.tsx",
+        "The component renders correctly without the test button"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/GovernmentDataPanel.tsx",
           "operation": "modify",
-          "description": "Add 'Update & Recalculate Risk' button at bottom of form (blue bg-blue-600 hover:bg-blue-700, white text, px-6 py-3, rounded-lg). On click: (1) validate all fields, (2) show loading spinner, (3) call backend.predictOutbreakRisk with rainfall, humidity, turbidity, bacteriaIndex, (4) calculate vulnerability_weight and priority_score using InterventionPriority formula, (5) store complete alert record in localStorage 'cholera_alerts' array with all 15 input fields + calculated risk outputs (riskCategory, riskPercentage, diseaseClassification, priorityScore), (6) emit custom event 'risk-data-updated' with payload for dashboard refresh, (7) update localStorage 'last_government_report' with all current data, (8) display success toast (green) or error toast (red) with validation messages. Use useActor hook to access backend. Handle Promise resolution/rejection appropriately."
+          "description": "Remove the 'Test Email Configuration' button UI element, its click handler function (handleTestEmail or similar), and all associated test email logic from the GovernmentDataPanel component. Ensure the remaining form and 'Update & Recalculate Risk' button functionality is preserved and the component renders correctly without the removed button."
         }
       ]
     },
     {
-      "id": "REQ-77",
-      "summary": "Render GovernmentDataPanel only in Government view at top of dashboard",
+      "id": "REQ-100",
+      "summary": "Verify and test the 'Update & Recalculate Risk' button functionality to ensure proper validation, backend integration, visualization updates, alert storage, email triggering, loading states, and user feedback",
       "acceptanceCriteria": [
-        "GovernmentDataPanel appears only in Government dashboard view",
-        "Component is positioned at top of dashboard",
-        "Component is not visible to Common Citizen or Hospital/PHC users"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add GovernmentDataPanel component import. In Government view rendering block, position GovernmentDataPanel at the very top before all other analytics sections. Ensure it renders only when selectedRole === 'government'. Add mb-6 spacing below it."
-        }
-      ]
-    },
-    {
-      "id": "REQ-78",
-      "summary": "Implement automatic email triggering in EmailAlertService when risk exceeds 70% using EmailJS placeholders",
-      "acceptanceCriteria": [
-        "Function calls emailjs.send with exact placeholder key names",
-        "All template variables are included in payload",
-        "Function returns Promise resolving to success/failure",
-        "No hardcoded real credentials present"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/services/EmailAlertService.ts",
-          "operation": "modify",
-          "description": "Replace mock implementation with real emailjs.send() call: emailjs.send('SERVICE_ID_HERE', 'TEMPLATE_ID_HERE', {risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, priority_score}, 'PUBLIC_KEY_HERE'). Keep placeholder strings as-is (do not replace with real credentials). Function should accept parameters matching template variables and return Promise<{success: boolean, message: string}>. Add condition to trigger automatically when risk_percentage > 70. Keep existing imports and maintain module structure. Add comment explaining placeholder credentials need replacement for production."
-        }
-      ]
-    },
-    {
-      "id": "REQ-79",
-      "summary": "Integrate automatic email alert triggering in GovernmentDataPanel after risk calculation when risk exceeds 70%",
-      "acceptanceCriteria": [
-        "Email automatically sends when risk exceeds 70%",
-        "Success message displays as green toast notification",
-        "Error message displays as red toast with specific error details",
-        "Email sending does not block UI interactions"
+        "All 15 input fields are properly validated before submission",
+        "Backend predictOutbreakRisk is called with correct environmental parameters",
+        "RiskGauge component updates with the new risk percentage and color-coded level",
+        "DiseaseClassification component updates with recalculated disease probabilities",
+        "WardHeatmap updates showing the affected ward with new risk level and color",
+        "InterventionPriority component recalculates priority scores with updated ward data",
+        "A complete alert record is stored in localStorage under 'cholera_alerts' key with all environmental inputs, calculated outputs, email status, and timestamp",
+        "Automatic email alert is triggered via EmailAlertService when risk percentage > 70%",
+        "Loading spinner appears during backend calculation and disappears on completion",
+        "Success toast notification displays 'Risk calculation completed successfully' or similar message",
+        "Validation errors are shown for invalid or missing field values",
+        "Error messages are displayed if backend call fails with specific error details"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/GovernmentDataPanel.tsx",
           "operation": "modify",
-          "description": "Import sendAlert from EmailAlertService. After backend predictOutbreakRisk resolves in 'Update & Recalculate Risk' button handler, check if riskPercentage > 70. If true, call sendAlert({risk_level: riskCategory, risk_percentage: riskPercentage, time: new Date().toISOString(), rainfall, humidity, turbidity, bacteria: bacteriaIndex, ward, priority_score: calculatedPriorityScore}) asynchronously (non-blocking). Display green toast 'Government Alert Sent Successfully' on success or red toast 'Email Alert Failed: [error.message]' on failure. Store email sent status (true/false) in alert record. Use async/await with try-catch for error handling."
-        }
-      ]
-    },
-    {
-      "id": "REQ-80",
-      "summary": "Add manual 'Send Alert Email' button to GovernmentDataPanel for on-demand email sending",
-      "acceptanceCriteria": [
-        "Manual send button appears in Government Data Panel",
-        "Button works regardless of current risk level",
-        "Loading spinner displays during email send",
-        "Success/failure notification appears after completion"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/GovernmentDataPanel.tsx",
-          "operation": "modify",
-          "description": "Add 'Send Alert Email' button below 'Update & Recalculate Risk' button with secondary styling (bg-gray-600 hover:bg-gray-700, white text, px-6 py-3, rounded-lg, mt-4). On click: call sendAlert with current form data and last calculated risk values (retrieve from state or localStorage if needed). Show loading spinner during send. Display green toast on success, red toast with error message on failure. Button should work independent of risk level threshold. Use separate loading state to avoid interference with risk calculation button."
-        }
-      ]
-    },
-    {
-      "id": "REQ-81",
-      "summary": "Expand AlertHistory component columns to include all environmental inputs, calculated outputs, email status, and recommended action",
-      "acceptanceCriteria": [
-        "Table displays all 14 specified columns",
-        "Email Sent column shows Yes/No badges",
-        "Disease Most Likely displays the highest probability disease",
-        "All existing filtering functionality remains intact",
-        "Table is scrollable horizontally if needed"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AlertHistory.tsx",
-          "operation": "modify",
-          "description": "Expand table columns to 14 total: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level (badge with color), Risk % (numeric), Disease Most Likely (text from highest probability in disease classification), Priority Score (numeric), Email Sent (Yes/No badge - green for Yes, gray for No), Recommended Action (text). Retrieve all data from localStorage 'cholera_alerts'. Maintain existing ward and risk level filter dropdowns. Add horizontal scroll (overflow-x-auto) to table container. Use consistent badge styling for Risk Level (green/yellow/red based on thresholds) and Email Sent (green/gray). Display Disease Most Likely by finding the disease with highest probability from the classification object stored in alert record."
-        }
-      ]
-    },
-    {
-      "id": "REQ-82",
-      "summary": "Update alert storage logic to persist complete alert records with all inputs, outputs, and email status",
-      "acceptanceCriteria": [
-        "Alert records contain all environmental input values",
-        "Alert records contain all calculated risk outputs",
-        "Email sent status is stored as boolean/Yes/No",
-        "Records persist across page refreshes via localStorage",
-        "Records are accessible to AlertHistory component"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/GovernmentDataPanel.tsx",
-          "operation": "modify",
-          "description": "In 'Update & Recalculate Risk' button handler, after risk calculation completes, create complete alert record object containing: {timestamp, ward, rainfall, humidity, turbidity, bacteriaIndex, sanitationCoverage, waterTreatmentCoverage, riskLevel, riskPercentage, diseaseMostLikely, priorityScore, emailSent (boolean/Yes/No string), recommendedAction (from AlertEngine logic based on risk level), waterSourceType, chlorinationStatus, phcCapacity, emergencyResponseStatus, populationDensity, reportedCases}. Append to localStorage 'cholera_alerts' array. Ensure array is initialized if empty. Limit to last 100 records to prevent storage overflow."
-        },
-        {
-          "path": "frontend/src/components/RiskPredictionPanel.tsx",
-          "operation": "modify",
-          "description": "Update existing alert storage logic (if present) to match the complete record structure from REQ-82. Ensure alert records include all available environmental inputs from the form, calculated risk outputs from backend response, emailSent boolean set to false (RiskPredictionPanel is for Hospital/PHC, no email alerts), and recommendedAction text. Store in localStorage 'cholera_alerts' array. Maintain consistency with GovernmentDataPanel storage format."
-        }
-      ]
-    },
-    {
-      "id": "REQ-83",
-      "summary": "Implement priority score calculation formula in InterventionPriority component with vulnerability weighting and top-3 highlighting",
-      "acceptanceCriteria": [
-        "Priority score calculation uses exact formula specified",
-        "Vulnerability weight correctly adds bonuses based on conditions",
-        "Final scores are normalized to 0-100 range",
-        "Top 3 wards display red background",
-        "Top 3 wards show 'Immediate Intervention Required' badge"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/InterventionPriority.tsx",
-          "operation": "modify",
-          "description": "Replace existing priority calculation logic with: priority_score = outbreak_probability × vulnerability_weight, where vulnerability_weight starts at 1.0 and adds: +1.0 if sanitationCoverage < 50, +1.0 if waterTreatmentCoverage < 60, +1.0 if populationDensity > 2000. Normalize final scores to 0-100 scale (divide by max possible weight, multiply by 100). Retrieve ward-specific data (sanitation, water treatment, population) from wardDataGenerator utility. Sort wards by priority_score descending. Apply red background (bg-red-100 border-l-4 border-red-600) to top 3 rows. Add 'Immediate Intervention Required' badge (bg-red-600 text-white px-3 py-1 rounded-full text-sm) to top 3 wards. Display outbreak_probability and vulnerability_weight breakdown in tooltips or expandable rows for transparency."
-        }
-      ]
-    },
-    {
-      "id": "REQ-84",
-      "summary": "Verify and maintain consistent visual styling across all dashboard components with government-grade professional aesthetic",
-      "acceptanceCriteria": [
-        "All cards use white background",
-        "Headers use professional blue color",
-        "Risk color thresholds match specification (<30% green, 30-70% yellow, >70% red)",
-        "Card spacing and padding is consistent at 24px",
-        "Overall aesthetic matches government dashboard style"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Review and standardize all component wrappers to use consistent Tailwind classes: bg-white for card backgrounds, shadow-md or shadow-lg for elevation, rounded-lg for corners, p-6 (24px) for internal padding, space-y-6 or gap-6 for component spacing. Ensure headers use text-blue-600 (#2563EB). Verify risk color thresholds in all risk displays: <30% text-green-600 (#16A34A), 30-70% text-yellow-600 or text-amber-500 (#F59E0B or #FCD34D), >70% text-red-600 (#DC2626). Add border-gray-200 borders where appropriate. Ensure consistent font weights (font-semibold for headers, font-normal for body)."
+          "description": "Review and enhance the 'Update & Recalculate Risk' button handler to ensure: (1) all 15 input fields (Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status) are validated with appropriate error messages for invalid or missing values; (2) loading state is properly managed with a spinner displayed during calculation; (3) the backend predictOutbreakRisk function is called with the four required environmental parameters (rainfall, humidity, turbidity, bacteriaIndex); (4) upon successful calculation, a complete alert record is created and stored in localStorage under the 'cholera_alerts' key containing all environmental inputs, calculated risk outputs (riskPercentage, riskCategory, message), email status, and timestamp; (5) EmailAlertService is invoked to send automatic email alerts when the risk percentage exceeds 70%; (6) success toast notification is displayed with message 'Risk calculation completed successfully' or similar; (7) error handling displays specific error messages if backend call fails or validation errors occur. Ensure the implementation triggers proper updates to dashboard visualizations through state management or event propagation."
         },
         {
           "path": "frontend/src/components/RiskGauge.tsx",
           "operation": "modify",
-          "description": "Verify color thresholds: low risk (<30%) uses green-600 (#16A34A), medium risk (30-70%) uses yellow-500 or amber-400 (#F59E0B or #FCD34D), high risk (>70%) uses red-600 (#DC2626). Ensure card uses bg-white, shadow-md, rounded-lg, p-6. Verify header is text-blue-600."
+          "description": "Ensure the RiskGauge component properly receives and displays updated risk percentage and color-coded level (green/yellow/red) when the GovernmentDataPanel triggers a recalculation. Verify the component subscribes to the relevant state or prop changes and re-renders with the new risk data, updating both the visual gauge and progress bar accordingly."
         },
         {
-          "path": "frontend/src/components/SafetyAdvisory.tsx",
+          "path": "frontend/src/components/DiseaseClassification.tsx",
           "operation": "modify",
-          "description": "Verify color scheme matches specification: high risk uses red-600, medium uses yellow-500, low uses green-600. Ensure card styling is bg-white, shadow-md, rounded-lg, p-6. Verify header color is text-blue-600."
-        },
-        {
-          "path": "frontend/src/components/AlertHistory.tsx",
-          "operation": "modify",
-          "description": "Verify risk level badges use correct colors: High/Critical uses bg-red-600 text-white, Medium/Moderate uses bg-yellow-500 text-white, Low uses bg-green-600 text-white. Ensure table card uses bg-white, shadow-md, rounded-lg, p-6, with blue header (text-blue-600)."
+          "description": "Ensure the DiseaseClassification component properly receives and displays recalculated disease probabilities (Cholera, Typhoid, Dysentery, Hepatitis A) when the GovernmentDataPanel triggers a risk recalculation. Verify the component updates its horizontal bar and pie charts with the new probability percentages and highlights the highest risk disease appropriately."
         },
         {
           "path": "frontend/src/components/WardHeatmap.tsx",
           "operation": "modify",
-          "description": "Verify heatmap cell colors match thresholds: <30% bg-green-500, 30-70% bg-yellow-500, >70% bg-red-600. Ensure container card uses bg-white, shadow-md, rounded-lg, p-6, with blue header."
-        }
-      ]
-    },
-    {
-      "id": "REQ-85",
-      "summary": "Hide RiskPredictionPanel from Common Citizen view and simplify it for Hospital/PHC view by removing government-only fields",
-      "acceptanceCriteria": [
-        "RiskPredictionPanel does not render in Common Citizen view",
-        "Hospital/PHC view shows simplified input form",
-        "Government-only fields are not visible to Hospital/PHC users",
-        "Role-based field visibility is enforced"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/RiskPredictionPanel.tsx",
-          "operation": "modify",
-          "description": "Add role prop (UserRole type). Conditionally hide these fields when role is 'healthcare': Water Source Type dropdown, Chlorination Status toggle, PHC Capacity dropdown, Emergency Response Status dropdown. Keep visible for healthcare role: Ward, Rainfall, Humidity, Turbidity, Bacteria Index, Reported Cases, Sanitation Coverage %, Water Treatment Coverage %, Population Density. Maintain all fields for government role (though government will primarily use GovernmentDataPanel). Add prop validation and type safety. Update internal state management to handle optional fields."
+          "description": "Ensure the WardHeatmap component properly updates to show the affected ward with the new risk level and corresponding color-coding when the GovernmentDataPanel triggers a recalculation. Verify the component recalculates ward-specific risks using the updated environmental factors (sanitation coverage, water treatment, population density) and renders the grid-based heatmap with accurate visual indicators."
         },
         {
-          "path": "frontend/src/pages/DashboardPage.tsx",
+          "path": "frontend/src/components/InterventionPriority.tsx",
           "operation": "modify",
-          "description": "Ensure RiskPredictionPanel is NEVER rendered when selectedRole === 'community'. For healthcare role, pass role='healthcare' prop to RiskPredictionPanel. For government role (if RiskPredictionPanel is still rendered as backup), pass role='government'. Verify Common Citizen view conditional block completely excludes RiskPredictionPanel component."
+          "description": "Ensure the InterventionPriority component properly recalculates and displays updated priority scores for wards when the GovernmentDataPanel triggers a risk recalculation. Verify the component updates both the ranked table and bar chart with new outbreak probabilities, vulnerability factors (sanitation, water treatment, population density), and calculated priority scores based on the updated ward data."
+        },
+        {
+          "path": "frontend/src/services/EmailAlertService.ts",
+          "operation": "modify",
+          "description": "Verify the EmailAlertService properly formats and sends email alerts via EmailJS using the configured service (service_hf3e6oq), template (template_3dldpfg), and public key (KHu3JNagtUgZCsDcG). Ensure the service includes all required parameters in the email template: risk percentage, risk level, environmental data (rainfall, humidity, turbidity, bacteria index), ward information, and timestamp. Confirm detailed logging is present for debugging alert delivery status."
         }
       ]
     }

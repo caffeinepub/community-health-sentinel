@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 19,
+  "projectStateVersion": 27,
   "summary": "Community Health Sentinel - A production-grade AI-powered early warning system for water-borne diseases in Coimbatore District. Features full-screen role selection with strict role-based data control and workflow separation: Common Citizen (view-only Public Transparency Dashboard showing Last Government Inspection Report with ward data, water quality metrics, disease risk distribution, safety guidelines, village heatmap, and read-only alert history), Hospital/PHC (ward-specific data entry with case reporting and 7-14 day forecast), and Government Health Authority (full control panel with 12-15 field Government Data Update Panel for environmental and infrastructure data, Update & Recalculate Risk functionality, comprehensive analytics including disease classification system with Cholera/Typhoid/Dysentery/Hepatitis A probabilities, 3x3 grid-style village risk heatmap for 9 wards, ward priority scoring with vulnerability weighting formula, full audit log alert history with all environmental metrics and email status, EmailJS integration with automatic triggering at >70% risk and manual send capability, 14-day predictive forecast, disease distribution visualizations, patient case trend graphs, resource deployment recommendations, comparative ward analytics, CSV export capability, and advanced visualizations). Built with modular architecture for government deployment readiness.",
   "architectural_notes": [
     "Color-coded risk system: Green <40%, Orange 40-70%, Red >70%",
@@ -14,7 +14,9 @@
     "Alert sections: light colored backgrounds (red #FEF2F2, orange #FFF7ED, green #F0FDF4) with matching borders",
     "Role-based views: Community Member (risk index + safety advisory), Healthcare Facility (forecast + case volume projection), Administrative Authority (full analytics)"
   ],
-  "known_issues": [],
+  "known_issues": [
+    "Ward-specific outbreak probability logic needs review for scientific accuracy"
+  ],
   "isFixRequest": true,
   "existing_features": [
     {
@@ -664,6 +666,110 @@
         "REQ-85"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-to-ensure-the-update-recalculate-risk-button-properly-triggers-backend-risk-calculation-updates-all-visualizations-riskgauge-diseaseclassification-wardheatmap-interventionpriority-and-stores-complete-alert-records-in-localstorage-with-all-environmental-parameters-and-calculated-outputs",
+      "title": "Update the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) to ensure the 'Update & Recalculate Risk' button properly triggers backend risk calculation, updates all visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), and stores complete alert records in localStorage with all environmental parameters and calculated outputs",
+      "reqIds": [
+        "REQ-87"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-fix-the-emailalertservice-frontend-src-services-emailalertservice-ts-automatic-email-triggering-functionality-to-send-alerts-immediately-after-risk-calculation-when-risk-percentage-exceeds-70-using-the-configured-emailjs-credentials-service-hf3e6oq-template-3dldpfg-khu3jnagtugzcsdcg-with-template-variables-including-risk-level-risk-percentage-time-rainfall-humidity-turbidity-bacteria-ward-and-priority-score",
+      "title": "Verify and fix the EmailAlertService (frontend/src/services/EmailAlertService.ts) automatic email triggering functionality to send alerts immediately after risk calculation when risk percentage exceeds 70%, using the configured EmailJS credentials (service_hf3e6oq, template_3dldpfg, KHu3JNagtUgZCsDcG) with template variables including risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, and priority_score",
+      "reqIds": [
+        "REQ-88"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-manual-send-alert-email-button-in-governmentdatapanel-component-triggers-email-alerts-for-all-risk-levels-not-just-70-displaying-loading-state-during-send-operation-success-confirmation-message-or-detailed-error-message-on-failure",
+      "title": "Ensure the manual 'Send Alert Email' button in GovernmentDataPanel component triggers email alerts for all risk levels (not just >70%), displaying loading state during send operation, success confirmation message, or detailed error message on failure",
+      "reqIds": [
+        "REQ-89"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-alerthistory-component-frontend-src-components-alerthistory-tsx-to-display-the-email-sent-status-badge-yes-no-for-each-alert-record-with-green-badge-for-yes-and-grey-badge-for-no-and-ensure-filtering-functionality-works-correctly-for-ward-and-risk-level-filters",
+      "title": "Update the AlertHistory component (frontend/src/components/AlertHistory.tsx) to display the 'Email Sent' status badge (Yes/No) for each alert record, with green badge for 'Yes' and grey badge for 'No', and ensure filtering functionality works correctly for ward and risk level filters",
+      "reqIds": [
+        "REQ-91"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-visual-feedback-and-status-indicators-throughout-the-government-dashboard-to-clearly-show-when-risk-calculations-are-in-progress-when-email-alerts-are-being-sent-and-when-operations-complete-successfully-or-fail-using-toast-notifications-or-inline-status-messages",
+      "title": "Add visual feedback and status indicators throughout the Government dashboard to clearly show when risk calculations are in progress, when email alerts are being sent, and when operations complete successfully or fail, using toast notifications or inline status messages",
+      "reqIds": [
+        "REQ-92"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refactor-the-ward-specific-outbreak-probability-calculation-logic-in-wardheatmap-component-frontend-src-components-wardheatmap-tsx-to-use-a-scientifically-grounded-formula-that-accounts-for-ward-specific-characteristics-calculate-each-ward-s-outbreak-probability-as-ward-risk-base-risk-1-sanitation-factor-water-treatment-factor-population-density-factor-environmental-factor-where-sanitation-factor-100-sanitation-coverage-200-water-treatment-factor-100-water-treatment-coverage-200-population-density-factor-population-density-2000-10000-clamped-to-0-0-3-environmental-factor-ward-specific-environmental-multiplier-0-8-1-2-based-on-ward-characteristics-ensuring-the-final-value-is-normalized-to-0-100-range",
+      "title": "Refactor the ward-specific outbreak probability calculation logic in WardHeatmap component (frontend/src/components/WardHeatmap.tsx) to use a scientifically grounded formula that accounts for ward-specific characteristics: calculate each ward's outbreak probability as: Ward_Risk = Base_Risk × (1 + Sanitation_Factor + Water_Treatment_Factor + Population_Density_Factor + Environmental_Factor) where Sanitation_Factor = (100 - sanitation_coverage) / 200, Water_Treatment_Factor = (100 - water_treatment_coverage) / 200, Population_Density_Factor = (population_density - 2000) / 10000 (clamped to 0-0.3), Environmental_Factor = ward-specific environmental multiplier (0.8-1.2) based on ward characteristics, ensuring the final value is normalized to 0-100% range",
+      "reqIds": [
+        "REQ-93"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-to-ensure-ward-specific-data-sanitation-coverage-water-treatment-coverage-population-density-water-source-type-directly-influences-the-ward-outbreak-probability-calculations-shown-in-wardheatmap-passing-updated-ward-characteristics-to-the-visualization-components-when-update-recalculate-risk-is-triggered",
+      "title": "Update the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) to ensure ward-specific data (sanitation coverage, water treatment coverage, population density, water source type) directly influences the ward outbreak probability calculations shown in WardHeatmap, passing updated ward characteristics to the visualization components when 'Update & Recalculate Risk' is triggered",
+      "reqIds": [
+        "REQ-94"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-detailed-error-logging-and-debugging-instrumentation-to-the-emailalertservice-frontend-src-services-emailalertservice-ts-sendalert-function-to-capture-and-display-the-complete-emailjs-api-response-including-success-failure-status-error-codes-error-messages-and-network-request-details-logging-all-information-to-browser-console-for-diagnosis",
+      "title": "Add detailed error logging and debugging instrumentation to the EmailAlertService (frontend/src/services/EmailAlertService.ts) sendAlert function to capture and display the complete EmailJS API response, including success/failure status, error codes, error messages, and network request details, logging all information to browser console for diagnosis",
+      "reqIds": [
+        "REQ-95"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-handling-to-the-manual-send-alert-email-button-click-handler-in-governmentdatapanel-component-to-catch-and-display-specific-error-types-emailjs-configuration-errors-invalid-service-id-template-id-or-public-key-network-connectivity-issues-template-parameter-validation-failures-and-api-rate-limiting-showing-user-friendly-error-messages-in-toast-notifications-with-the-actual-error-reason",
+      "title": "Add comprehensive error handling to the manual 'Send Alert Email' button click handler in GovernmentDataPanel component to catch and display specific error types: EmailJS configuration errors (invalid service_id, template_id, or public_key), network connectivity issues, template parameter validation failures, and API rate limiting, showing user-friendly error messages in toast notifications with the actual error reason",
+      "reqIds": [
+        "REQ-96"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-validate-all-emailjs-template-parameters-in-the-sendalert-function-to-ensure-complete-data-is-being-sent-confirm-risk-level-risk-percentage-time-formatted-as-readable-date-time-string-rainfall-humidity-turbidity-bacteria-ward-and-priority-score-are-all-populated-with-valid-values-before-calling-emailjs-send-logging-any-missing-or-invalid-parameters-to-console-and-preventing-send-if-critical-fields-are-missing",
+      "title": "Verify and validate all EmailJS template parameters in the sendAlert function to ensure complete data is being sent: confirm risk_level, risk_percentage, time (formatted as readable date/time string), rainfall, humidity, turbidity, bacteria, ward, and priority_score are all populated with valid values before calling emailjs.send(), logging any missing or invalid parameters to console and preventing send if critical fields are missing",
+      "reqIds": [
+        "REQ-97"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-diagnostic-test-button-labeled-test-email-configuration-to-the-governmentdatapanel-component-positioned-near-the-send-alert-email-button-that-attempts-to-send-a-minimal-test-email-using-emailjs-with-hardcoded-test-values-displaying-detailed-success-failure-feedback-to-help-identify-whether-the-issue-is-with-emailjs-configuration-credentials-template-setup-or-runtime-data-population",
+      "title": "Add a diagnostic test button labeled 'Test Email Configuration' to the GovernmentDataPanel component (positioned near the 'Send Alert Email' button) that attempts to send a minimal test email using EmailJS with hardcoded test values, displaying detailed success/failure feedback to help identify whether the issue is with EmailJS configuration, credentials, template setup, or runtime data population",
+      "reqIds": [
+        "REQ-98"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-test-email-configuration-button-from-the-governmentdatapanel-component-frontend-src-components-governmentdatapanel-tsx-including-the-button-ui-element-click-handler-function-and-all-associated-test-email-logic",
+      "title": "Remove the 'Test Email Configuration' button from the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx), including the button UI element, click handler function, and all associated test email logic",
+      "reqIds": [
+        "REQ-99"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-test-the-update-recalculate-risk-button-functionality-in-the-governmentdatapanel-component-to-ensure-it-1-validates-all-15-input-fields-ward-rainfall-7-day-avg-rainfall-humidity-7-day-avg-humidity-turbidity-bacteria-index-sanitation-coverage-water-treatment-coverage-population-density-reported-cases-water-source-type-chlorination-status-phc-capacity-emergency-response-status-2-calls-the-backend-predictoutbreakrisk-function-with-the-environmental-data-3-successfully-updates-all-dashboard-visualizations-riskgauge-diseaseclassification-wardheatmap-interventionpriority-4-creates-a-new-entry-in-alerthistory-with-all-input-data-plus-calculated-risk-outputs-5-triggers-automatic-email-alerts-when-risk-exceeds-70-6-shows-proper-loading-states-during-calculation-7-displays-success-confirmation-or-validation-error-messages",
+      "title": "Verify and test the 'Update & Recalculate Risk' button functionality in the GovernmentDataPanel component to ensure it: (1) validates all 15 input fields (Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status), (2) calls the backend predictOutbreakRisk function with the environmental data, (3) successfully updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates a new entry in AlertHistory with all input data plus calculated risk outputs, (5) triggers automatic email alerts when risk exceeds 70%, (6) shows proper loading states during calculation, (7) displays success confirmation or validation error messages",
+      "reqIds": [
+        "REQ-100"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -912,6 +1018,46 @@
     {
       "id": "AR-65",
       "summary": "Implement priority score formula: priority_score = outbreak_probability × vulnerability_weight where vulnerability_weight = base 1 + 1 if sanitation < 50 + 1 if water_treatment < 60 + 1 if population_density > 2000, normalized to 0-100 scale, with top 3 wards highlighted in red with 'Immediate Intervention Required' badge",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-66",
+      "summary": "Update the EmailJS configuration file frontend/src/config/email.config.ts to replace placeholder values with actual production credentials: SERVICE_ID: 'service_hf3e6oq', TEMPLATE_ID: 'template_3dldpfg', PUBLIC_KEY: 'KHu3JNagtUgZCsDcG'",
+      "reqIds": [
+        "REQ-86"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-70",
+      "summary": "Add comprehensive error handling and logging to the backend predictOutbreakRisk function (backend/main.mo) to ensure it returns valid risk calculations for all numeric inputs without throwing errors, with detailed logging of input values and calculation steps",
+      "reqIds": [
+        "REQ-90"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-71",
+      "summary": "Debug and explain the ward-specific outbreak probability calculation logic to make it more scientifically accurate and region-specific",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-72",
+      "summary": "Debug manual 'Send Alert Email' button EmailJS integration to identify and fix why emails are not being sent successfully",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-73",
+      "summary": "Remove the 'Test Email Configuration' button from GovernmentDataPanel component",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-74",
+      "summary": "Verify and test the 'Update & Recalculate Risk' button functionality in GovernmentDataPanel to ensure it properly triggers risk calculations, updates visualizations, stores alerts, and handles errors",
       "reqIds": [],
       "status": "pending"
     }

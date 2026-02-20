@@ -1,5 +1,6 @@
 import { createRouter, createRoute, createRootRoute, RouterProvider, Outlet } from '@tanstack/react-router';
 import { useState } from 'react';
+import { Toaster } from '@/components/ui/sonner';
 import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
 import RoleSelector from './components/RoleSelector';
@@ -7,7 +8,12 @@ import RoleSelector from './components/RoleSelector';
 export type UserRole = 'community' | 'healthcare' | 'admin' | null;
 
 const rootRoute = createRootRoute({
-  component: () => <Outlet />
+  component: () => (
+    <>
+      <Outlet />
+      <Toaster position="top-right" richColors />
+    </>
+  )
 });
 
 const indexRoute = createRoute({

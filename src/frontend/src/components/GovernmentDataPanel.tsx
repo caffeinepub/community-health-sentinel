@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useActor } from '@/hooks/useActor';
-import { Loader2, Mail } from 'lucide-react';
+import { Loader2, Mail, Calculator } from 'lucide-react';
 import { sendAlertEmail } from '@/services/EmailAlertService';
 import { toast } from 'sonner';
 
@@ -142,14 +142,13 @@ export default function GovernmentDataPanel() {
     if (densityNum > 2000) vulnerabilityWeight += 1.0;
     
     const rawScore = (outbreakProbability / 100) * vulnerabilityWeight;
-    const maxWeight = 4.0; // 1.0 base + 3.0 max bonuses
+    const maxWeight = 4.0;
     const normalizedScore = (rawScore / maxWeight) * 100;
     
     return Math.min(100, normalizedScore);
   };
   
   const getDiseaseClassification = (riskPercentage: number) => {
-    // Simulated disease probabilities based on risk
     if (riskPercentage >= 70) {
       return {
         cholera: 45,
@@ -208,7 +207,9 @@ export default function GovernmentDataPanel() {
       const casesNum = parseFloat(reportedCases);
       
       // Call backend to calculate risk
+      console.log('Calling backend with:', { rainfallNum, humidityNum, turbidityNum, bacteriaNum });
       const result = await actor.predictOutbreakRisk(rainfallNum, humidityNum, turbidityNum, bacteriaNum);
+      console.log('Backend response:', result);
       
       const riskPercentage = result.riskPercentage;
       const riskCategory = result.riskCategory;
@@ -230,6 +231,16 @@ export default function GovernmentDataPanel() {
       });
       localStorage.setItem('environmental_input_history', JSON.stringify(history.slice(0, 7)));
       
+      // Store ward-specific data for heatmap calculation
+      const wardData = {
+        wardId: parseInt(ward),
+        sanitationCoverage: sanitationNum,
+        waterTreatmentCoverage: waterNum,
+        populationDensity: densityNum,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(`ward_${ward}_data`, JSON.stringify(wardData));
+      
       // Update last government report
       localStorage.setItem('last_government_report', JSON.stringify({
         timestamp: new Date().toISOString(),
@@ -244,14 +255,15 @@ export default function GovernmentDataPanel() {
         riskLevel: riskCategory
       }));
       
-      // Determine if email should be sent
+      // Determine if email should be sent automatically for high risk
       let emailSent = 'No';
       if (riskPercentage > 70) {
+        console.log('High risk detected (>70%), sending automatic alert email...');
         try {
           await sendAlertEmail({
             risk_level: riskCategory,
             risk_percentage: riskPercentage,
-            time: new Date().toISOString(),
+            time: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
             rainfall: rainfallNum,
             humidity: humidityNum,
             turbidity: turbidityNum,
@@ -260,12 +272,16 @@ export default function GovernmentDataPanel() {
             priority_score: priorityScore
           });
           emailSent = 'Yes';
+          console.log('✅ Automatic alert email sent successfully');
           toast.success('Government Alert Sent Successfully', {
-            description: `High risk alert sent for Ward ${ward}`
+            description: `High risk alert email sent for Ward ${ward}`,
+            duration: 5000
           });
         } catch (error) {
+          console.error('❌ Automatic email send failed:', error);
           toast.error('Email Alert Failed', {
-            description: error instanceof Error ? error.message : 'Failed to send email'
+            description: error instanceof Error ? error.message : 'Failed to send email',
+            duration: 5000
           });
         }
       }
@@ -298,7 +314,7 @@ export default function GovernmentDataPanel() {
       alerts.unshift(alertRecord);
       localStorage.setItem('cholera_alerts', JSON.stringify(alerts.slice(0, 100)));
       
-      // Emit custom event for dashboard refresh
+      // Emit custom event for dashboard refresh (including ward data update)
       window.dispatchEvent(new CustomEvent('risk-data-updated', { 
         detail: {
           riskPercentage,
@@ -307,13 +323,21 @@ export default function GovernmentDataPanel() {
         }
       }));
       
-      toast.success('Risk Recalculated Successfully', {
-        description: `Ward ${ward}: ${riskCategory} (${riskPercentage.toFixed(1)}%)`
+      // Emit ward data update event for WardHeatmap
+      window.dispatchEvent(new CustomEvent('wardDataUpdated', {
+        detail: wardData
+      }));
+      
+      toast.success('Risk Calculation Complete', {
+        description: `Ward ${ward}: ${riskCategory} (${riskPercentage.toFixed(1)}%)`,
+        duration: 5000
       });
       
     } catch (error) {
-      toast.error('Calculation Failed', {
-        description: error instanceof Error ? error.message : 'Unknown error occurred'
+      console.error('Risk calculation error:', error);
+      toast.error('Risk Calculation Failed', {
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        duration: 5000
       });
     } finally {
       setIsCalculating(false);
@@ -322,7 +346,7 @@ export default function GovernmentDataPanel() {
   
   const handleSendAlertManually = async () => {
     if (!ward) {
-      toast.error('Please select a ward first');
+      toast.error('Please select a ward first', { duration: 5000 });
       return;
     }
     
@@ -333,36 +357,46 @@ export default function GovernmentDataPanel() {
       const humidityNum = parseFloat(humidity) || 0;
       const turbidityNum = parseFloat(turbidity) || 0;
       const bacteriaNum = parseFloat(bacteriaIndex) || 0;
+      const sanitationNum = parseFloat(sanitationCoverage) || 0;
+      const waterNum = parseFloat(waterTreatmentCoverage) || 0;
+      const densityNum = parseFloat(populationDensity) || 0;
       
       // Get last calculated risk from localStorage
       const lastReport = localStorage.getItem('last_government_report');
       let riskPercentage = 50;
       let riskCategory = 'Medium (Yellow/Amber)';
+      let priorityScore = 50;
       
       if (lastReport) {
         const report = JSON.parse(lastReport);
         riskPercentage = 100 - report.waterQualityIndex;
         riskCategory = report.riskLevel;
+        priorityScore = calculatePriorityScore(riskPercentage, sanitationNum, waterNum, densityNum);
       }
       
+      console.log('Sending manual alert email...');
       await sendAlertEmail({
         risk_level: riskCategory,
         risk_percentage: riskPercentage,
-        time: new Date().toISOString(),
+        time: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
         rainfall: rainfallNum,
         humidity: humidityNum,
         turbidity: turbidityNum,
         bacteria: bacteriaNum,
         ward: `Ward ${ward}`,
-        priority_score: 0
+        priority_score: priorityScore
       });
       
-      toast.success('Government Alert Sent Successfully', {
-        description: `Manual alert sent for Ward ${ward}`
+      console.log('✅ Manual alert email sent successfully');
+      toast.success('Alert Email Sent Successfully', {
+        description: `Manual alert sent for Ward ${ward} at ${new Date().toLocaleTimeString('en-IN')}`,
+        duration: 5000
       });
     } catch (error) {
+      console.error('❌ Manual email send failed:', error);
       toast.error('Email Alert Failed', {
-        description: error instanceof Error ? error.message : 'Failed to send email'
+        description: error instanceof Error ? error.message : 'Failed to send email',
+        duration: 5000
       });
     } finally {
       setIsSendingEmail(false);
@@ -381,10 +415,10 @@ export default function GovernmentDataPanel() {
             <Label htmlFor="ward" className="text-sm font-semibold text-gray-700">Ward <span className="text-red-600">*</span></Label>
             <Select value={ward} onValueChange={setWard}>
               <SelectTrigger id="ward" className="border-gray-300">
-                <SelectValue placeholder="Select ward" />
+                <SelectValue placeholder="Select Ward" />
               </SelectTrigger>
               <SelectContent>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(w => (
+                {Array.from({ length: 9 }, (_, i) => i + 1).map((w) => (
                   <SelectItem key={w} value={w.toString()}>Ward {w}</SelectItem>
                 ))}
               </SelectContent>
@@ -397,23 +431,16 @@ export default function GovernmentDataPanel() {
             <Input
               id="rainfall"
               type="number"
+              min="0"
               step="0.1"
               value={rainfall}
               onChange={(e) => setRainfall(e.target.value)}
-              placeholder="0.0"
+              placeholder="e.g., 50.5"
               className="border-gray-300"
             />
-          </div>
-          
-          {/* 7-day avg rainfall */}
-          <div className="space-y-2">
-            <Label className="text-sm font-semibold text-gray-700">7-day Avg Rainfall (mm)</Label>
-            <Input
-              type="text"
-              value={avg7DayRainfall.toFixed(1)}
-              disabled
-              className="bg-gray-100 border-gray-300"
-            />
+            {avg7DayRainfall > 0 && (
+              <p className="text-xs text-gray-500">7-day avg: {avg7DayRainfall.toFixed(1)} mm</p>
+            )}
           </div>
           
           {/* Humidity */}
@@ -422,23 +449,17 @@ export default function GovernmentDataPanel() {
             <Input
               id="humidity"
               type="number"
+              min="0"
+              max="100"
               step="0.1"
               value={humidity}
               onChange={(e) => setHumidity(e.target.value)}
-              placeholder="0-100"
+              placeholder="e.g., 75.0"
               className="border-gray-300"
             />
-          </div>
-          
-          {/* 7-day avg humidity */}
-          <div className="space-y-2">
-            <Label className="text-sm font-semibold text-gray-700">7-day Avg Humidity (%)</Label>
-            <Input
-              type="text"
-              value={avg7DayHumidity.toFixed(1)}
-              disabled
-              className="bg-gray-100 border-gray-300"
-            />
+            {avg7DayHumidity > 0 && (
+              <p className="text-xs text-gray-500">7-day avg: {avg7DayHumidity.toFixed(1)}%</p>
+            )}
           </div>
           
           {/* Turbidity */}
@@ -447,10 +468,11 @@ export default function GovernmentDataPanel() {
             <Input
               id="turbidity"
               type="number"
+              min="0"
               step="0.1"
               value={turbidity}
               onChange={(e) => setTurbidity(e.target.value)}
-              placeholder="0.0"
+              placeholder="e.g., 10.5"
               className="border-gray-300"
             />
           </div>
@@ -461,10 +483,11 @@ export default function GovernmentDataPanel() {
             <Input
               id="bacteriaIndex"
               type="number"
+              min="0"
               step="0.1"
               value={bacteriaIndex}
               onChange={(e) => setBacteriaIndex(e.target.value)}
-              placeholder="0.0"
+              placeholder="e.g., 50.0"
               className="border-gray-300"
             />
           </div>
@@ -475,10 +498,12 @@ export default function GovernmentDataPanel() {
             <Input
               id="sanitationCoverage"
               type="number"
+              min="0"
+              max="100"
               step="0.1"
               value={sanitationCoverage}
               onChange={(e) => setSanitationCoverage(e.target.value)}
-              placeholder="0-100"
+              placeholder="e.g., 65.0"
               className="border-gray-300"
             />
           </div>
@@ -489,36 +514,42 @@ export default function GovernmentDataPanel() {
             <Input
               id="waterTreatmentCoverage"
               type="number"
+              min="0"
+              max="100"
               step="0.1"
               value={waterTreatmentCoverage}
               onChange={(e) => setWaterTreatmentCoverage(e.target.value)}
-              placeholder="0-100"
+              placeholder="e.g., 70.0"
               className="border-gray-300"
             />
           </div>
           
           {/* Population Density */}
           <div className="space-y-2">
-            <Label htmlFor="populationDensity" className="text-sm font-semibold text-gray-700">Population Density <span className="text-red-600">*</span></Label>
+            <Label htmlFor="populationDensity" className="text-sm font-semibold text-gray-700">Population Density (per km²) <span className="text-red-600">*</span></Label>
             <Input
               id="populationDensity"
               type="number"
+              min="0"
+              step="1"
               value={populationDensity}
               onChange={(e) => setPopulationDensity(e.target.value)}
-              placeholder="per sq km"
+              placeholder="e.g., 2500"
               className="border-gray-300"
             />
           </div>
           
           {/* Reported Cases */}
           <div className="space-y-2">
-            <Label htmlFor="reportedCases" className="text-sm font-semibold text-gray-700">Reported Cases (7-day) <span className="text-red-600">*</span></Label>
+            <Label htmlFor="reportedCases" className="text-sm font-semibold text-gray-700">Reported Cases <span className="text-red-600">*</span></Label>
             <Input
               id="reportedCases"
               type="number"
+              min="0"
+              step="1"
               value={reportedCases}
               onChange={(e) => setReportedCases(e.target.value)}
-              placeholder="0"
+              placeholder="e.g., 5"
               className="border-gray-300"
             />
           </div>
@@ -528,12 +559,13 @@ export default function GovernmentDataPanel() {
             <Label htmlFor="waterSourceType" className="text-sm font-semibold text-gray-700">Water Source Type <span className="text-red-600">*</span></Label>
             <Select value={waterSourceType} onValueChange={setWaterSourceType}>
               <SelectTrigger id="waterSourceType" className="border-gray-300">
-                <SelectValue placeholder="Select source" />
+                <SelectValue placeholder="Select Water Source" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Municipal">Municipal</SelectItem>
-                <SelectItem value="Well">Well</SelectItem>
+                <SelectItem value="Borewell">Borewell</SelectItem>
                 <SelectItem value="River">River</SelectItem>
+                <SelectItem value="Lake">Lake</SelectItem>
                 <SelectItem value="Mixed">Mixed</SelectItem>
               </SelectContent>
             </Select>
@@ -548,7 +580,7 @@ export default function GovernmentDataPanel() {
                 checked={chlorinationStatus}
                 onCheckedChange={setChlorinationStatus}
               />
-              <span className="text-sm text-gray-600">{chlorinationStatus ? 'Yes' : 'No'}</span>
+              <span className="text-sm text-gray-600">{chlorinationStatus ? 'Active' : 'Inactive'}</span>
             </div>
           </div>
           
@@ -557,12 +589,12 @@ export default function GovernmentDataPanel() {
             <Label htmlFor="phcCapacity" className="text-sm font-semibold text-gray-700">PHC Capacity <span className="text-red-600">*</span></Label>
             <Select value={phcCapacity} onValueChange={setPhcCapacity}>
               <SelectTrigger id="phcCapacity" className="border-gray-300">
-                <SelectValue placeholder="Select capacity" />
+                <SelectValue placeholder="Select PHC Capacity" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Low">Low</SelectItem>
-                <SelectItem value="Medium">Medium</SelectItem>
-                <SelectItem value="High">High</SelectItem>
+                <SelectItem value="Low">Low (0-30%)</SelectItem>
+                <SelectItem value="Medium">Medium (31-70%)</SelectItem>
+                <SelectItem value="High">High (71-100%)</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -572,52 +604,66 @@ export default function GovernmentDataPanel() {
             <Label htmlFor="emergencyResponseStatus" className="text-sm font-semibold text-gray-700">Emergency Response Status <span className="text-red-600">*</span></Label>
             <Select value={emergencyResponseStatus} onValueChange={setEmergencyResponseStatus}>
               <SelectTrigger id="emergencyResponseStatus" className="border-gray-300">
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder="Select Status" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="Ready">Ready</SelectItem>
                 <SelectItem value="Standby">Standby</SelectItem>
                 <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Critical">Critical</SelectItem>
+                <SelectItem value="Overwhelmed">Overwhelmed</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
         
         {/* Action Buttons */}
-        <div className="flex gap-4 pt-4">
+        <div className="flex gap-4 pt-4 border-t border-gray-200">
           <Button
             onClick={handleUpdateAndRecalculate}
             disabled={isCalculating || isFetching}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold"
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
           >
             {isCalculating ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                 Calculating...
               </>
             ) : (
-              'Update & Recalculate Risk'
+              <>
+                <Calculator className="w-5 h-5 mr-2" />
+                Update & Recalculate Risk
+              </>
             )}
           </Button>
           
           <Button
             onClick={handleSendAlertManually}
             disabled={isSendingEmail || !ward}
-            variant="secondary"
-            className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold"
+            variant="outline"
+            className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 rounded-lg transition-colors"
           >
             {isSendingEmail ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                 Sending...
               </>
             ) : (
               <>
-                <Mail className="w-4 h-4 mr-2" />
+                <Mail className="w-5 h-5 mr-2" />
                 Send Alert Email
               </>
             )}
           </Button>
+        </div>
+        
+        {/* Info Note */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+          <p className="font-semibold mb-1">📧 Email Alert Policy:</p>
+          <ul className="list-disc list-inside space-y-1 text-xs">
+            <li>Automatic email alerts are sent when risk exceeds 70% (High Risk)</li>
+            <li>Use "Send Alert Email" button to manually send alerts for any risk level</li>
+            <li>All alerts are logged in the Alert History with email status</li>
+          </ul>
         </div>
       </CardContent>
     </Card>

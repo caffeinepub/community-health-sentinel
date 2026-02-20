@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -5,10 +6,36 @@ import { getWardData, getAllWardsData } from '@/utils/wardDataGenerator';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface InterventionPriorityProps {
-  overallRisk: number;
+  overallRisk?: number;
 }
 
-export default function InterventionPriority({ overallRisk }: InterventionPriorityProps) {
+export default function InterventionPriority({ overallRisk: propOverallRisk }: InterventionPriorityProps) {
+  const [overallRisk, setOverallRisk] = useState<number>(propOverallRisk || 50);
+  const [updateTrigger, setUpdateTrigger] = useState(0);
+  
+  // Update from props
+  useEffect(() => {
+    if (propOverallRisk !== undefined) {
+      setOverallRisk(propOverallRisk);
+    }
+  }, [propOverallRisk]);
+  
+  // Listen for risk data updates
+  useEffect(() => {
+    const handleRiskUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { riskPercentage } = customEvent.detail;
+      setOverallRisk(riskPercentage);
+      setUpdateTrigger(prev => prev + 1);
+    };
+    
+    window.addEventListener('risk-data-updated', handleRiskUpdate);
+    
+    return () => {
+      window.removeEventListener('risk-data-updated', handleRiskUpdate);
+    };
+  }, []);
+  
   const wardsData = getAllWardsData();
   
   const adjustmentFactors = [0.85, 1.15, 0.95, 1.10, 0.90, 1.05, 1.12, 0.88, 1.08];
@@ -85,7 +112,7 @@ export default function InterventionPriority({ overallRisk }: InterventionPriori
                 const isTopThree = index < 3;
                 return (
                   <TableRow 
-                    key={ward.wardId}
+                    key={`${ward.wardId}-${updateTrigger}`}
                     className={isTopThree ? 'bg-red-100 border-l-4 border-red-600' : 'hover:bg-gray-50'}
                   >
                     <TableCell className="font-bold">{index + 1}</TableCell>

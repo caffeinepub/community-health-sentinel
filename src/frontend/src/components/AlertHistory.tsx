@@ -61,11 +61,11 @@ export default function AlertHistory({ filterWard }: AlertHistoryProps) {
 
   const getRiskBadgeColor = (riskLevel: string) => {
     if (riskLevel.toLowerCase().includes('high') || riskLevel.toLowerCase().includes('red')) {
-      return 'bg-red-600 text-white';
+      return 'bg-red-600 text-white hover:bg-red-700';
     } else if (riskLevel.toLowerCase().includes('medium') || riskLevel.toLowerCase().includes('yellow') || riskLevel.toLowerCase().includes('amber')) {
-      return 'bg-yellow-500 text-white';
+      return 'bg-yellow-500 text-white hover:bg-yellow-600';
     } else {
-      return 'bg-green-600 text-white';
+      return 'bg-green-600 text-white hover:bg-green-700';
     }
   };
 
@@ -160,7 +160,7 @@ export default function AlertHistory({ filterWard }: AlertHistoryProps) {
                       <TableCell className="font-medium text-red-600">{alert.diseaseMostLikely || 'N/A'}</TableCell>
                       <TableCell className="font-semibold">{alert.priorityScore?.toFixed(1) || 'N/A'}</TableCell>
                       <TableCell>
-                        <Badge className={alert.emailSent === 'Yes' ? 'bg-green-600 text-white' : 'bg-gray-400 text-white'}>
+                        <Badge className={alert.emailSent === 'Yes' ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-400 text-white hover:bg-gray-500'}>
                           {alert.emailSent || 'No'}
                         </Badge>
                       </TableCell>

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
@@ -8,20 +9,57 @@ interface DiseaseData {
 }
 
 export default function DiseaseClassification() {
-  // Generate simulated disease probabilities
-  const generateDiseaseData = (): DiseaseData[] => {
+  const [diseaseData, setDiseaseData] = useState<DiseaseData[]>([]);
+  
+  // Generate disease probabilities based on current risk
+  const generateDiseaseData = (riskPercentage: number): DiseaseData[] => {
     const diseases = ['Cholera', 'Typhoid', 'Dysentery', 'Hepatitis A'];
-    const probabilities = [35, 28, 22, 15]; // Sum to 100
+    let probabilities: number[];
+    
+    if (riskPercentage >= 70) {
+      probabilities = [45, 30, 15, 10];
+    } else if (riskPercentage >= 30) {
+      probabilities = [30, 35, 20, 15];
+    } else {
+      probabilities = [15, 20, 35, 30];
+    }
     
     return diseases.map((name, index) => ({
       name,
       probability: probabilities[index],
-      color: index === 0 ? '#DC2626' : '#2563EB' // Highest in red, others in blue
+      color: index === 0 ? '#DC2626' : '#2563EB'
     }));
   };
+  
+  // Initialize with default data
+  useEffect(() => {
+    const lastReport = localStorage.getItem('last_government_report');
+    let initialRisk = 50;
+    
+    if (lastReport) {
+      const report = JSON.parse(lastReport);
+      initialRisk = 100 - report.waterQualityIndex;
+    }
+    
+    setDiseaseData(generateDiseaseData(initialRisk));
+  }, []);
+  
+  // Listen for risk data updates
+  useEffect(() => {
+    const handleRiskUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { riskPercentage } = customEvent.detail;
+      setDiseaseData(generateDiseaseData(riskPercentage));
+    };
+    
+    window.addEventListener('risk-data-updated', handleRiskUpdate);
+    
+    return () => {
+      window.removeEventListener('risk-data-updated', handleRiskUpdate);
+    };
+  }, []);
 
-  const diseaseData = generateDiseaseData();
-  const highestDisease = diseaseData[0];
+  const highestDisease = diseaseData.length > 0 ? diseaseData[0] : { name: 'N/A', probability: 0 };
 
   return (
     <Card className="bg-white border-medical-border shadow-medical rounded-xl">

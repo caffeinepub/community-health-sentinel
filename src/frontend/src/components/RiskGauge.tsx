@@ -1,11 +1,36 @@
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
 interface RiskGaugeProps {
-  riskPercentage: number;
+  riskPercentage?: number;
 }
 
-export default function RiskGauge({ riskPercentage }: RiskGaugeProps) {
+export default function RiskGauge({ riskPercentage: propRiskPercentage }: RiskGaugeProps) {
+  const [riskPercentage, setRiskPercentage] = useState<number>(propRiskPercentage || 50);
+  
+  // Update from props
+  useEffect(() => {
+    if (propRiskPercentage !== undefined) {
+      setRiskPercentage(propRiskPercentage);
+    }
+  }, [propRiskPercentage]);
+  
+  // Listen for risk data updates
+  useEffect(() => {
+    const handleRiskUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { riskPercentage: newRisk } = customEvent.detail;
+      setRiskPercentage(newRisk);
+    };
+    
+    window.addEventListener('risk-data-updated', handleRiskUpdate);
+    
+    return () => {
+      window.removeEventListener('risk-data-updated', handleRiskUpdate);
+    };
+  }, []);
+  
   const getRiskColor = (): string => {
     if (riskPercentage < 30) return '#16A34A'; // Green
     if (riskPercentage < 70) return '#F59E0B'; // Yellow

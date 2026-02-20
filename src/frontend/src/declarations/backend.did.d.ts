@@ -13,7 +13,10 @@ import type { Principal } from '@icp-sdk/core/principal';
 export interface RiskPrediction {
   'riskCategory' : string,
   'riskPercentage' : number,
+  'message' : string,
+  'timestamp' : Time,
 }
+export type Time = bigint;
 export interface _SERVICE {
   'predictOutbreakRisk' : ActorMethod<
     [number, number, number, number],

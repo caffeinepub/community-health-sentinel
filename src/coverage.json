@@ -1,187 +1,44 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T19:29:11.701Z",
+  "generatedAt": "2026-02-20T20:16:42.702Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 15,
-    "implemented": 15,
+    "total": 2,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-71",
-        "summary": "Remove all environmental input forms (rainfall, humidity, turbidity, bacteria index fields) and risk calculation controls from the Common Citizen dashboard view in DashboardPage.tsx, ensuring Common Citizen users have zero ability to enter data or trigger calculations",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-72",
-        "summary": "Create a new LastGovernmentReport component (frontend/src/components/LastGovernmentReport.tsx) displaying a read-only card titled 'Last Government Inspection Report' with prominent timestamp label and fields: Ward, Water Quality Index, Bacteria Level, Turbidity, Rainfall, Humidity, Sanitation Coverage %, Water Treatment Coverage %, Risk Level, using white card styling with professional blue accents",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/LastGovernmentReport.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/LastGovernmentReport.tsx"
-        ]
-      },
-      {
-        "id": "REQ-73",
-        "summary": "Add page title 'Public Transparency Dashboard' at the top of the Common Citizen view in DashboardPage.tsx, styled with large bold text and professional blue color (#2563EB)",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-74",
-        "summary": "Update DashboardPage.tsx to render only these components for Common Citizen view: LastGovernmentReport (new), RiskGauge (read-only current status), DiseaseClassification, SafetyAdvisory, PreventiveRecommendations, WardHeatmap (read-only), AlertHistory (read-only, filterable), removing all other dashboard sections",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-75",
-        "summary": "Create a new GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx) displaying a card titled 'Government Data Update Panel' with 15 input fields: Ward (dropdown 1-9), Rainfall (mm), 7-day avg rainfall (auto-calculated from history), Humidity (%), 7-day avg humidity (auto-calculated), Turbidity (NTU), Bacteria Index, Sanitation Coverage (%), Water Treatment Coverage (%), Population Density, Reported Cases (7-day count), Water Source Type (dropdown: Municipal/Well/River/Mixed), Chlorination Status (Yes/No toggle), PHC Capacity (dropdown: Low/Medium/High), Emergency Response Status (dropdown: Standby/Active/Critical), with proper validation and white card styling",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-76",
-        "summary": "Add 'Update & Recalculate Risk' button to GovernmentDataPanel component that, when clicked: (1) validates all input fields, (2) calls backend predictOutbreakRisk with environmental data, (3) updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates new entry in AlertHistory with all input data plus calculated risk, (5) shows loading state during calculation, (6) displays success confirmation or validation errors",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-77",
-        "summary": "Update DashboardPage.tsx to render GovernmentDataPanel component only in Government view, positioning it prominently at the top of the dashboard before other analytics sections",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-78",
-        "summary": "Update EmailAlertService.ts to implement automatic email triggering when risk_percentage exceeds 70, using emailjs.send() with parameters: SERVICE_ID_HERE, TEMPLATE_ID_HERE, template variables {risk_level, risk_percentage, time, rainfall, humidity, turbidity, bacteria, ward, priority_score}, PUBLIC_KEY_HERE, and return Promise with success/failure status",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/services/EmailAlertService.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/services/EmailAlertService.ts"
-        ]
-      },
-      {
-        "id": "REQ-79",
-        "summary": "Integrate automatic email alert triggering in GovernmentDataPanel component that calls EmailAlertService.sendAlert() immediately after risk calculation when risk_percentage > 70, and displays UI toast notification 'Government Alert Sent Successfully' on success or 'Email Alert Failed: [error message]' on failure",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-80",
-        "summary": "Add manual 'Send Alert Email' button to GovernmentDataPanel component positioned below the 'Update & Recalculate Risk' button that triggers EmailAlertService.sendAlert() with current risk data regardless of risk level, displaying loading spinner during send and success/failure notification after completion",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-81",
-        "summary": "Update AlertHistory component to expand columns to include: Date & Time, Ward, Rainfall, Humidity, Turbidity, Bacteria, Sanitation %, Water Treatment %, Risk Level (badge), Risk % (numeric), Disease Most Likely (text), Priority Score (numeric), Email Sent (Yes/No badge), Recommended Action (text), maintaining filterable table with ward and risk level filters",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AlertHistory.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AlertHistory.tsx"
-        ]
-      },
-      {
-        "id": "REQ-82",
-        "summary": "Update the alert storage logic in GovernmentDataPanel and RiskPredictionPanel components to store complete alert records including all environmental inputs (rainfall, humidity, turbidity, bacteria, sanitation, water treatment), calculated outputs (risk level, risk percentage, disease classification, priority score), email status (Yes/No), and recommended action text in localStorage under key 'cholera_alerts'",
+        "id": "REQ-100",
+        "summary": "Verify and test the 'Update & Recalculate Risk' button functionality in the GovernmentDataPanel component to ensure it: (1) validates all 15 input fields (Ward, Rainfall, 7-day avg rainfall, Humidity, 7-day avg humidity, Turbidity, Bacteria Index, Sanitation Coverage, Water Treatment Coverage, Population Density, Reported Cases, Water Source Type, Chlorination Status, PHC Capacity, Emergency Response Status), (2) calls the backend predictOutbreakRisk function with the environmental data, (3) successfully updates all dashboard visualizations (RiskGauge, DiseaseClassification, WardHeatmap, InterventionPriority), (4) creates a new entry in AlertHistory with all input data plus calculated risk outputs, (5) triggers automatic email alerts when risk exceeds 70%, (6) shows proper loading states during calculation, (7) displays success confirmation or validation error messages",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/GovernmentDataPanel.tsx",
-          "frontend/src/components/RiskPredictionPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/GovernmentDataPanel.tsx",
-          "frontend/src/components/RiskPredictionPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-83",
-        "summary": "Update InterventionPriority component to implement priority score calculation using formula: priority_score = outbreak_probability × vulnerability_weight, where vulnerability_weight = base 1.0 + 1.0 if sanitation < 50 + 1.0 if water_treatment < 60 + 1.0 if population_density > 2000, normalized to 0-100 scale, and highlight the top 3 highest priority wards with red background and 'Immediate Intervention Required' badge",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/InterventionPriority.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/InterventionPriority.tsx"
-        ]
-      },
-      {
-        "id": "REQ-84",
-        "summary": "Verify and maintain consistent visual styling across all dashboard components: white backgrounds (#FFFFFF), professional blue headers (#2563EB), red color for high risk (>70%, #DC2626), yellow/amber color for medium risk (30-70%, #F59E0B or #FCD34D), green color for low risk (<30%, #16A34A), clean card borders (#E2E8F0), soft shadows, structured spacing (24px padding), and government-grade professional aesthetic",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
           "frontend/src/components/RiskGauge.tsx",
-          "frontend/src/components/SafetyAdvisory.tsx",
-          "frontend/src/components/AlertHistory.tsx",
-          "frontend/src/components/WardHeatmap.tsx"
+          "frontend/src/components/DiseaseClassification.tsx",
+          "frontend/src/components/WardHeatmap.tsx",
+          "frontend/src/components/InterventionPriority.tsx",
+          "frontend/src/services/EmailAlertService.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/components/AlertHistory.tsx"
+          "frontend/src/components/GovernmentDataPanel.tsx",
+          "frontend/src/components/RiskGauge.tsx",
+          "frontend/src/components/DiseaseClassification.tsx",
+          "frontend/src/components/WardHeatmap.tsx",
+          "frontend/src/components/InterventionPriority.tsx"
         ]
       },
       {
-        "id": "REQ-85",
-        "summary": "Update RiskPredictionPanel component to hide it completely from Common Citizen view and simplify it for Hospital/PHC view by removing government-only fields (water source type, chlorination status, PHC capacity, emergency response status), keeping only core environmental inputs and hospital-specific fields (reported cases, sanitation coverage, water treatment coverage, population density)",
+        "id": "REQ-99",
+        "summary": "Remove the 'Test Email Configuration' button from the GovernmentDataPanel component (frontend/src/components/GovernmentDataPanel.tsx), including the button UI element, click handler function, and all associated test email logic",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/RiskPredictionPanel.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
+          "frontend/src/components/GovernmentDataPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/RiskPredictionPanel.tsx",
-          "frontend/src/pages/DashboardPage.tsx"
+          "frontend/src/components/GovernmentDataPanel.tsx"
         ]
       }
     ]
@@ -191,13 +48,11 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/AlertHistory.tsx",
+    "frontend/src/components/DiseaseClassification.tsx",
     "frontend/src/components/GovernmentDataPanel.tsx",
     "frontend/src/components/InterventionPriority.tsx",
-    "frontend/src/components/LastGovernmentReport.tsx",
-    "frontend/src/components/RiskPredictionPanel.tsx",
-    "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/services/EmailAlertService.ts",
+    "frontend/src/components/RiskGauge.tsx",
+    "frontend/src/components/WardHeatmap.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
